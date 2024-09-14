@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"silkyfinish.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="第十章 注意力机制64 注意力机制    卷积、全连接、池化层都只考虑不随意线索 ![[Pasted image 20240812194627.png]] 注意力机制考虑随意线索 随意线索被称之为查询query 每个输入是一个 值value和不随意线索key 的对 通过注意力池化层来有偏向性地选择某些输入 ![[Pasted image 20240813102524.png]]2.非参注意力池化层">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自然语言处理">
+<meta property="og:url" content="https://silkyfinish.github.io/2024/09/14/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/index.html">
+<meta property="og:site_name" content="SilkyFinish">
+<meta property="og:description" content="第十章 注意力机制64 注意力机制    卷积、全连接、池化层都只考虑不随意线索 ![[Pasted image 20240812194627.png]] 注意力机制考虑随意线索 随意线索被称之为查询query 每个输入是一个 值value和不随意线索key 的对 通过注意力池化层来有偏向性地选择某些输入 ![[Pasted image 20240813102524.png]]2.非参注意力池化层">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-09-14T09:29:45.000Z">
+<meta property="article:modified_time" content="2024-09-14T09:32:10.970Z">
+<meta property="article:author" content="SilkyFinish">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://silkyfinish.github.io/2024/09/14/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://silkyfinish.github.io/2024/09/14/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/","path":"2024/09/14/自然语言处理/","title":"自然语言处理"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>自然语言处理 | SilkyFinish</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">SilkyFinish</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">SilkyFinish的个人博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E5%8D%81%E7%AB%A0-%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6"><span class="nav-number">1.</span> <span class="nav-text">第十章 注意力机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#64-%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6"><span class="nav-number">1.1.</span> <span class="nav-text">64 注意力机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#65-%E6%B3%A8%E6%84%8F%E5%8A%9B%E5%88%86%E6%95%B0"><span class="nav-number">1.2.</span> <span class="nav-text">65 注意力分数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#66-%E4%BD%BF%E7%94%A8%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E7%9A%84seq2seq"><span class="nav-number">1.3.</span> <span class="nav-text">66. 使用注意力机制的seq2seq</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%A6%E6%9C%89%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E7%9A%84%E8%A7%A3%E7%A0%81%E5%99%A8%E5%9F%BA%E6%9C%AC%E6%8E%A5%E5%8F%A3"><span class="nav-number">1.3.1.</span> <span class="nav-text">带有注意力机制的解码器基本接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E5%B8%A6%E6%9C%89Bahdanau%E6%B3%A8%E6%84%8F%E5%8A%9B%E7%9A%84%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E8%A7%A3%E7%A0%81%E5%99%A8"><span class="nav-number">1.3.2.</span> <span class="nav-text">实现带有Bahdanau注意力的循环神经网络解码器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#67-%E8%87%AA%E6%B3%A8%E6%84%8F%E5%8A%9B"><span class="nav-number">1.4.</span> <span class="nav-text">67.自注意力</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#68-Transformer"><span class="nav-number">1.5.</span> <span class="nav-text">68.Transformer</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E4%BD%8D%E7%BD%AE%E7%9A%84%E5%89%8D%E9%A6%88%E7%BD%91%E7%BB%9C"><span class="nav-number">1.5.1.</span> <span class="nav-text">基于位置的前馈网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%AE%8B%E5%B7%AE%E8%BF%9E%E6%8E%A5%E5%92%8C%E5%B1%82%E5%BD%92%E4%B8%80%E5%8C%96"><span class="nav-number">1.5.2.</span> <span class="nav-text">使用残差连接和层归一化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E7%BC%96%E7%A0%81%E5%99%A8%E4%B8%AD%E7%9A%84%E4%B8%80%E4%B8%AA%E5%B1%82"><span class="nav-number">1.5.3.</span> <span class="nav-text">实现编码器中的一个层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Transformer%E7%BC%96%E7%A0%81%E5%99%A8"><span class="nav-number">1.5.4.</span> <span class="nav-text">Transformer编码器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Transformer%E8%A7%A3%E7%A0%81%E5%99%A8%E4%B9%9F%E6%98%AF%E7%94%B1%E5%A4%9A%E4%B8%AA%E7%9B%B8%E5%90%8C%E7%9A%84%E5%B1%82%E7%BB%84%E6%88%90"><span class="nav-number">1.5.5.</span> <span class="nav-text">Transformer解码器也是由多个相同的层组成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Transformer%E8%A7%A3%E7%A0%81%E5%99%A8"><span class="nav-number">1.5.6.</span> <span class="nav-text">Transformer解码器</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E5%8D%81%E5%9B%9B%E7%AB%A0-%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86%EF%BC%9A%E9%A2%84%E8%AE%AD%E7%BB%83"><span class="nav-number">2.</span> <span class="nav-text">第十四章 自然语言处理：预训练</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#69-BERT%E9%A2%84%E8%AE%AD%E7%BB%83"><span class="nav-number">2.1.</span> <span class="nav-text">69 BERT预训练</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Input-Representation"><span class="nav-number">2.1.1.</span> <span class="nav-text">Input Representation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BERTEncoder-class"><span class="nav-number">2.1.2.</span> <span class="nav-text">BERTEncoder class</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Masked-Language-Modeling"><span class="nav-number">2.1.3.</span> <span class="nav-text">Masked Language Modeling</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Next-Sentence-Prediction"><span class="nav-number">2.1.4.</span> <span class="nav-text">Next Sentence Prediction</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Putting-All-Things-Together"><span class="nav-number">2.1.5.</span> <span class="nav-text">Putting All Things Together</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E5%8D%81%E4%BA%94%E7%AB%A0-%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86%EF%BC%9A%E5%BA%94%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">第十五章 自然语言处理：应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#70-BERT-%E5%BE%AE%E8%B0%83"><span class="nav-number">3.1.</span> <span class="nav-text">70 BERT 微调</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E5%8D%81%E4%B8%80%E7%AB%A0-%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">第十一章 优化算法</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="SilkyFinish"
+      src="/images/avatar.avif">
+  <p class="site-author-name" itemprop="name">SilkyFinish</p>
+  <div class="site-description" itemprop="description">冲天香阵透长安，满城尽带黄金甲</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://silkyfinish.github.io/2024/09/14/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.avif">
+      <meta itemprop="name" content="SilkyFinish">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SilkyFinish">
+      <meta itemprop="description" content="冲天香阵透长安，满城尽带黄金甲">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="自然语言处理 | SilkyFinish">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          自然语言处理
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2024-09-14 17:29:45 / Modified: 17:32:10" itemprop="dateCreated datePublished" datetime="2024-09-14T17:29:45+08:00">2024-09-14</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="第十章-注意力机制"><a href="#第十章-注意力机制" class="headerlink" title="第十章 注意力机制"></a>第十章 注意力机制</h1><h2 id="64-注意力机制"><a href="#64-注意力机制" class="headerlink" title="64 注意力机制"></a>64 注意力机制</h2><ol>
+<li></li>
+</ol>
+<ul>
+<li>卷积、全连接、池化层都只考虑不随意线索</li>
+<li>![[Pasted image 20240812194627.png]]</li>
+<li>注意力机制考虑随意线索<ul>
+<li>随意线索被称之为查询query</li>
+<li>每个输入是一个 值value和不随意线索key 的对</li>
+<li>通过注意力池化层来有偏向性地选择某些输入</li>
+<li>![[Pasted image 20240813102524.png]]<br>2.非参注意力池化层</li>
+</ul>
+</li>
+<li>Nadaraya-Watson核回归</li>
+<li>$f(x)&#x3D;\sum_{i&#x3D;1}^{n}\frac{K(x-x_{i})}{\sum_{j&#x3D;1}^{n}K(x-x_{i})}y_{i}$</li>
+<li>其中x是查询，(xi,yi)是键值对</li>
+<li>K是核函数，用来计算距离，分数表示概率，即每个的相对重要性，离x越近的值越大，也就是说对于要拟合的x，通过这个系数找到离他比较近的点，给他们的y值比较大的权重，（获得了更多的注意力）最终得到一个加权平均</li>
+<li>简单来说，根据输入的位置对输出yi进行加权</li>
+<li>使用高斯核$K(u)&#x3D;\frac{1}{\sqrt{2\pi}}exp(-\frac{u^2}2)$</li>
+<li>$f(x)&#x3D;\sum_{i&#x3D;1}^{n}\frac{exp(-\frac{(x-x_{i})^2}{2})}{\sum_{j&#x3D;1}^{n}exp(-\frac{(x-x_{j})^2}{2})}y_{i}$</li>
+<li>$&#x3D;\sum_{i&#x3D;1}^{n}softmax(-\frac{(x-x_{i})^2}{2})y_{i}$<br>3.参数化的注意力机制</li>
+<li>在之前的基础上引入可以学习的w</li>
+<li>$f(x)&#x3D;\sum_{i&#x3D;1}^{n}softmax(-\frac{((x-x_{i})w)^2}{2})y_{i}$<br>4.总结</li>
+<li>受试者使用非自主性和自主性提示有选择性地引导注意力。前者基于突出性，后者则依赖于意识</li>
+<li>注意力机制通过注意力汇聚使选择偏向于值（感官输入），其中包含查询（自主性提示）和键（非自主性提示）。键和值是成对的</li>
+</ul>
+<h2 id="65-注意力分数"><a href="#65-注意力分数" class="headerlink" title="65 注意力分数"></a>65 注意力分数</h2><p>1.注意力分数</p>
+<ul>
+<li>![[Pasted image 20240813111010.png]]</li>
+<li>![[Pasted image 20240813111039.png]]<br>2.Additive Attention</li>
+<li>可学参数：$W_k \in \mathbb{R}^{h\times k},W_q \in \mathbb{R}^{h\times q},v \in \mathbb{R}^{h}$</li>
+<li>$a(k,q)&#x3D;v^T tanh(W_kk+W_qq)$</li>
+<li>等价于将key和query合并起来后放入到一个隐藏大小为h输出大小为1的单隐藏层MLP<br>3.Scaled Dot-Product Attention</li>
+<li>如果query和key都是同样的长度d，$a(ki,q)&#x3D;&lt;q,ki&gt;&#x2F;\sqrt{d}$</li>
+<li>分母保证对d没那么敏感<br>4.总结</li>
+<li>注意力分数是query和key的相似度，注意力权重是分数的softmax结果</li>
+</ul>
+<h2 id="66-使用注意力机制的seq2seq"><a href="#66-使用注意力机制的seq2seq" class="headerlink" title="66. 使用注意力机制的seq2seq"></a>66. 使用注意力机制的seq2seq</h2><p>1.动机</p>
+<ul>
+<li>机器翻译中，每个生成的词可能相关于源句子中不同的词，在seq2seq中源句子所有信息都被压缩在最后一个隐藏状态，引入注意力可以去关注需要的部分<br>2.加入注意力</li>
+<li>![[Pasted image 20240813152336.png]]</li>
+<li>编码器对每次词的输出作为key和value</li>
+<li>解码器RNN对上一个词的输出是query</li>
+<li>注意力的输出和下一个词的词嵌入合并进入<br>3.总结</li>
+<li>注意力机制可以根据解码器RNN的输出来匹配到合适的编码器的RNN的输出来更有效地传递信息<br>4.Bahdanau注意力</li>
+</ul>
+<h3 id="带有注意力机制的解码器基本接口"><a href="#带有注意力机制的解码器基本接口" class="headerlink" title="带有注意力机制的解码器基本接口"></a>带有注意力机制的解码器基本接口</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">AttentionDecoder</span>(d2l.Decoder):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;带有注意力机制的解码器基本接口&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, **kwargs</span>):</span><br><span class="line">        <span class="built_in">super</span>(AttentionDecoder, <span class="variable language_">self</span>).__init__(**kwargs)</span><br><span class="line"></span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">attention_weights</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">raise</span> NotImplementedError</span><br></pre></td></tr></table></figure>
+<h3 id="实现带有Bahdanau注意力的循环神经网络解码器"><a href="#实现带有Bahdanau注意力的循环神经网络解码器" class="headerlink" title="实现带有Bahdanau注意力的循环神经网络解码器"></a>实现带有Bahdanau注意力的循环神经网络解码器</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Seq2SeqAttentionDecoder</span>(<span class="title class_ inherited__">AttentionDecoder</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, vocab_size, embed_size, num_hiddens, num_layers,</span></span><br><span class="line"><span class="params">                 dropout=<span class="number">0</span>, **kwargs</span>):</span><br><span class="line">        <span class="built_in">super</span>(Seq2SeqAttentionDecoder, <span class="variable language_">self</span>).__init__(**kwargs)</span><br><span class="line">        <span class="variable language_">self</span>.attention = d2l.AdditiveAttention(</span><br><span class="line">            num_hiddens, num_hiddens, num_hiddens, dropout)</span><br><span class="line">        <span class="variable language_">self</span>.embedding = nn.Embedding(vocab_size, embed_size)</span><br><span class="line">        <span class="variable language_">self</span>.rnn = nn.GRU(</span><br><span class="line">            embed_size + num_hiddens, num_hiddens, num_layers,</span><br><span class="line">            dropout=dropout)</span><br><span class="line">        <span class="variable language_">self</span>.dense = nn.Linear(num_hiddens, vocab_size)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">init_state</span>(<span class="params">self, enc_outputs, enc_valid_lens, *args</span>):</span><br><span class="line">        <span class="comment"># outputs的形状为(batch_size，num_steps，num_hiddens).</span></span><br><span class="line">        <span class="comment"># hidden_state的形状为(num_layers，batch_size，num_hiddens)</span></span><br><span class="line">        outputs, hidden_state = enc_outputs</span><br><span class="line">        <span class="keyword">return</span> (outputs.permute(<span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>), hidden_state, enc_valid_lens)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, X, state</span>):</span><br><span class="line">        <span class="comment"># enc_outputs的形状为(batch_size,num_steps,num_hiddens).</span></span><br><span class="line">        <span class="comment"># hidden_state的形状为(num_layers,batch_size,</span></span><br><span class="line">        <span class="comment"># num_hiddens)</span></span><br><span class="line">        enc_outputs, hidden_state, enc_valid_lens = state</span><br><span class="line">        <span class="comment"># 输出X的形状为(num_steps,batch_size,embed_size)</span></span><br><span class="line">        X = <span class="variable language_">self</span>.embedding(X).permute(<span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>)</span><br><span class="line">        outputs, <span class="variable language_">self</span>._attention_weights = [], []</span><br><span class="line">        <span class="keyword">for</span> x <span class="keyword">in</span> X:</span><br><span class="line">            <span class="comment"># query的形状为(batch_size,1,num_hiddens)</span></span><br><span class="line">            query = torch.unsqueeze(hidden_state[-<span class="number">1</span>], dim=<span class="number">1</span>)</span><br><span class="line">            <span class="comment">#解码器RNN对上一个词的输出</span></span><br><span class="line">            <span class="comment"># context的形状为(batch_size,1,num_hiddens)</span></span><br><span class="line">            context = <span class="variable language_">self</span>.attention(</span><br><span class="line">                query, enc_outputs, enc_outputs, enc_valid_lens)</span><br><span class="line">            <span class="comment"># 在特征维度上连结</span></span><br><span class="line">            x = torch.cat((context, torch.unsqueeze(x, dim=<span class="number">1</span>)), dim=-<span class="number">1</span>)</span><br><span class="line">            <span class="comment"># 将x变形为(1,batch_size,embed_size+num_hiddens)</span></span><br><span class="line">            out, hidden_state = <span class="variable language_">self</span>.rnn(x.permute(<span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>), hidden_state)</span><br><span class="line">            outputs.append(out)</span><br><span class="line">            <span class="variable language_">self</span>._attention_weights.append(<span class="variable language_">self</span>.attention.attention_weights)</span><br><span class="line">        <span class="comment"># 全连接层变换后，outputs的形状为</span></span><br><span class="line">        <span class="comment"># (num_steps,batch_size,vocab_size)</span></span><br><span class="line">        outputs = <span class="variable language_">self</span>.dense(torch.cat(outputs, dim=<span class="number">0</span>))</span><br><span class="line">        <span class="keyword">return</span> outputs.permute(<span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>), [enc_outputs, hidden_state,</span><br><span class="line">                                          enc_valid_lens]</span><br><span class="line"></span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">attention_weights</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>._attention_weights</span><br></pre></td></tr></table></figure>
+<h2 id="67-自注意力"><a href="#67-自注意力" class="headerlink" title="67.自注意力"></a>67.自注意力</h2><p>1.自注意力</p>
+<ul>
+<li>给定序列x1,…,xn,xi作为key，value，query得到y1,…,yn</li>
+<li>yi&#x3D;f(xi,(x1,x1),…(xn,xn))</li>
+<li>![[Pasted image 20240813170723.png]]<br>2.对比<br>![[Pasted image 20240813170758.png]]<br>k是窗口的大小，n是序列长度，d是词向量特征维度，d^2是矩阵乘法。最长路径指信息传递。并行度是每个计算是否依赖其他的输出。n^ 2d是每次q要和n组做乘法，每个长度为d。由此可以看出，自注意力最长路径短说明他擅长看很长的序列，但反映在计算复杂度上他需要很大的计算量（n方）<br>3.位置编码</li>
+<li>跟CNN&#x2F;RNN不同，自注意力并没有记录位置信息</li>
+<li>位置编码将位置信息注入到输入里<ul>
+<li>假设长度为n的序列是：$X\in \mathbb{R}^{n\times d}$,那么使用位置编码矩阵$P\in \mathbb{R}^{n\times d}$来输出X+P作为自编码输入</li>
+</ul>
+</li>
+<li>$p_{i,2j}&#x3D;sin(\frac{i}{10000^{2j&#x2F;d}}),p_{i,2j+1}&#x3D;cos(\frac{i}{10000^{2j&#x2F;d}})$</li>
+</ul>
+<h2 id="68-Transformer"><a href="#68-Transformer" class="headerlink" title="68.Transformer"></a>68.Transformer</h2><p>1.架构<br>纯基于注意力</p>
+<ul>
+<li>编码器：多头自注意力</li>
+<li>解码器：解码器自注意力，编码器-解码器注意力<br>![[Pasted image 20240814073957.png]]<br>2.多头注意力<br>![[Pasted image 20240814074233.png]]<br>对同一key，value，query，希望抽取不同的信息（例如短距离关系和长距离关系）<br>-&gt;多头注意力使用h个独立的注意力池化，合并各个头输出得到最终输出<br>3.基于位置的前馈网络</li>
+<li>输入形状由（b,n,d）变换成（bn，d）</li>
+<li>作用于两个全连接层</li>
+<li>输出形状由（bn，d）变化回（b,n,d）</li>
+<li>等价于两层核窗口为1的一维卷积层<br>4.层归一化</li>
+<li>Add：ResNet</li>
+<li>Norm：层归一化<ul>
+<li>批量归一化对每个特征&#x2F;通道里元素进行归一化，不适合序列长度会变的NLP</li>
+<li>层归一化对每个样本里的元素进行归一化</li>
+<li>![[Pasted image 20240814094754.png]]<br>5.信息传递</li>
+</ul>
+</li>
+<li>编码器中的输出y1，…yn</li>
+<li>将其作为解码器中第i个Transformer块中多头注意力的key和value，它的query来自目标序列</li>
+<li>意味着编码器和解码器中块的个数和输出维度都是一样的<br>6.预测</li>
+<li>预测第t+1个输出时，解码器中输入前t个预测值。在自注意力中，前t个预测值作为key和value，第t个值还作为query</li>
+<li>![[Pasted image 20240814101706.png]]<br>7.代码</li>
+</ul>
+<h3 id="基于位置的前馈网络"><a href="#基于位置的前馈网络" class="headerlink" title="基于位置的前馈网络"></a>基于位置的前馈网络</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">PositionWiseFFN</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, ffn_num_input, ffn_num_hiddens, ffn_num_outputs,</span></span><br><span class="line"><span class="params">                 **kwargs</span>):</span><br><span class="line">        <span class="built_in">super</span>(PositionWiseFFN, <span class="variable language_">self</span>).__init__(**kwargs)</span><br><span class="line">        <span class="variable language_">self</span>.dense1 = nn.Linear(ffn_num_input, ffn_num_hiddens)</span><br><span class="line">        <span class="variable language_">self</span>.relu = nn.ReLU()</span><br><span class="line">        <span class="variable language_">self</span>.dense2 = nn.Linear(ffn_num_hiddens, ffn_num_outputs)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, X</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.dense2(<span class="variable language_">self</span>.relu(<span class="variable language_">self</span>.dense1(X)))</span><br></pre></td></tr></table></figure>
+<h3 id="使用残差连接和层归一化"><a href="#使用残差连接和层归一化" class="headerlink" title="使用残差连接和层归一化"></a>使用残差连接和层归一化</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">AddNorm</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, normalized_shape, dropout, **kwargs</span>):</span><br><span class="line">        <span class="built_in">super</span>(AddNorm, <span class="variable language_">self</span>).__init__(**kwargs)</span><br><span class="line">        <span class="variable language_">self</span>.dropout = nn.Dropout(dropout)</span><br><span class="line">        <span class="variable language_">self</span>.ln = nn.LayerNorm(normalized_shape)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, X, Y</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.ln(<span class="variable language_">self</span>.dropout(Y) + X)</span><br></pre></td></tr></table></figure>
+<h3 id="实现编码器中的一个层"><a href="#实现编码器中的一个层" class="headerlink" title="实现编码器中的一个层"></a>实现编码器中的一个层</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">EncoderBlock</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, key_size, query_size, value_size, num_hiddens,</span></span><br><span class="line"><span class="params">                 norm_shape, ffn_num_input, ffn_num_hiddens, num_heads,</span></span><br><span class="line"><span class="params">                 dropout, use_bias=<span class="literal">False</span>, **kwargs</span>):</span><br><span class="line">        <span class="built_in">super</span>(EncoderBlock, <span class="variable language_">self</span>).__init__(**kwargs)</span><br><span class="line">        <span class="variable language_">self</span>.attention = d2l.MultiHeadAttention(key_size, query_size,</span><br><span class="line">                                                value_size, num_hiddens,</span><br><span class="line">                                                num_heads, dropout, use_bias)</span><br><span class="line">        <span class="variable language_">self</span>.addnorm1 = AddNorm(norm_shape, dropout)</span><br><span class="line">        <span class="variable language_">self</span>.ffn = PositionWiseFFN(ffn_num_input, ffn_num_hiddens,</span><br><span class="line">                                   num_hiddens)</span><br><span class="line">        <span class="variable language_">self</span>.addnorm2 = AddNorm(norm_shape, dropout)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, X, valid_lens</span>):</span><br><span class="line">        Y = <span class="variable language_">self</span>.addnorm1(X, <span class="variable language_">self</span>.attention(X, X, X, valid_lens))</span><br><span class="line">        <span class="comment">#这里q，k，v都是自己</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.addnorm2(Y, <span class="variable language_">self</span>.ffn(Y))</span><br></pre></td></tr></table></figure>
+<h3 id="Transformer编码器"><a href="#Transformer编码器" class="headerlink" title="Transformer编码器"></a>Transformer编码器</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">TransformerEncoder</span>(d2l.Encoder):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, vocab_size, key_size, query_size, value_size,</span></span><br><span class="line"><span class="params">                 num_hiddens, norm_shape, ffn_num_input, ffn_num_hiddens,</span></span><br><span class="line"><span class="params">                 num_heads, num_layers, dropout, use_bias=<span class="literal">False</span>, **kwargs</span>):</span><br><span class="line">        <span class="built_in">super</span>(TransformerEncoder, <span class="variable language_">self</span>).__init__(**kwargs)</span><br><span class="line">        <span class="variable language_">self</span>.num_hiddens = num_hiddens</span><br><span class="line">        <span class="variable language_">self</span>.embedding = nn.Embedding(vocab_size, num_hiddens)</span><br><span class="line">        <span class="variable language_">self</span>.pos_encoding = d2l.PositionalEncoding(num_hiddens, dropout)</span><br><span class="line">        <span class="variable language_">self</span>.blks = nn.Sequential()</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(num_layers):</span><br><span class="line">            <span class="variable language_">self</span>.blks.add_module(</span><br><span class="line">                <span class="string">&quot;block&quot;</span> + <span class="built_in">str</span>(i),</span><br><span class="line">                EncoderBlock(key_size, query_size, value_size, num_hiddens,</span><br><span class="line">                             norm_shape, ffn_num_input, ffn_num_hiddens,</span><br><span class="line">                             num_heads, dropout, use_bias))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, X, valid_lens, *args</span>):</span><br><span class="line">        X = <span class="variable language_">self</span>.pos_encoding(<span class="variable language_">self</span>.embedding(X) * math.sqrt(<span class="variable language_">self</span>.num_hiddens))</span><br><span class="line">        <span class="variable language_">self</span>.attention_weights = [<span class="literal">None</span>] * <span class="built_in">len</span>(<span class="variable language_">self</span>.blks)</span><br><span class="line">        <span class="keyword">for</span> i, blk <span class="keyword">in</span> <span class="built_in">enumerate</span>(<span class="variable language_">self</span>.blks):</span><br><span class="line">            X = blk(X, valid_lens)</span><br><span class="line">            <span class="variable language_">self</span>.attention_weights[</span><br><span class="line">                i] = blk.attention.attention.attention_weights</span><br><span class="line">        <span class="keyword">return</span> X</span><br></pre></td></tr></table></figure>
+<h3 id="Transformer解码器也是由多个相同的层组成"><a href="#Transformer解码器也是由多个相同的层组成" class="headerlink" title="Transformer解码器也是由多个相同的层组成"></a>Transformer解码器也是由多个相同的层组成</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">DecoderBlock</span>(nn.Module):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;解码器中第i个块&quot;&quot;&quot;</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;类比之前使用注意力机制的seq2seq，第一个attention层相当于原来的rnn层，第二个attention层就是attention层&#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, key_size, query_size, value_size, num_hiddens,</span></span><br><span class="line"><span class="params">                 norm_shape, ffn_num_input, ffn_num_hiddens, num_heads,</span></span><br><span class="line"><span class="params">                 dropout, i, **kwargs</span>):</span><br><span class="line">        <span class="built_in">super</span>(DecoderBlock, <span class="variable language_">self</span>).__init__(**kwargs)</span><br><span class="line">        <span class="variable language_">self</span>.i = i</span><br><span class="line">        <span class="variable language_">self</span>.attention1 = d2l.MultiHeadAttention(</span><br><span class="line">            key_size, query_size, value_size, num_hiddens, num_heads, dropout)</span><br><span class="line">        <span class="variable language_">self</span>.addnorm1 = AddNorm(norm_shape, dropout)</span><br><span class="line">        <span class="variable language_">self</span>.attention2 = d2l.MultiHeadAttention(</span><br><span class="line">            key_size, query_size, value_size, num_hiddens, num_heads, dropout)</span><br><span class="line">        <span class="variable language_">self</span>.addnorm2 = AddNorm(norm_shape, dropout)</span><br><span class="line">        <span class="variable language_">self</span>.ffn = PositionWiseFFN(ffn_num_input, ffn_num_hiddens,</span><br><span class="line">                                   num_hiddens)</span><br><span class="line">        <span class="variable language_">self</span>.addnorm3 = AddNorm(norm_shape, dropout)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, X, state</span>):</span><br><span class="line">        enc_outputs, enc_valid_lens = state[<span class="number">0</span>], state[<span class="number">1</span>]</span><br><span class="line">        <span class="comment"># 训练阶段，输出序列的所有词元都在同一时间处理，q，k，v都是X</span></span><br><span class="line">        <span class="comment"># 因此state[2][self.i]初始化为None。</span></span><br><span class="line">        <span class="comment"># 预测阶段，输出序列是通过词元一个接着一个解码的，合并X和前面的输出</span></span><br><span class="line">        <span class="comment"># 因此state[2][self.i]包含着直到当前时间步第i个块解码的输出表示</span></span><br><span class="line">        <span class="keyword">if</span> state[<span class="number">2</span>][<span class="variable language_">self</span>.i] <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            key_values = X</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            key_values = torch.cat((state[<span class="number">2</span>][<span class="variable language_">self</span>.i], X), axis=<span class="number">1</span>)</span><br><span class="line">        state[<span class="number">2</span>][<span class="variable language_">self</span>.i] = key_values</span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.training:</span><br><span class="line">            batch_size, num_steps, _ = X.shape</span><br><span class="line">            <span class="comment"># dec_valid_lens的开头:(batch_size,num_steps),</span></span><br><span class="line">            <span class="comment"># 其中每一行是[1,2,...,num_steps]</span></span><br><span class="line">            dec_valid_lens = torch.arange(</span><br><span class="line">                <span class="number">1</span>, num_steps + <span class="number">1</span>, device=X.device).repeat(batch_size, <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            dec_valid_lens = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 自注意力</span></span><br><span class="line">        X2 = <span class="variable language_">self</span>.attention1(X, key_values, key_values, dec_valid_lens)</span><br><span class="line">        Y = <span class="variable language_">self</span>.addnorm1(X, X2)</span><br><span class="line">        <span class="comment"># 编码器－解码器注意力。</span></span><br><span class="line">        <span class="comment"># enc_outputs的开头:(batch_size,num_steps,num_hiddens)</span></span><br><span class="line">        Y2 = <span class="variable language_">self</span>.attention2(Y, enc_outputs, enc_outputs, enc_valid_lens)</span><br><span class="line">        Z = <span class="variable language_">self</span>.addnorm2(Y, Y2)</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.addnorm3(Z, <span class="variable language_">self</span>.ffn(Z)), state</span><br></pre></td></tr></table></figure>
+<h3 id="Transformer解码器"><a href="#Transformer解码器" class="headerlink" title="Transformer解码器"></a>Transformer解码器</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">TransformerDecoder</span>(d2l.AttentionDecoder):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, vocab_size, key_size, query_size, value_size,</span></span><br><span class="line"><span class="params">                 num_hiddens, norm_shape, ffn_num_input, ffn_num_hiddens,</span></span><br><span class="line"><span class="params">                 num_heads, num_layers, dropout, **kwargs</span>):</span><br><span class="line">        <span class="built_in">super</span>(TransformerDecoder, <span class="variable language_">self</span>).__init__(**kwargs)</span><br><span class="line">        <span class="variable language_">self</span>.num_hiddens = num_hiddens</span><br><span class="line">        <span class="variable language_">self</span>.num_layers = num_layers</span><br><span class="line">        <span class="variable language_">self</span>.embedding = nn.Embedding(vocab_size, num_hiddens)</span><br><span class="line">        <span class="variable language_">self</span>.pos_encoding = d2l.PositionalEncoding(num_hiddens, dropout)</span><br><span class="line">        <span class="variable language_">self</span>.blks = nn.Sequential()</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(num_layers):</span><br><span class="line">            <span class="variable language_">self</span>.blks.add_module(<span class="string">&quot;block&quot;</span>+<span class="built_in">str</span>(i),</span><br><span class="line">                DecoderBlock(key_size, query_size, value_size, num_hiddens,</span><br><span class="line">                             norm_shape, ffn_num_input, ffn_num_hiddens,</span><br><span class="line">                             num_heads, dropout, i))</span><br><span class="line">        <span class="variable language_">self</span>.dense = nn.Linear(num_hiddens, vocab_size)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">init_state</span>(<span class="params">self, enc_outputs, enc_valid_lens, *args</span>):</span><br><span class="line">        <span class="keyword">return</span> [enc_outputs, enc_valid_lens, [<span class="literal">None</span>] * <span class="variable language_">self</span>.num_layers]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, X, state</span>):</span><br><span class="line">        X = <span class="variable language_">self</span>.pos_encoding(<span class="variable language_">self</span>.embedding(X) * math.sqrt(<span class="variable language_">self</span>.num_hiddens))</span><br><span class="line">        <span class="variable language_">self</span>._attention_weights = [[<span class="literal">None</span>] * <span class="built_in">len</span>(<span class="variable language_">self</span>.blks) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span> (<span class="number">2</span>)]</span><br><span class="line">        <span class="keyword">for</span> i, blk <span class="keyword">in</span> <span class="built_in">enumerate</span>(<span class="variable language_">self</span>.blks):</span><br><span class="line">            X, state = blk(X, state)</span><br><span class="line">            <span class="comment"># 解码器自注意力权重</span></span><br><span class="line">            <span class="variable language_">self</span>._attention_weights[<span class="number">0</span>][</span><br><span class="line">                i] = blk.attention1.attention.attention_weights</span><br><span class="line">            <span class="comment"># “编码器－解码器”自注意力权重</span></span><br><span class="line">            <span class="variable language_">self</span>._attention_weights[<span class="number">1</span>][</span><br><span class="line">                i] = blk.attention2.attention.attention_weights</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.dense(X), state</span><br><span class="line"></span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">attention_weights</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>._attention_weights</span><br></pre></td></tr></table></figure>
+<h1 id="第十四章-自然语言处理：预训练"><a href="#第十四章-自然语言处理：预训练" class="headerlink" title="第十四章 自然语言处理：预训练"></a>第十四章 自然语言处理：预训练</h1><h2 id="69-BERT预训练"><a href="#69-BERT预训练" class="headerlink" title="69 BERT预训练"></a>69 BERT预训练</h2><p>1.NLP里的迁移学习</p>
+<ul>
+<li>使用预训练好的模型来抽取词、句子的特征<ul>
+<li>例如word2vec或语言模型</li>
+</ul>
+</li>
+<li>不更新预训练好的模型</li>
+<li>需要构建新的网络来抓取新任务需要的信息<ul>
+<li>word2vec忽略了时序信息，语言模型只看了一个方向<br>2.BERT的动机</li>
+</ul>
+</li>
+<li>基于微调的NLP模型</li>
+<li>预训练的模型抽取了足够多的信息</li>
+<li>新的任务只需要增加一个简单的输出层<br>3.BERT架构</li>
+<li>只有编码器的Transformer</li>
+<li>两个版本：<ul>
+<li>Base：blocks&#x3D;12，hidden size&#x3D;768，heads&#x3D;12，parameters&#x3D;110M</li>
+<li>Large：blocks&#x3D;24，hidden size&#x3D;1024，heads&#x3D;16，parameters&#x3D;340M</li>
+</ul>
+</li>
+<li>在大规模数据上训练&gt;3B词<br>4.对输入的修改</li>
+<li>因为只有编码器，所以source和target都得给编码器</li>
+<li>每个样本是一个句子对</li>
+<li>加入额外的片段嵌入，用segment embedding分隔</li>
+<li>位置编码可学习，每个token有一个position embedding</li>
+<li>![[Pasted image 20240815091740.png]]<br>5.预训练任务1：带掩码的语言模型</li>
+<li>Transformer的编码器是双向的，标准语言模型要求单向</li>
+<li>带掩码的语言模型每次随机（15%概率）将一些词元换成mask，这样Transformer的编码器仍然可以做双向，相当于完形填空</li>
+<li>因为微调任务中不会出现mask，所以预训练中<ul>
+<li>80%概率，将选中的词元变成mask</li>
+<li>10%概率，换成一个随机词元</li>
+<li>10%概率，保持原有的词元<br>6.预训练任务2：下一个句子预测</li>
+</ul>
+</li>
+<li>预测一个句子对中两个句子是否相邻</li>
+<li>训练样本中：50%概率选择相邻句子对，50%概率选择随机句子对</li>
+<li>将cls对应输出放到一个全连接层预测<br>7.代码</li>
+</ul>
+<h3 id="Input-Representation"><a href="#Input-Representation" class="headerlink" title="Input Representation"></a>Input Representation</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">get_tokens_and_segments</span>(<span class="params">tokens_a, tokens_b=<span class="literal">None</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Get tokens of the BERT input sequence and their segment IDs.&quot;&quot;&quot;</span></span><br><span class="line">    tokens = [<span class="string">&#x27;&lt;cls&gt;&#x27;</span>] + tokens_a + [<span class="string">&#x27;&lt;sep&gt;&#x27;</span>]</span><br><span class="line">    segments = [<span class="number">0</span>] * (<span class="built_in">len</span>(tokens_a) + <span class="number">2</span>)</span><br><span class="line">    <span class="keyword">if</span> tokens_b <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">        tokens += tokens_b + [<span class="string">&#x27;&lt;sep&gt;&#x27;</span>]</span><br><span class="line">        segments += [<span class="number">1</span>] * (<span class="built_in">len</span>(tokens_b) + <span class="number">1</span>)</span><br><span class="line">    <span class="keyword">return</span> tokens, segments</span><br></pre></td></tr></table></figure>
+<h3 id="BERTEncoder-class"><a href="#BERTEncoder-class" class="headerlink" title="BERTEncoder class"></a>BERTEncoder class</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">BERTEncoder</span>(nn.Module):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;BERT encoder.&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, vocab_size, num_hiddens, norm_shape, ffn_num_input,</span></span><br><span class="line"><span class="params">                 ffn_num_hiddens, num_heads, num_layers, dropout,</span></span><br><span class="line"><span class="params">                 max_len=<span class="number">1000</span>, key_size=<span class="number">768</span>, query_size=<span class="number">768</span>, value_size=<span class="number">768</span>,</span></span><br><span class="line"><span class="params">                 **kwargs</span>):</span><br><span class="line">        <span class="built_in">super</span>(BERTEncoder, <span class="variable language_">self</span>).__init__(**kwargs)</span><br><span class="line">        <span class="variable language_">self</span>.token_embedding = nn.Embedding(vocab_size, num_hiddens)</span><br><span class="line">        <span class="variable language_">self</span>.segment_embedding = nn.Embedding(<span class="number">2</span>, num_hiddens)</span><br><span class="line">        <span class="variable language_">self</span>.blks = nn.Sequential()</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(num_layers):</span><br><span class="line">            <span class="variable language_">self</span>.blks.add_module(<span class="string">f&quot;<span class="subst">&#123;i&#125;</span>&quot;</span>, d2l.EncoderBlock(</span><br><span class="line">                key_size, query_size, value_size, num_hiddens, norm_shape,</span><br><span class="line">                ffn_num_input, ffn_num_hiddens, num_heads, dropout, <span class="literal">True</span>))</span><br><span class="line">        <span class="variable language_">self</span>.pos_embedding = nn.Parameter(torch.randn(<span class="number">1</span>, max_len,</span><br><span class="line">                                                      num_hiddens))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, tokens, segments, valid_lens</span>):</span><br><span class="line">        X = <span class="variable language_">self</span>.token_embedding(tokens) + <span class="variable language_">self</span>.segment_embedding(segments)</span><br><span class="line">        X = X + <span class="variable language_">self</span>.pos_embedding.data[:, :X.shape[<span class="number">1</span>], :]</span><br><span class="line">        <span class="keyword">for</span> blk <span class="keyword">in</span> <span class="variable language_">self</span>.blks:</span><br><span class="line">            X = blk(X, valid_lens)</span><br><span class="line">        <span class="keyword">return</span> X</span><br></pre></td></tr></table></figure>
+<h3 id="Masked-Language-Modeling"><a href="#Masked-Language-Modeling" class="headerlink" title="Masked Language Modeling"></a>Masked Language Modeling</h3><p>把要预测的位置的词所对应的encoder的输出拿到这里来预测位置的值</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MaskLM</span>(nn.Module):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;The masked language model task of BERT.&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, vocab_size, num_hiddens, num_inputs=<span class="number">768</span>, **kwargs</span>):</span><br><span class="line">        <span class="built_in">super</span>(MaskLM, <span class="variable language_">self</span>).__init__(**kwargs)</span><br><span class="line">        <span class="variable language_">self</span>.mlp = nn.Sequential(nn.Linear(num_inputs, num_hiddens),</span><br><span class="line">                                 nn.ReLU(),</span><br><span class="line">                                 nn.LayerNorm(num_hiddens),</span><br><span class="line">                                 nn.Linear(num_hiddens, vocab_size))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, X, pred_positions</span>):</span><br><span class="line">        num_pred_positions = pred_positions.shape[<span class="number">1</span>]</span><br><span class="line">        pred_positions = pred_positions.reshape(-<span class="number">1</span>)</span><br><span class="line">        batch_size = X.shape[<span class="number">0</span>]</span><br><span class="line">        batch_idx = torch.arange(<span class="number">0</span>, batch_size)</span><br><span class="line">        batch_idx = torch.repeat_interleave(batch_idx, num_pred_positions)</span><br><span class="line">        masked_X = X[batch_idx, pred_positions]</span><br><span class="line">        masked_X = masked_X.reshape((batch_size, num_pred_positions, -<span class="number">1</span>))</span><br><span class="line">        mlm_Y_hat = <span class="variable language_">self</span>.mlp(masked_X)</span><br><span class="line">        <span class="keyword">return</span> mlm_Y_hat</span><br></pre></td></tr></table></figure>
+<h3 id="Next-Sentence-Prediction"><a href="#Next-Sentence-Prediction" class="headerlink" title="Next Sentence Prediction"></a>Next Sentence Prediction</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">NextSentencePred</span>(nn.Module):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;The next sentence prediction task of BERT.&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, num_inputs, **kwargs</span>):</span><br><span class="line">        <span class="built_in">super</span>(NextSentencePred, <span class="variable language_">self</span>).__init__(**kwargs)</span><br><span class="line">        <span class="variable language_">self</span>.output = nn.Linear(num_inputs, <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, X</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.output(X)</span><br></pre></td></tr></table></figure>
+<h3 id="Putting-All-Things-Together"><a href="#Putting-All-Things-Together" class="headerlink" title="Putting All Things Together"></a>Putting All Things Together</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">BERTModel</span>(nn.Module):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;The BERT model.&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, vocab_size, num_hiddens, norm_shape, ffn_num_input,</span></span><br><span class="line"><span class="params">                 ffn_num_hiddens, num_heads, num_layers, dropout,</span></span><br><span class="line"><span class="params">                 max_len=<span class="number">1000</span>, key_size=<span class="number">768</span>, query_size=<span class="number">768</span>, value_size=<span class="number">768</span>,</span></span><br><span class="line"><span class="params">                 hid_in_features=<span class="number">768</span>, mlm_in_features=<span class="number">768</span>,</span></span><br><span class="line"><span class="params">                 nsp_in_features=<span class="number">768</span></span>):</span><br><span class="line">        <span class="built_in">super</span>(BERTModel, <span class="variable language_">self</span>).__init__()</span><br><span class="line">        <span class="variable language_">self</span>.encoder = BERTEncoder(vocab_size, num_hiddens, norm_shape,</span><br><span class="line">                    ffn_num_input, ffn_num_hiddens, num_heads, num_layers,</span><br><span class="line">                    dropout, max_len=max_len, key_size=key_size,</span><br><span class="line">                    query_size=query_size, value_size=value_size)</span><br><span class="line">        <span class="variable language_">self</span>.hidden = nn.Sequential(nn.Linear(hid_in_features, num_hiddens),</span><br><span class="line">                                    nn.Tanh())</span><br><span class="line">        <span class="variable language_">self</span>.mlm = MaskLM(vocab_size, num_hiddens, mlm_in_features)</span><br><span class="line">        <span class="variable language_">self</span>.nsp = NextSentencePred(nsp_in_features)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, tokens, segments, valid_lens=<span class="literal">None</span>, pred_positions=<span class="literal">None</span></span>):</span><br><span class="line">        encoded_X = <span class="variable language_">self</span>.encoder(tokens, segments, valid_lens)</span><br><span class="line">        <span class="keyword">if</span> pred_positions <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            mlm_Y_hat = <span class="variable language_">self</span>.mlm(encoded_X, pred_positions)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            mlm_Y_hat = <span class="literal">None</span></span><br><span class="line">        nsp_Y_hat = <span class="variable language_">self</span>.nsp(<span class="variable language_">self</span>.hidden(encoded_X[:, <span class="number">0</span>, :]))</span><br><span class="line">        <span class="keyword">return</span> encoded_X, mlm_Y_hat, nsp_Y_hat</span><br></pre></td></tr></table></figure>
+<h1 id="第十五章-自然语言处理：应用"><a href="#第十五章-自然语言处理：应用" class="headerlink" title="第十五章 自然语言处理：应用"></a>第十五章 自然语言处理：应用</h1><h2 id="70-BERT-微调"><a href="#70-BERT-微调" class="headerlink" title="70 BERT 微调"></a>70 BERT 微调</h2><ol>
+<li></li>
+</ol>
+<ul>
+<li>BERT对每一个词元返回抽取了上下文信息的特征向量</li>
+<li>不同的任务使用不同的特征</li>
+<li>![[Pasted image 20240815120301.png]]<br>2.句子分类</li>
+<li>将cls对应的向量输入到全连接层分类</li>
+<li>![[Pasted image 20240815120632.png]]<br>3.命名实体识别</li>
+<li>识别一个词元是不是命名实体，例如人名、机构、位置</li>
+<li>将非特殊词元放进全连接层分类</li>
+<li>![[Pasted image 20240815123809.png]]<br>4.问题回答</li>
+<li>给定一个问题，和描述文字，找出一个片段作为回答</li>
+<li>对片段中的每个词元预测它是不是回答的开头和结尾（三分类问题）</li>
+<li>![[Pasted image 20240815124119.png]]</li>
+<li>前面是问题，后面是描述</li>
+</ul>
+<h1 id="第十一章-优化算法"><a href="#第十一章-优化算法" class="headerlink" title="第十一章 优化算法"></a>第十一章 优化算法</h1><p>1.优化问题</p>
+<ul>
+<li>一般形式：minimize f（x） subject to x $\in$C<br>2.局部最小vs全局最小</li>
+<li>迭代算法一般只能找到局部最小<br>3.凸集</li>
+<li>$\alpha x+(1-\alpha)y\in C \forall\alpha\in [0,1]\forall x,y\in C$</li>
+<li>![[Pasted image 20240815152102.png]]<br>4.凸函数</li>
+<li>$f(\alpha x+(1-\alpha)y)\leqslant \alpha f(x)+(1-\alpha)f(y)\in C \forall\alpha\in [0,1]\forall x,y\in C$</li>
+<li>![[Pasted image 20240815152457.png]]<br>5.凸函数优化</li>
+<li>如果代价函数f是凸的，且限制集合c是凸的，那么就是凸优化问题，那么局部最小就是全局最小</li>
+<li>严格凸优化问题有唯一的全局最小<br>6.例子</li>
+<li>凸：线性回归，sofmax</li>
+<li>非凸：其他：MLP,CNN,RNN,attention<br>7.冲量法</li>
+<li>不会一下很猛地改变很多，因为每次改变的方向不仅取决于当前的梯度，还却决于之前的梯度</li>
+<li>![[Pasted image 20240815153733.png]]<br>8.Adam</li>
+<li>对学习率不那么敏感，非常平滑</li>
+<li>$v_t&#x3D;\beta_1v_{t-1}+(1-\beta_1)g_t,\beta_1&#x3D;0.9$</li>
+<li>$v_t&#x3D;(1-\beta_1)(g_t+\beta_1g_{t-1}+\beta_1^2g_{t-2}+\beta_1^3g_{t-3}+…)$</li>
+<li>无穷等比求和（betan次方）-&gt;权重和为（1-beta）1&#x2F;（1-beta）&#x3D;1</li>
+<li>$\sum_{i&#x3D;0}^{t}\beta_1^i&#x3D;\frac{1-\beta_1^t}{1-\beta_1}$-&gt;在t比较小时修正$\hat{v_t}&#x3D;\frac{v_t}{1-\beta_1^t}$</li>
+<li>$s_t&#x3D;\beta_2s_{t-1}+(1-\beta_2)g_t^2,\beta_2&#x3D;0.999$</li>
+<li>在t比较小时修正$\hat{v_t}&#x3D;\frac{v_t}{1-\beta_2^t}$</li>
+<li>计算重新调整后的梯度$g_t’&#x3D;\frac{\hat{v_t}}{\sqrt{\hat{s_t}}+\epsilon}$，分子是使得变化比较平滑，分母是和分子制衡，使得不同维度梯度变化差不多，不会让太大的影响比较小的</li>
+<li>最后用这个梯度更新</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/09/14/%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="prev" title="循环神经网络">
+                  <i class="fa fa-angle-left"></i> 循环神经网络
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">SilkyFinish</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

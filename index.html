@@ -124,7 +124,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">4</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -159,7 +159,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://silkyfinish.github.io/2024/09/13/hello/">
+    <link itemprop="mainEntityOfPage" href="https://silkyfinish.github.io/2024/09/14/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.avif">
@@ -177,7 +177,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/09/13/hello/" class="post-title-link" itemprop="url">hello</a>
+          <a href="/2024/09/14/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" class="post-title-link" itemprop="url">自然语言处理</a>
         </h2>
 
         <div class="post-meta-container">
@@ -189,7 +189,790 @@
       <span class="post-meta-item-text">Posted on</span>
       
 
-      <time title="Created: 2024-09-13 11:29:12 / Modified: 17:48:12" itemprop="dateCreated datePublished" datetime="2024-09-13T11:29:12+08:00">2024-09-13</time>
+      <time title="Created: 2024-09-14 17:29:45 / Modified: 17:32:10" itemprop="dateCreated datePublished" datetime="2024-09-14T17:29:45+08:00">2024-09-14</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="第十章-注意力机制"><a href="#第十章-注意力机制" class="headerlink" title="第十章 注意力机制"></a>第十章 注意力机制</h1><h2 id="64-注意力机制"><a href="#64-注意力机制" class="headerlink" title="64 注意力机制"></a>64 注意力机制</h2><ol>
+<li></li>
+</ol>
+<ul>
+<li>卷积、全连接、池化层都只考虑不随意线索</li>
+<li>![[Pasted image 20240812194627.png]]</li>
+<li>注意力机制考虑随意线索<ul>
+<li>随意线索被称之为查询query</li>
+<li>每个输入是一个 值value和不随意线索key 的对</li>
+<li>通过注意力池化层来有偏向性地选择某些输入</li>
+<li>![[Pasted image 20240813102524.png]]<br>2.非参注意力池化层</li>
+</ul>
+</li>
+<li>Nadaraya-Watson核回归</li>
+<li>$f(x)&#x3D;\sum_{i&#x3D;1}^{n}\frac{K(x-x_{i})}{\sum_{j&#x3D;1}^{n}K(x-x_{i})}y_{i}$</li>
+<li>其中x是查询，(xi,yi)是键值对</li>
+<li>K是核函数，用来计算距离，分数表示概率，即每个的相对重要性，离x越近的值越大，也就是说对于要拟合的x，通过这个系数找到离他比较近的点，给他们的y值比较大的权重，（获得了更多的注意力）最终得到一个加权平均</li>
+<li>简单来说，根据输入的位置对输出yi进行加权</li>
+<li>使用高斯核$K(u)&#x3D;\frac{1}{\sqrt{2\pi}}exp(-\frac{u^2}2)$</li>
+<li>$f(x)&#x3D;\sum_{i&#x3D;1}^{n}\frac{exp(-\frac{(x-x_{i})^2}{2})}{\sum_{j&#x3D;1}^{n}exp(-\frac{(x-x_{j})^2}{2})}y_{i}$</li>
+<li>$&#x3D;\sum_{i&#x3D;1}^{n}softmax(-\frac{(x-x_{i})^2}{2})y_{i}$<br>3.参数化的注意力机制</li>
+<li>在之前的基础上引入可以学习的w</li>
+<li>$f(x)&#x3D;\sum_{i&#x3D;1}^{n}softmax(-\frac{((x-x_{i})w)^2}{2})y_{i}$<br>4.总结</li>
+<li>受试者使用非自主性和自主性提示有选择性地引导注意力。前者基于突出性，后者则依赖于意识</li>
+<li>注意力机制通过注意力汇聚使选择偏向于值（感官输入），其中包含查询（自主性提示）和键（非自主性提示）。键和值是成对的</li>
+</ul>
+<h2 id="65-注意力分数"><a href="#65-注意力分数" class="headerlink" title="65 注意力分数"></a>65 注意力分数</h2><p>1.注意力分数</p>
+<ul>
+<li>![[Pasted image 20240813111010.png]]</li>
+<li>![[Pasted image 20240813111039.png]]<br>2.Additive Attention</li>
+<li>可学参数：$W_k \in \mathbb{R}^{h\times k},W_q \in \mathbb{R}^{h\times q},v \in \mathbb{R}^{h}$</li>
+<li>$a(k,q)&#x3D;v^T tanh(W_kk+W_qq)$</li>
+<li>等价于将key和query合并起来后放入到一个隐藏大小为h输出大小为1的单隐藏层MLP<br>3.Scaled Dot-Product Attention</li>
+<li>如果query和key都是同样的长度d，$a(ki,q)&#x3D;&lt;q,ki&gt;&#x2F;\sqrt{d}$</li>
+<li>分母保证对d没那么敏感<br>4.总结</li>
+<li>注意力分数是query和key的相似度，注意力权重是分数的softmax结果</li>
+</ul>
+<h2 id="66-使用注意力机制的seq2seq"><a href="#66-使用注意力机制的seq2seq" class="headerlink" title="66. 使用注意力机制的seq2seq"></a>66. 使用注意力机制的seq2seq</h2><p>1.动机</p>
+<ul>
+<li>机器翻译中，每个生成的词可能相关于源句子中不同的词，在seq2seq中源句子所有信息都被压缩在最后一个隐藏状态，引入注意力可以去关注需要的部分<br>2.加入注意力</li>
+<li>![[Pasted image 20240813152336.png]]</li>
+<li>编码器对每次词的输出作为key和value</li>
+<li>解码器RNN对上一个词的输出是query</li>
+<li>注意力的输出和下一个词的词嵌入合并进入<br>3.总结</li>
+<li>注意力机制可以根据解码器RNN的输出来匹配到合适的编码器的RNN的输出来更有效地传递信息<br>4.Bahdanau注意力</li>
+</ul>
+<h3 id="带有注意力机制的解码器基本接口"><a href="#带有注意力机制的解码器基本接口" class="headerlink" title="带有注意力机制的解码器基本接口"></a>带有注意力机制的解码器基本接口</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">AttentionDecoder</span>(d2l.Decoder):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;带有注意力机制的解码器基本接口&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, **kwargs</span>):</span><br><span class="line">        <span class="built_in">super</span>(AttentionDecoder, <span class="variable language_">self</span>).__init__(**kwargs)</span><br><span class="line"></span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">attention_weights</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">raise</span> NotImplementedError</span><br></pre></td></tr></table></figure>
+<h3 id="实现带有Bahdanau注意力的循环神经网络解码器"><a href="#实现带有Bahdanau注意力的循环神经网络解码器" class="headerlink" title="实现带有Bahdanau注意力的循环神经网络解码器"></a>实现带有Bahdanau注意力的循环神经网络解码器</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Seq2SeqAttentionDecoder</span>(<span class="title class_ inherited__">AttentionDecoder</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, vocab_size, embed_size, num_hiddens, num_layers,</span></span><br><span class="line"><span class="params">                 dropout=<span class="number">0</span>, **kwargs</span>):</span><br><span class="line">        <span class="built_in">super</span>(Seq2SeqAttentionDecoder, <span class="variable language_">self</span>).__init__(**kwargs)</span><br><span class="line">        <span class="variable language_">self</span>.attention = d2l.AdditiveAttention(</span><br><span class="line">            num_hiddens, num_hiddens, num_hiddens, dropout)</span><br><span class="line">        <span class="variable language_">self</span>.embedding = nn.Embedding(vocab_size, embed_size)</span><br><span class="line">        <span class="variable language_">self</span>.rnn = nn.GRU(</span><br><span class="line">            embed_size + num_hiddens, num_hiddens, num_layers,</span><br><span class="line">            dropout=dropout)</span><br><span class="line">        <span class="variable language_">self</span>.dense = nn.Linear(num_hiddens, vocab_size)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">init_state</span>(<span class="params">self, enc_outputs, enc_valid_lens, *args</span>):</span><br><span class="line">        <span class="comment"># outputs的形状为(batch_size，num_steps，num_hiddens).</span></span><br><span class="line">        <span class="comment"># hidden_state的形状为(num_layers，batch_size，num_hiddens)</span></span><br><span class="line">        outputs, hidden_state = enc_outputs</span><br><span class="line">        <span class="keyword">return</span> (outputs.permute(<span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>), hidden_state, enc_valid_lens)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, X, state</span>):</span><br><span class="line">        <span class="comment"># enc_outputs的形状为(batch_size,num_steps,num_hiddens).</span></span><br><span class="line">        <span class="comment"># hidden_state的形状为(num_layers,batch_size,</span></span><br><span class="line">        <span class="comment"># num_hiddens)</span></span><br><span class="line">        enc_outputs, hidden_state, enc_valid_lens = state</span><br><span class="line">        <span class="comment"># 输出X的形状为(num_steps,batch_size,embed_size)</span></span><br><span class="line">        X = <span class="variable language_">self</span>.embedding(X).permute(<span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>)</span><br><span class="line">        outputs, <span class="variable language_">self</span>._attention_weights = [], []</span><br><span class="line">        <span class="keyword">for</span> x <span class="keyword">in</span> X:</span><br><span class="line">            <span class="comment"># query的形状为(batch_size,1,num_hiddens)</span></span><br><span class="line">            query = torch.unsqueeze(hidden_state[-<span class="number">1</span>], dim=<span class="number">1</span>)</span><br><span class="line">            <span class="comment">#解码器RNN对上一个词的输出</span></span><br><span class="line">            <span class="comment"># context的形状为(batch_size,1,num_hiddens)</span></span><br><span class="line">            context = <span class="variable language_">self</span>.attention(</span><br><span class="line">                query, enc_outputs, enc_outputs, enc_valid_lens)</span><br><span class="line">            <span class="comment"># 在特征维度上连结</span></span><br><span class="line">            x = torch.cat((context, torch.unsqueeze(x, dim=<span class="number">1</span>)), dim=-<span class="number">1</span>)</span><br><span class="line">            <span class="comment"># 将x变形为(1,batch_size,embed_size+num_hiddens)</span></span><br><span class="line">            out, hidden_state = <span class="variable language_">self</span>.rnn(x.permute(<span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>), hidden_state)</span><br><span class="line">            outputs.append(out)</span><br><span class="line">            <span class="variable language_">self</span>._attention_weights.append(<span class="variable language_">self</span>.attention.attention_weights)</span><br><span class="line">        <span class="comment"># 全连接层变换后，outputs的形状为</span></span><br><span class="line">        <span class="comment"># (num_steps,batch_size,vocab_size)</span></span><br><span class="line">        outputs = <span class="variable language_">self</span>.dense(torch.cat(outputs, dim=<span class="number">0</span>))</span><br><span class="line">        <span class="keyword">return</span> outputs.permute(<span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>), [enc_outputs, hidden_state,</span><br><span class="line">                                          enc_valid_lens]</span><br><span class="line"></span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">attention_weights</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>._attention_weights</span><br></pre></td></tr></table></figure>
+<h2 id="67-自注意力"><a href="#67-自注意力" class="headerlink" title="67.自注意力"></a>67.自注意力</h2><p>1.自注意力</p>
+<ul>
+<li>给定序列x1,…,xn,xi作为key，value，query得到y1,…,yn</li>
+<li>yi&#x3D;f(xi,(x1,x1),…(xn,xn))</li>
+<li>![[Pasted image 20240813170723.png]]<br>2.对比<br>![[Pasted image 20240813170758.png]]<br>k是窗口的大小，n是序列长度，d是词向量特征维度，d^2是矩阵乘法。最长路径指信息传递。并行度是每个计算是否依赖其他的输出。n^ 2d是每次q要和n组做乘法，每个长度为d。由此可以看出，自注意力最长路径短说明他擅长看很长的序列，但反映在计算复杂度上他需要很大的计算量（n方）<br>3.位置编码</li>
+<li>跟CNN&#x2F;RNN不同，自注意力并没有记录位置信息</li>
+<li>位置编码将位置信息注入到输入里<ul>
+<li>假设长度为n的序列是：$X\in \mathbb{R}^{n\times d}$,那么使用位置编码矩阵$P\in \mathbb{R}^{n\times d}$来输出X+P作为自编码输入</li>
+</ul>
+</li>
+<li>$p_{i,2j}&#x3D;sin(\frac{i}{10000^{2j&#x2F;d}}),p_{i,2j+1}&#x3D;cos(\frac{i}{10000^{2j&#x2F;d}})$</li>
+</ul>
+<h2 id="68-Transformer"><a href="#68-Transformer" class="headerlink" title="68.Transformer"></a>68.Transformer</h2><p>1.架构<br>纯基于注意力</p>
+<ul>
+<li>编码器：多头自注意力</li>
+<li>解码器：解码器自注意力，编码器-解码器注意力<br>![[Pasted image 20240814073957.png]]<br>2.多头注意力<br>![[Pasted image 20240814074233.png]]<br>对同一key，value，query，希望抽取不同的信息（例如短距离关系和长距离关系）<br>-&gt;多头注意力使用h个独立的注意力池化，合并各个头输出得到最终输出<br>3.基于位置的前馈网络</li>
+<li>输入形状由（b,n,d）变换成（bn，d）</li>
+<li>作用于两个全连接层</li>
+<li>输出形状由（bn，d）变化回（b,n,d）</li>
+<li>等价于两层核窗口为1的一维卷积层<br>4.层归一化</li>
+<li>Add：ResNet</li>
+<li>Norm：层归一化<ul>
+<li>批量归一化对每个特征&#x2F;通道里元素进行归一化，不适合序列长度会变的NLP</li>
+<li>层归一化对每个样本里的元素进行归一化</li>
+<li>![[Pasted image 20240814094754.png]]<br>5.信息传递</li>
+</ul>
+</li>
+<li>编码器中的输出y1，…yn</li>
+<li>将其作为解码器中第i个Transformer块中多头注意力的key和value，它的query来自目标序列</li>
+<li>意味着编码器和解码器中块的个数和输出维度都是一样的<br>6.预测</li>
+<li>预测第t+1个输出时，解码器中输入前t个预测值。在自注意力中，前t个预测值作为key和value，第t个值还作为query</li>
+<li>![[Pasted image 20240814101706.png]]<br>7.代码</li>
+</ul>
+<h3 id="基于位置的前馈网络"><a href="#基于位置的前馈网络" class="headerlink" title="基于位置的前馈网络"></a>基于位置的前馈网络</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">PositionWiseFFN</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, ffn_num_input, ffn_num_hiddens, ffn_num_outputs,</span></span><br><span class="line"><span class="params">                 **kwargs</span>):</span><br><span class="line">        <span class="built_in">super</span>(PositionWiseFFN, <span class="variable language_">self</span>).__init__(**kwargs)</span><br><span class="line">        <span class="variable language_">self</span>.dense1 = nn.Linear(ffn_num_input, ffn_num_hiddens)</span><br><span class="line">        <span class="variable language_">self</span>.relu = nn.ReLU()</span><br><span class="line">        <span class="variable language_">self</span>.dense2 = nn.Linear(ffn_num_hiddens, ffn_num_outputs)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, X</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.dense2(<span class="variable language_">self</span>.relu(<span class="variable language_">self</span>.dense1(X)))</span><br></pre></td></tr></table></figure>
+<h3 id="使用残差连接和层归一化"><a href="#使用残差连接和层归一化" class="headerlink" title="使用残差连接和层归一化"></a>使用残差连接和层归一化</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">AddNorm</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, normalized_shape, dropout, **kwargs</span>):</span><br><span class="line">        <span class="built_in">super</span>(AddNorm, <span class="variable language_">self</span>).__init__(**kwargs)</span><br><span class="line">        <span class="variable language_">self</span>.dropout = nn.Dropout(dropout)</span><br><span class="line">        <span class="variable language_">self</span>.ln = nn.LayerNorm(normalized_shape)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, X, Y</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.ln(<span class="variable language_">self</span>.dropout(Y) + X)</span><br></pre></td></tr></table></figure>
+<h3 id="实现编码器中的一个层"><a href="#实现编码器中的一个层" class="headerlink" title="实现编码器中的一个层"></a>实现编码器中的一个层</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">EncoderBlock</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, key_size, query_size, value_size, num_hiddens,</span></span><br><span class="line"><span class="params">                 norm_shape, ffn_num_input, ffn_num_hiddens, num_heads,</span></span><br><span class="line"><span class="params">                 dropout, use_bias=<span class="literal">False</span>, **kwargs</span>):</span><br><span class="line">        <span class="built_in">super</span>(EncoderBlock, <span class="variable language_">self</span>).__init__(**kwargs)</span><br><span class="line">        <span class="variable language_">self</span>.attention = d2l.MultiHeadAttention(key_size, query_size,</span><br><span class="line">                                                value_size, num_hiddens,</span><br><span class="line">                                                num_heads, dropout, use_bias)</span><br><span class="line">        <span class="variable language_">self</span>.addnorm1 = AddNorm(norm_shape, dropout)</span><br><span class="line">        <span class="variable language_">self</span>.ffn = PositionWiseFFN(ffn_num_input, ffn_num_hiddens,</span><br><span class="line">                                   num_hiddens)</span><br><span class="line">        <span class="variable language_">self</span>.addnorm2 = AddNorm(norm_shape, dropout)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, X, valid_lens</span>):</span><br><span class="line">        Y = <span class="variable language_">self</span>.addnorm1(X, <span class="variable language_">self</span>.attention(X, X, X, valid_lens))</span><br><span class="line">        <span class="comment">#这里q，k，v都是自己</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.addnorm2(Y, <span class="variable language_">self</span>.ffn(Y))</span><br></pre></td></tr></table></figure>
+<h3 id="Transformer编码器"><a href="#Transformer编码器" class="headerlink" title="Transformer编码器"></a>Transformer编码器</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">TransformerEncoder</span>(d2l.Encoder):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, vocab_size, key_size, query_size, value_size,</span></span><br><span class="line"><span class="params">                 num_hiddens, norm_shape, ffn_num_input, ffn_num_hiddens,</span></span><br><span class="line"><span class="params">                 num_heads, num_layers, dropout, use_bias=<span class="literal">False</span>, **kwargs</span>):</span><br><span class="line">        <span class="built_in">super</span>(TransformerEncoder, <span class="variable language_">self</span>).__init__(**kwargs)</span><br><span class="line">        <span class="variable language_">self</span>.num_hiddens = num_hiddens</span><br><span class="line">        <span class="variable language_">self</span>.embedding = nn.Embedding(vocab_size, num_hiddens)</span><br><span class="line">        <span class="variable language_">self</span>.pos_encoding = d2l.PositionalEncoding(num_hiddens, dropout)</span><br><span class="line">        <span class="variable language_">self</span>.blks = nn.Sequential()</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(num_layers):</span><br><span class="line">            <span class="variable language_">self</span>.blks.add_module(</span><br><span class="line">                <span class="string">&quot;block&quot;</span> + <span class="built_in">str</span>(i),</span><br><span class="line">                EncoderBlock(key_size, query_size, value_size, num_hiddens,</span><br><span class="line">                             norm_shape, ffn_num_input, ffn_num_hiddens,</span><br><span class="line">                             num_heads, dropout, use_bias))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, X, valid_lens, *args</span>):</span><br><span class="line">        X = <span class="variable language_">self</span>.pos_encoding(<span class="variable language_">self</span>.embedding(X) * math.sqrt(<span class="variable language_">self</span>.num_hiddens))</span><br><span class="line">        <span class="variable language_">self</span>.attention_weights = [<span class="literal">None</span>] * <span class="built_in">len</span>(<span class="variable language_">self</span>.blks)</span><br><span class="line">        <span class="keyword">for</span> i, blk <span class="keyword">in</span> <span class="built_in">enumerate</span>(<span class="variable language_">self</span>.blks):</span><br><span class="line">            X = blk(X, valid_lens)</span><br><span class="line">            <span class="variable language_">self</span>.attention_weights[</span><br><span class="line">                i] = blk.attention.attention.attention_weights</span><br><span class="line">        <span class="keyword">return</span> X</span><br></pre></td></tr></table></figure>
+<h3 id="Transformer解码器也是由多个相同的层组成"><a href="#Transformer解码器也是由多个相同的层组成" class="headerlink" title="Transformer解码器也是由多个相同的层组成"></a>Transformer解码器也是由多个相同的层组成</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">DecoderBlock</span>(nn.Module):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;解码器中第i个块&quot;&quot;&quot;</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;类比之前使用注意力机制的seq2seq，第一个attention层相当于原来的rnn层，第二个attention层就是attention层&#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, key_size, query_size, value_size, num_hiddens,</span></span><br><span class="line"><span class="params">                 norm_shape, ffn_num_input, ffn_num_hiddens, num_heads,</span></span><br><span class="line"><span class="params">                 dropout, i, **kwargs</span>):</span><br><span class="line">        <span class="built_in">super</span>(DecoderBlock, <span class="variable language_">self</span>).__init__(**kwargs)</span><br><span class="line">        <span class="variable language_">self</span>.i = i</span><br><span class="line">        <span class="variable language_">self</span>.attention1 = d2l.MultiHeadAttention(</span><br><span class="line">            key_size, query_size, value_size, num_hiddens, num_heads, dropout)</span><br><span class="line">        <span class="variable language_">self</span>.addnorm1 = AddNorm(norm_shape, dropout)</span><br><span class="line">        <span class="variable language_">self</span>.attention2 = d2l.MultiHeadAttention(</span><br><span class="line">            key_size, query_size, value_size, num_hiddens, num_heads, dropout)</span><br><span class="line">        <span class="variable language_">self</span>.addnorm2 = AddNorm(norm_shape, dropout)</span><br><span class="line">        <span class="variable language_">self</span>.ffn = PositionWiseFFN(ffn_num_input, ffn_num_hiddens,</span><br><span class="line">                                   num_hiddens)</span><br><span class="line">        <span class="variable language_">self</span>.addnorm3 = AddNorm(norm_shape, dropout)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, X, state</span>):</span><br><span class="line">        enc_outputs, enc_valid_lens = state[<span class="number">0</span>], state[<span class="number">1</span>]</span><br><span class="line">        <span class="comment"># 训练阶段，输出序列的所有词元都在同一时间处理，q，k，v都是X</span></span><br><span class="line">        <span class="comment"># 因此state[2][self.i]初始化为None。</span></span><br><span class="line">        <span class="comment"># 预测阶段，输出序列是通过词元一个接着一个解码的，合并X和前面的输出</span></span><br><span class="line">        <span class="comment"># 因此state[2][self.i]包含着直到当前时间步第i个块解码的输出表示</span></span><br><span class="line">        <span class="keyword">if</span> state[<span class="number">2</span>][<span class="variable language_">self</span>.i] <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            key_values = X</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            key_values = torch.cat((state[<span class="number">2</span>][<span class="variable language_">self</span>.i], X), axis=<span class="number">1</span>)</span><br><span class="line">        state[<span class="number">2</span>][<span class="variable language_">self</span>.i] = key_values</span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.training:</span><br><span class="line">            batch_size, num_steps, _ = X.shape</span><br><span class="line">            <span class="comment"># dec_valid_lens的开头:(batch_size,num_steps),</span></span><br><span class="line">            <span class="comment"># 其中每一行是[1,2,...,num_steps]</span></span><br><span class="line">            dec_valid_lens = torch.arange(</span><br><span class="line">                <span class="number">1</span>, num_steps + <span class="number">1</span>, device=X.device).repeat(batch_size, <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            dec_valid_lens = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 自注意力</span></span><br><span class="line">        X2 = <span class="variable language_">self</span>.attention1(X, key_values, key_values, dec_valid_lens)</span><br><span class="line">        Y = <span class="variable language_">self</span>.addnorm1(X, X2)</span><br><span class="line">        <span class="comment"># 编码器－解码器注意力。</span></span><br><span class="line">        <span class="comment"># enc_outputs的开头:(batch_size,num_steps,num_hiddens)</span></span><br><span class="line">        Y2 = <span class="variable language_">self</span>.attention2(Y, enc_outputs, enc_outputs, enc_valid_lens)</span><br><span class="line">        Z = <span class="variable language_">self</span>.addnorm2(Y, Y2)</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.addnorm3(Z, <span class="variable language_">self</span>.ffn(Z)), state</span><br></pre></td></tr></table></figure>
+<h3 id="Transformer解码器"><a href="#Transformer解码器" class="headerlink" title="Transformer解码器"></a>Transformer解码器</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">TransformerDecoder</span>(d2l.AttentionDecoder):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, vocab_size, key_size, query_size, value_size,</span></span><br><span class="line"><span class="params">                 num_hiddens, norm_shape, ffn_num_input, ffn_num_hiddens,</span></span><br><span class="line"><span class="params">                 num_heads, num_layers, dropout, **kwargs</span>):</span><br><span class="line">        <span class="built_in">super</span>(TransformerDecoder, <span class="variable language_">self</span>).__init__(**kwargs)</span><br><span class="line">        <span class="variable language_">self</span>.num_hiddens = num_hiddens</span><br><span class="line">        <span class="variable language_">self</span>.num_layers = num_layers</span><br><span class="line">        <span class="variable language_">self</span>.embedding = nn.Embedding(vocab_size, num_hiddens)</span><br><span class="line">        <span class="variable language_">self</span>.pos_encoding = d2l.PositionalEncoding(num_hiddens, dropout)</span><br><span class="line">        <span class="variable language_">self</span>.blks = nn.Sequential()</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(num_layers):</span><br><span class="line">            <span class="variable language_">self</span>.blks.add_module(<span class="string">&quot;block&quot;</span>+<span class="built_in">str</span>(i),</span><br><span class="line">                DecoderBlock(key_size, query_size, value_size, num_hiddens,</span><br><span class="line">                             norm_shape, ffn_num_input, ffn_num_hiddens,</span><br><span class="line">                             num_heads, dropout, i))</span><br><span class="line">        <span class="variable language_">self</span>.dense = nn.Linear(num_hiddens, vocab_size)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">init_state</span>(<span class="params">self, enc_outputs, enc_valid_lens, *args</span>):</span><br><span class="line">        <span class="keyword">return</span> [enc_outputs, enc_valid_lens, [<span class="literal">None</span>] * <span class="variable language_">self</span>.num_layers]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, X, state</span>):</span><br><span class="line">        X = <span class="variable language_">self</span>.pos_encoding(<span class="variable language_">self</span>.embedding(X) * math.sqrt(<span class="variable language_">self</span>.num_hiddens))</span><br><span class="line">        <span class="variable language_">self</span>._attention_weights = [[<span class="literal">None</span>] * <span class="built_in">len</span>(<span class="variable language_">self</span>.blks) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span> (<span class="number">2</span>)]</span><br><span class="line">        <span class="keyword">for</span> i, blk <span class="keyword">in</span> <span class="built_in">enumerate</span>(<span class="variable language_">self</span>.blks):</span><br><span class="line">            X, state = blk(X, state)</span><br><span class="line">            <span class="comment"># 解码器自注意力权重</span></span><br><span class="line">            <span class="variable language_">self</span>._attention_weights[<span class="number">0</span>][</span><br><span class="line">                i] = blk.attention1.attention.attention_weights</span><br><span class="line">            <span class="comment"># “编码器－解码器”自注意力权重</span></span><br><span class="line">            <span class="variable language_">self</span>._attention_weights[<span class="number">1</span>][</span><br><span class="line">                i] = blk.attention2.attention.attention_weights</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.dense(X), state</span><br><span class="line"></span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">attention_weights</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>._attention_weights</span><br></pre></td></tr></table></figure>
+<h1 id="第十四章-自然语言处理：预训练"><a href="#第十四章-自然语言处理：预训练" class="headerlink" title="第十四章 自然语言处理：预训练"></a>第十四章 自然语言处理：预训练</h1><h2 id="69-BERT预训练"><a href="#69-BERT预训练" class="headerlink" title="69 BERT预训练"></a>69 BERT预训练</h2><p>1.NLP里的迁移学习</p>
+<ul>
+<li>使用预训练好的模型来抽取词、句子的特征<ul>
+<li>例如word2vec或语言模型</li>
+</ul>
+</li>
+<li>不更新预训练好的模型</li>
+<li>需要构建新的网络来抓取新任务需要的信息<ul>
+<li>word2vec忽略了时序信息，语言模型只看了一个方向<br>2.BERT的动机</li>
+</ul>
+</li>
+<li>基于微调的NLP模型</li>
+<li>预训练的模型抽取了足够多的信息</li>
+<li>新的任务只需要增加一个简单的输出层<br>3.BERT架构</li>
+<li>只有编码器的Transformer</li>
+<li>两个版本：<ul>
+<li>Base：blocks&#x3D;12，hidden size&#x3D;768，heads&#x3D;12，parameters&#x3D;110M</li>
+<li>Large：blocks&#x3D;24，hidden size&#x3D;1024，heads&#x3D;16，parameters&#x3D;340M</li>
+</ul>
+</li>
+<li>在大规模数据上训练&gt;3B词<br>4.对输入的修改</li>
+<li>因为只有编码器，所以source和target都得给编码器</li>
+<li>每个样本是一个句子对</li>
+<li>加入额外的片段嵌入，用segment embedding分隔</li>
+<li>位置编码可学习，每个token有一个position embedding</li>
+<li>![[Pasted image 20240815091740.png]]<br>5.预训练任务1：带掩码的语言模型</li>
+<li>Transformer的编码器是双向的，标准语言模型要求单向</li>
+<li>带掩码的语言模型每次随机（15%概率）将一些词元换成mask，这样Transformer的编码器仍然可以做双向，相当于完形填空</li>
+<li>因为微调任务中不会出现mask，所以预训练中<ul>
+<li>80%概率，将选中的词元变成mask</li>
+<li>10%概率，换成一个随机词元</li>
+<li>10%概率，保持原有的词元<br>6.预训练任务2：下一个句子预测</li>
+</ul>
+</li>
+<li>预测一个句子对中两个句子是否相邻</li>
+<li>训练样本中：50%概率选择相邻句子对，50%概率选择随机句子对</li>
+<li>将cls对应输出放到一个全连接层预测<br>7.代码</li>
+</ul>
+<h3 id="Input-Representation"><a href="#Input-Representation" class="headerlink" title="Input Representation"></a>Input Representation</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">get_tokens_and_segments</span>(<span class="params">tokens_a, tokens_b=<span class="literal">None</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Get tokens of the BERT input sequence and their segment IDs.&quot;&quot;&quot;</span></span><br><span class="line">    tokens = [<span class="string">&#x27;&lt;cls&gt;&#x27;</span>] + tokens_a + [<span class="string">&#x27;&lt;sep&gt;&#x27;</span>]</span><br><span class="line">    segments = [<span class="number">0</span>] * (<span class="built_in">len</span>(tokens_a) + <span class="number">2</span>)</span><br><span class="line">    <span class="keyword">if</span> tokens_b <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">        tokens += tokens_b + [<span class="string">&#x27;&lt;sep&gt;&#x27;</span>]</span><br><span class="line">        segments += [<span class="number">1</span>] * (<span class="built_in">len</span>(tokens_b) + <span class="number">1</span>)</span><br><span class="line">    <span class="keyword">return</span> tokens, segments</span><br></pre></td></tr></table></figure>
+<h3 id="BERTEncoder-class"><a href="#BERTEncoder-class" class="headerlink" title="BERTEncoder class"></a>BERTEncoder class</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">BERTEncoder</span>(nn.Module):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;BERT encoder.&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, vocab_size, num_hiddens, norm_shape, ffn_num_input,</span></span><br><span class="line"><span class="params">                 ffn_num_hiddens, num_heads, num_layers, dropout,</span></span><br><span class="line"><span class="params">                 max_len=<span class="number">1000</span>, key_size=<span class="number">768</span>, query_size=<span class="number">768</span>, value_size=<span class="number">768</span>,</span></span><br><span class="line"><span class="params">                 **kwargs</span>):</span><br><span class="line">        <span class="built_in">super</span>(BERTEncoder, <span class="variable language_">self</span>).__init__(**kwargs)</span><br><span class="line">        <span class="variable language_">self</span>.token_embedding = nn.Embedding(vocab_size, num_hiddens)</span><br><span class="line">        <span class="variable language_">self</span>.segment_embedding = nn.Embedding(<span class="number">2</span>, num_hiddens)</span><br><span class="line">        <span class="variable language_">self</span>.blks = nn.Sequential()</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(num_layers):</span><br><span class="line">            <span class="variable language_">self</span>.blks.add_module(<span class="string">f&quot;<span class="subst">&#123;i&#125;</span>&quot;</span>, d2l.EncoderBlock(</span><br><span class="line">                key_size, query_size, value_size, num_hiddens, norm_shape,</span><br><span class="line">                ffn_num_input, ffn_num_hiddens, num_heads, dropout, <span class="literal">True</span>))</span><br><span class="line">        <span class="variable language_">self</span>.pos_embedding = nn.Parameter(torch.randn(<span class="number">1</span>, max_len,</span><br><span class="line">                                                      num_hiddens))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, tokens, segments, valid_lens</span>):</span><br><span class="line">        X = <span class="variable language_">self</span>.token_embedding(tokens) + <span class="variable language_">self</span>.segment_embedding(segments)</span><br><span class="line">        X = X + <span class="variable language_">self</span>.pos_embedding.data[:, :X.shape[<span class="number">1</span>], :]</span><br><span class="line">        <span class="keyword">for</span> blk <span class="keyword">in</span> <span class="variable language_">self</span>.blks:</span><br><span class="line">            X = blk(X, valid_lens)</span><br><span class="line">        <span class="keyword">return</span> X</span><br></pre></td></tr></table></figure>
+<h3 id="Masked-Language-Modeling"><a href="#Masked-Language-Modeling" class="headerlink" title="Masked Language Modeling"></a>Masked Language Modeling</h3><p>把要预测的位置的词所对应的encoder的输出拿到这里来预测位置的值</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MaskLM</span>(nn.Module):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;The masked language model task of BERT.&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, vocab_size, num_hiddens, num_inputs=<span class="number">768</span>, **kwargs</span>):</span><br><span class="line">        <span class="built_in">super</span>(MaskLM, <span class="variable language_">self</span>).__init__(**kwargs)</span><br><span class="line">        <span class="variable language_">self</span>.mlp = nn.Sequential(nn.Linear(num_inputs, num_hiddens),</span><br><span class="line">                                 nn.ReLU(),</span><br><span class="line">                                 nn.LayerNorm(num_hiddens),</span><br><span class="line">                                 nn.Linear(num_hiddens, vocab_size))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, X, pred_positions</span>):</span><br><span class="line">        num_pred_positions = pred_positions.shape[<span class="number">1</span>]</span><br><span class="line">        pred_positions = pred_positions.reshape(-<span class="number">1</span>)</span><br><span class="line">        batch_size = X.shape[<span class="number">0</span>]</span><br><span class="line">        batch_idx = torch.arange(<span class="number">0</span>, batch_size)</span><br><span class="line">        batch_idx = torch.repeat_interleave(batch_idx, num_pred_positions)</span><br><span class="line">        masked_X = X[batch_idx, pred_positions]</span><br><span class="line">        masked_X = masked_X.reshape((batch_size, num_pred_positions, -<span class="number">1</span>))</span><br><span class="line">        mlm_Y_hat = <span class="variable language_">self</span>.mlp(masked_X)</span><br><span class="line">        <span class="keyword">return</span> mlm_Y_hat</span><br></pre></td></tr></table></figure>
+<h3 id="Next-Sentence-Prediction"><a href="#Next-Sentence-Prediction" class="headerlink" title="Next Sentence Prediction"></a>Next Sentence Prediction</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">NextSentencePred</span>(nn.Module):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;The next sentence prediction task of BERT.&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, num_inputs, **kwargs</span>):</span><br><span class="line">        <span class="built_in">super</span>(NextSentencePred, <span class="variable language_">self</span>).__init__(**kwargs)</span><br><span class="line">        <span class="variable language_">self</span>.output = nn.Linear(num_inputs, <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, X</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.output(X)</span><br></pre></td></tr></table></figure>
+<h3 id="Putting-All-Things-Together"><a href="#Putting-All-Things-Together" class="headerlink" title="Putting All Things Together"></a>Putting All Things Together</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">BERTModel</span>(nn.Module):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;The BERT model.&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, vocab_size, num_hiddens, norm_shape, ffn_num_input,</span></span><br><span class="line"><span class="params">                 ffn_num_hiddens, num_heads, num_layers, dropout,</span></span><br><span class="line"><span class="params">                 max_len=<span class="number">1000</span>, key_size=<span class="number">768</span>, query_size=<span class="number">768</span>, value_size=<span class="number">768</span>,</span></span><br><span class="line"><span class="params">                 hid_in_features=<span class="number">768</span>, mlm_in_features=<span class="number">768</span>,</span></span><br><span class="line"><span class="params">                 nsp_in_features=<span class="number">768</span></span>):</span><br><span class="line">        <span class="built_in">super</span>(BERTModel, <span class="variable language_">self</span>).__init__()</span><br><span class="line">        <span class="variable language_">self</span>.encoder = BERTEncoder(vocab_size, num_hiddens, norm_shape,</span><br><span class="line">                    ffn_num_input, ffn_num_hiddens, num_heads, num_layers,</span><br><span class="line">                    dropout, max_len=max_len, key_size=key_size,</span><br><span class="line">                    query_size=query_size, value_size=value_size)</span><br><span class="line">        <span class="variable language_">self</span>.hidden = nn.Sequential(nn.Linear(hid_in_features, num_hiddens),</span><br><span class="line">                                    nn.Tanh())</span><br><span class="line">        <span class="variable language_">self</span>.mlm = MaskLM(vocab_size, num_hiddens, mlm_in_features)</span><br><span class="line">        <span class="variable language_">self</span>.nsp = NextSentencePred(nsp_in_features)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, tokens, segments, valid_lens=<span class="literal">None</span>, pred_positions=<span class="literal">None</span></span>):</span><br><span class="line">        encoded_X = <span class="variable language_">self</span>.encoder(tokens, segments, valid_lens)</span><br><span class="line">        <span class="keyword">if</span> pred_positions <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            mlm_Y_hat = <span class="variable language_">self</span>.mlm(encoded_X, pred_positions)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            mlm_Y_hat = <span class="literal">None</span></span><br><span class="line">        nsp_Y_hat = <span class="variable language_">self</span>.nsp(<span class="variable language_">self</span>.hidden(encoded_X[:, <span class="number">0</span>, :]))</span><br><span class="line">        <span class="keyword">return</span> encoded_X, mlm_Y_hat, nsp_Y_hat</span><br></pre></td></tr></table></figure>
+<h1 id="第十五章-自然语言处理：应用"><a href="#第十五章-自然语言处理：应用" class="headerlink" title="第十五章 自然语言处理：应用"></a>第十五章 自然语言处理：应用</h1><h2 id="70-BERT-微调"><a href="#70-BERT-微调" class="headerlink" title="70 BERT 微调"></a>70 BERT 微调</h2><ol>
+<li></li>
+</ol>
+<ul>
+<li>BERT对每一个词元返回抽取了上下文信息的特征向量</li>
+<li>不同的任务使用不同的特征</li>
+<li>![[Pasted image 20240815120301.png]]<br>2.句子分类</li>
+<li>将cls对应的向量输入到全连接层分类</li>
+<li>![[Pasted image 20240815120632.png]]<br>3.命名实体识别</li>
+<li>识别一个词元是不是命名实体，例如人名、机构、位置</li>
+<li>将非特殊词元放进全连接层分类</li>
+<li>![[Pasted image 20240815123809.png]]<br>4.问题回答</li>
+<li>给定一个问题，和描述文字，找出一个片段作为回答</li>
+<li>对片段中的每个词元预测它是不是回答的开头和结尾（三分类问题）</li>
+<li>![[Pasted image 20240815124119.png]]</li>
+<li>前面是问题，后面是描述</li>
+</ul>
+<h1 id="第十一章-优化算法"><a href="#第十一章-优化算法" class="headerlink" title="第十一章 优化算法"></a>第十一章 优化算法</h1><p>1.优化问题</p>
+<ul>
+<li>一般形式：minimize f（x） subject to x $\in$C<br>2.局部最小vs全局最小</li>
+<li>迭代算法一般只能找到局部最小<br>3.凸集</li>
+<li>$\alpha x+(1-\alpha)y\in C \forall\alpha\in [0,1]\forall x,y\in C$</li>
+<li>![[Pasted image 20240815152102.png]]<br>4.凸函数</li>
+<li>$f(\alpha x+(1-\alpha)y)\leqslant \alpha f(x)+(1-\alpha)f(y)\in C \forall\alpha\in [0,1]\forall x,y\in C$</li>
+<li>![[Pasted image 20240815152457.png]]<br>5.凸函数优化</li>
+<li>如果代价函数f是凸的，且限制集合c是凸的，那么就是凸优化问题，那么局部最小就是全局最小</li>
+<li>严格凸优化问题有唯一的全局最小<br>6.例子</li>
+<li>凸：线性回归，sofmax</li>
+<li>非凸：其他：MLP,CNN,RNN,attention<br>7.冲量法</li>
+<li>不会一下很猛地改变很多，因为每次改变的方向不仅取决于当前的梯度，还却决于之前的梯度</li>
+<li>![[Pasted image 20240815153733.png]]<br>8.Adam</li>
+<li>对学习率不那么敏感，非常平滑</li>
+<li>$v_t&#x3D;\beta_1v_{t-1}+(1-\beta_1)g_t,\beta_1&#x3D;0.9$</li>
+<li>$v_t&#x3D;(1-\beta_1)(g_t+\beta_1g_{t-1}+\beta_1^2g_{t-2}+\beta_1^3g_{t-3}+…)$</li>
+<li>无穷等比求和（betan次方）-&gt;权重和为（1-beta）1&#x2F;（1-beta）&#x3D;1</li>
+<li>$\sum_{i&#x3D;0}^{t}\beta_1^i&#x3D;\frac{1-\beta_1^t}{1-\beta_1}$-&gt;在t比较小时修正$\hat{v_t}&#x3D;\frac{v_t}{1-\beta_1^t}$</li>
+<li>$s_t&#x3D;\beta_2s_{t-1}+(1-\beta_2)g_t^2,\beta_2&#x3D;0.999$</li>
+<li>在t比较小时修正$\hat{v_t}&#x3D;\frac{v_t}{1-\beta_2^t}$</li>
+<li>计算重新调整后的梯度$g_t’&#x3D;\frac{\hat{v_t}}{\sqrt{\hat{s_t}}+\epsilon}$，分子是使得变化比较平滑，分母是和分子制衡，使得不同维度梯度变化差不多，不会让太大的影响比较小的</li>
+<li>最后用这个梯度更新</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://silkyfinish.github.io/2024/09/14/%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.avif">
+      <meta itemprop="name" content="SilkyFinish">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SilkyFinish">
+      <meta itemprop="description" content="冲天香阵透长安，满城尽带黄金甲">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | SilkyFinish">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/09/14/%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" class="post-title-link" itemprop="url">循环神经网络</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2024-09-14 17:29:28 / Modified: 17:31:56" itemprop="dateCreated datePublished" datetime="2024-09-14T17:29:28+08:00">2024-09-14</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="第八章-循环神经网络"><a href="#第八章-循环神经网络" class="headerlink" title="第八章 循环神经网络"></a>第八章 循环神经网络</h1><h2 id="8-1-序列模型"><a href="#8-1-序列模型" class="headerlink" title="8.1 序列模型"></a>8.1 序列模型</h2><p>1.很多数据具有时序结构<br>2.统计工具</p>
+<ul>
+<li>在时间t观察到$x_t$,得到T个不独立的随机变量（$x_1,…x_T$)~p(<strong>x</strong>）</li>
+<li>p(<strong>x</strong>）&#x3D;p（x1)p(x2|x1)p(x3|x1,x2)…p(xT|x1,…xT-1)</li>
+<li>p(<strong>x</strong>）&#x3D;p（xT)p(xT-1|xT)p(xT-2|xT-1,xT-2)…p(x1|x1,…xT-1)</li>
+<li>对条件概率建模：p(xt|x1…xt-1)&#x3D;p(xt|f(x1…xt-1)),对见过的数据建模，也称自回归模型<br>3.方案A 马尔可夫假设</li>
+<li>假设当前数据只和$\tau$个过去数据点相关</li>
+<li>p(xt|x1…xt-1)&#x3D;p(xt|xt-$\tau$…xt-1)&#x3D;p(xt|f(xt-$\tau$…xt-1)),例如在过去数据上训练MLP模型</li>
+<li>$\tau$&#x3D;1时，得到一阶马尔可夫模型， p(<strong>x</strong>）&#x3D;$\Pi$p(xt|xt-1)<br>4.方案B 潜变量模型</li>
+<li>潜变量ht&#x3D;f(x1…xt-1)-&gt;xt&#x3D;p（xt|ht）</li>
+<li>![[Pasted image 20240806115112.png]]</li>
+</ul>
+<h2 id="8-2-文本预处理"><a href="#8-2-文本预处理" class="headerlink" title="8.2 文本预处理"></a>8.2 文本预处理</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> collections</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">from</span> d2l <span class="keyword">import</span> torch <span class="keyword">as</span> d2l</span><br></pre></td></tr></table></figure>
+<h3 id="将数据集读取到由文本行组成的列表中"><a href="#将数据集读取到由文本行组成的列表中" class="headerlink" title="将数据集读取到由文本行组成的列表中"></a>将数据集读取到由文本行组成的列表中</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">d2l.DATA_HUB[<span class="string">&#x27;time_machine&#x27;</span>] = (d2l.DATA_URL + <span class="string">&#x27;timemachine.txt&#x27;</span>,</span><br><span class="line">                                <span class="string">&#x27;090b5e7e70c295757f55df93cb0a180b9691891a&#x27;</span>)</span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;读取一本书&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">read_time_machine</span>():  </span><br><span class="line">    <span class="string">&quot;&quot;&quot;Load the time machine dataset into a list of text lines.&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(d2l.download(<span class="string">&#x27;time_machine&#x27;</span>), <span class="string">&#x27;r&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        lines = f.readlines()</span><br><span class="line">    <span class="keyword">return</span> [re.sub(<span class="string">&#x27;[^A-Za-z]+&#x27;</span>, <span class="string">&#x27; &#x27;</span>, line).strip().lower() <span class="keyword">for</span> line <span class="keyword">in</span> lines]</span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;把不是字母和空格的都变成空格&#x27;&#x27;&#x27;</span></span><br><span class="line">lines = read_time_machine()</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&#x27;</span></span><br><span class="line"><span class="string">print(lines[0])</span></span><br><span class="line"><span class="string">print(lines[10])</span></span><br></pre></td></tr></table></figure>
+<p>text lines: 3221<br>the time machine by h g wells<br>twinkled and his usually pale face was flushed and animated the</p>
+<h3 id="每个文本序列被拆分成一个标记列表"><a href="#每个文本序列被拆分成一个标记列表" class="headerlink" title="每个文本序列被拆分成一个标记列表"></a>每个文本序列被拆分成一个标记列表</h3><p>文本行列表lines-文本序列line-词元列表tokens-词元token</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">tokenize</span>(<span class="params">lines, token=<span class="string">&#x27;word&#x27;</span></span>):  </span><br><span class="line">    <span class="string">&quot;&quot;&quot;将文本行拆分为单词或字符标记。&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> token == <span class="string">&#x27;word&#x27;</span>:</span><br><span class="line">        <span class="keyword">return</span> [line.split() <span class="keyword">for</span> line <span class="keyword">in</span> lines]</span><br><span class="line">    <span class="keyword">elif</span> token == <span class="string">&#x27;char&#x27;</span>:</span><br><span class="line">        <span class="keyword">return</span> [<span class="built_in">list</span>(line) <span class="keyword">for</span> line <span class="keyword">in</span> lines]</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;错误：未知令牌类型：&#x27;</span> + token)</span><br><span class="line"></span><br><span class="line">tokens = tokenize(lines)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">11</span>):</span><br><span class="line">    <span class="built_in">print</span>(tokens[i])</span><br></pre></td></tr></table></figure>
+<p>[‘the’, ‘time’, ‘machine’, ‘by’, ‘h’, ‘g’, ‘wells’]<br>[]<br>[]<br>[]<br>[]<br>[‘i’]<br>[]<br>[]<br>[‘the’, ‘time’, ‘traveller’, ‘for’, ‘so’, ‘it’, ‘will’, ‘be’, ‘convenient’, ‘to’, ‘speak’, ‘of’, ‘him’]<br>[‘was’, ‘expounding’, ‘a’, ‘recondite’, ‘matter’, ‘to’, ‘us’, ‘his’, ‘grey’, ‘eyes’, ‘shone’, ‘and’]<br>[‘twinkled’, ‘and’, ‘his’, ‘usually’, ‘pale’, ‘face’, ‘was’, ‘flushed’, ‘and’, ‘animated’, ‘the’]</p>
+<h3 id="构建一个字典，通常也叫做-词表-（vocabulary），用来将字符串标记映射到从0开始的数字索引中"><a href="#构建一个字典，通常也叫做-词表-（vocabulary），用来将字符串标记映射到从0开始的数字索引中" class="headerlink" title="构建一个字典，通常也叫做_词表_（vocabulary），用来将字符串标记映射到从0开始的数字索引中"></a>构建一个字典，通常也叫做_词表_（vocabulary），用来将字符串标记映射到从0开始的数字索引中</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Vocab</span>:  </span><br><span class="line">    <span class="string">&quot;&quot;&quot;文本词表&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, tokens=<span class="literal">None</span>, min_freq=<span class="number">0</span>, reserved_tokens=<span class="literal">None</span></span>):</span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;如果某个词出现次数小于min_freq，就不要了；保存那些被保留的词元， 例如：填充词元（“&lt;pad&gt;”）； 序列开始词元（“&lt;bos&gt;”）； 序列结束词元（“&lt;eos&gt;”）&#x27;&#x27;&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> tokens <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            tokens = []</span><br><span class="line">        <span class="keyword">if</span> reserved_tokens <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            reserved_tokens = []</span><br><span class="line">        counter = count_corpus(tokens)</span><br><span class="line">        <span class="variable language_">self</span>.token_freqs = <span class="built_in">sorted</span>(counter.items(), key=<span class="keyword">lambda</span> x: x[<span class="number">1</span>],</span><br><span class="line">                                  reverse=<span class="literal">True</span>)<span class="string">&#x27;&#x27;&#x27;频率排序&#x27;&#x27;&#x27;</span></span><br><span class="line">        <span class="variable language_">self</span>.unk<span class="string">&#x27;&#x27;&#x27;unknown记为0&#x27;&#x27;&#x27;</span>, uniq_tokens = <span class="number">0</span>, [<span class="string">&#x27;&lt;unk&gt;&#x27;</span>] + reserved_tokens</span><br><span class="line">        uniq_tokens += [</span><br><span class="line">            token <span class="keyword">for</span> token, freq <span class="keyword">in</span> <span class="variable language_">self</span>.token_freqs</span><br><span class="line">            <span class="keyword">if</span> freq &gt;= min_freq <span class="keyword">and</span> token <span class="keyword">not</span> <span class="keyword">in</span> uniq_tokens]</span><br><span class="line">        <span class="variable language_">self</span>.idx_to_token, <span class="variable language_">self</span>.token_to_idx = [], <span class="built_in">dict</span>()<span class="string">&#x27;&#x27;&#x27;下标和token相互转换&#x27;&#x27;&#x27;</span></span><br><span class="line">        <span class="keyword">for</span> token <span class="keyword">in</span> uniq_tokens:</span><br><span class="line">            <span class="variable language_">self</span>.idx_to_token.append(token)</span><br><span class="line">            <span class="variable language_">self</span>.token_to_idx[token] = <span class="built_in">len</span>(<span class="variable language_">self</span>.idx_to_token) - <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__len__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">len</span>(<span class="variable language_">self</span>.idx_to_token)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__getitem__</span>(<span class="params">self, tokens</span>):<span class="string">&#x27;&#x27;&#x27;token-&gt;index，返回index&#x27;&#x27;&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> <span class="built_in">isinstance</span>(tokens, (<span class="built_in">list</span>, <span class="built_in">tuple</span>)):</span><br><span class="line">            <span class="keyword">return</span> <span class="variable language_">self</span>.token_to_idx.get(tokens, <span class="variable language_">self</span>.unk)</span><br><span class="line">        <span class="keyword">return</span> [<span class="variable language_">self</span>.__getitem__(token) <span class="keyword">for</span> token <span class="keyword">in</span> tokens]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">to_tokens</span>(<span class="params">self, indices</span>):<span class="string">&#x27;&#x27;&#x27;index-&gt;token，返回token&#x27;&#x27;&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> <span class="built_in">isinstance</span>(indices, (<span class="built_in">list</span>, <span class="built_in">tuple</span>)):</span><br><span class="line">            <span class="keyword">return</span> <span class="variable language_">self</span>.idx_to_token[indices]</span><br><span class="line">        <span class="keyword">return</span> [<span class="variable language_">self</span>.idx_to_token[index] <span class="keyword">for</span> index <span class="keyword">in</span> indices]</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">count_corpus</span>(<span class="params">tokens</span>):  </span><br><span class="line">    <span class="string">&quot;&quot;&quot;统计标记的频率。&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(tokens) == <span class="number">0</span> <span class="keyword">or</span> <span class="built_in">isinstance</span>(tokens[<span class="number">0</span>], <span class="built_in">list</span>):</span><br><span class="line">        tokens = [token <span class="keyword">for</span> line <span class="keyword">in</span> tokens <span class="keyword">for</span> token <span class="keyword">in</span> line]</span><br><span class="line">    <span class="keyword">return</span> collections.Counter(tokens)</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="构建词汇表"><a href="#构建词汇表" class="headerlink" title="构建词汇表"></a>构建词汇表</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vocab = Vocab(tokens)</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">list</span>(vocab.token_to_idx.items())[:<span class="number">10</span>])</span><br></pre></td></tr></table></figure>
+<p>[(‘unk’, 0), (‘the’, 1), (‘i’, 2), (‘and’, 3), (‘of’, 4), (‘a’, 5), (‘to’, 6), (‘was’, 7), (‘in’, 8), (‘that’, 9)]</p>
+<h3 id="将每一行文本转换成一个数字索引列表"><a href="#将每一行文本转换成一个数字索引列表" class="headerlink" title="将每一行文本转换成一个数字索引列表"></a>将每一行文本转换成一个数字索引列表</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> [<span class="number">0</span>, <span class="number">10</span>]:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;words:&#x27;</span>, tokens[i])</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;indices:&#x27;</span>, vocab[tokens[i]])</span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;当编写_getitem_方法并包含在你的类中时，python解释器会在实例上使用方括号自动调用方法&#x27;&#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>words: [‘the’, ‘time’, ‘machine’, ‘by’, ‘h’, ‘g’, ‘wells’]<br>indices: [1, 19, 50, 40, 2183, 2184, 400]<br>words: [‘twinkled’, ‘and’, ‘his’, ‘usually’, ‘pale’, ‘face’, ‘was’, ‘flushed’, ‘and’, ‘animated’, ‘the’]<br>indices: [2186, 3, 25, 1044, 362, 113, 7, 1421, 3, 1045, 1]</p>
+<h3 id="将所有内容打包到load-corpus-time-machine函数中"><a href="#将所有内容打包到load-corpus-time-machine函数中" class="headerlink" title="将所有内容打包到load_corpus_time_machine函数中"></a>将所有内容打包到<code>load_corpus_time_machine</code>函数中</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">load_corpus_time_machine</span>(<span class="params">max_tokens=-<span class="number">1</span></span>):  </span><br><span class="line">    <span class="string">&quot;&quot;&quot;返回时光机器数据集的标记索引列表和词汇表。&quot;&quot;&quot;</span></span><br><span class="line">    lines = read_time_machine()</span><br><span class="line">    tokens = tokenize(lines, <span class="string">&#x27;char&#x27;</span>)</span><br><span class="line">    vocab = Vocab(tokens)<span class="string">&#x27;&#x27;&#x27;对应字典&#x27;&#x27;&#x27;</span></span><br><span class="line">    corpus = [vocab[token] <span class="keyword">for</span> line <span class="keyword">in</span> tokens <span class="keyword">for</span> token <span class="keyword">in</span> line]<span class="string">&#x27;&#x27;&#x27;每一个单词(这里是字母)的数字&#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">if</span> max_tokens &gt; <span class="number">0</span>:</span><br><span class="line">        corpus = corpus[:max_tokens]</span><br><span class="line">    <span class="keyword">return</span> corpus, vocab</span><br><span class="line"></span><br><span class="line">corpus, vocab = load_corpus_time_machine()</span><br><span class="line"><span class="built_in">len</span>(corpus), <span class="built_in">len</span>(vocab)</span><br></pre></td></tr></table></figure>
+<p>(170580, 28) 28&#x3D;16+ukn+空格</p>
+<h2 id="8-3-语言模型"><a href="#8-3-语言模型" class="headerlink" title="8.3 语言模型"></a>8.3 语言模型</h2><p>1.给定文本序列x1-xT，语言模型的目标是估计联合概率p（x1-xT）<br>2.使用计数来建模</p>
+<ul>
+<li>假设序列长度为2，$p(x,x’)&#x3D;p(x)p(x’|x)&#x3D;\frac{n(x)}{n}\frac{n(x,x’)}{n(x)}$,n是语料库中的总词数，n（x），n（x，x’）是单个单词和连续单词对的出现次数<br>3.N元语法</li>
+<li>当序列很长时，因为文本量不够大，很可能n（x1-xT）&lt;&#x3D;1</li>
+<li>使用马尔可夫假设<ul>
+<li>一元语法：$p(x_1,x_2,x_3,x_4)&#x3D;p(x_1)p(x_2)p(x_3)p(x_4)&#x3D;\frac{n(x_1)}{n}\frac{n(x_2)}{n}\frac{n(x_3)}{n}\frac{n(x_4)}{n}$</li>
+<li>一元语法：$p(x_1,x_2,x_3,x_4)&#x3D;p(x_1)p(x_2|x_1)p(x_3|x_2)p(x_4|x_3)&#x3D;\frac{n(x_1)}{n}\frac{n(x_1,x_2)}{x_1}\frac{n(x_2,x_3)}{x_2}\frac{n(x_3,x_4)}{x_3}$<br>4.代码<br>1.F1:随机地生成一个小批量数据的特征和标签以供读取。 在随机采样中，每个样本都是在原始的长序列上任意捕获的子序列<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">seq_data_iter_random</span>(<span class="params">corpus, batch_size, num_steps<span class="string">&#x27;&#x27;&#x27;tau&#x27;&#x27;&#x27;</span></span>):  </span><br><span class="line">    <span class="string">&quot;&quot;&quot;使用随机抽样生成一个小批量子序列。&quot;&quot;&quot;</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;不同于8.1中的遍历每个都需要用很多次，这个是把总长切成n份，然后一个epoch就n份都过一遍。每个epoch开始的起点都是从0~tau中随机取，这样份就不会重复&#x27;&#x27;&#x27;</span></span><br><span class="line">    corpus = corpus[random.randint(<span class="number">0</span>, num_steps - <span class="number">1</span>):]</span><br><span class="line">    num_subseqs = (<span class="built_in">len</span>(corpus) - <span class="number">1</span>) // num_steps</span><br><span class="line">    initial_indices = <span class="built_in">list</span>(<span class="built_in">range</span>(<span class="number">0</span>, num_subseqs * num_steps, num_steps))<span class="string">&#x27;&#x27;&#x27;每个子序列开始的下标&#x27;&#x27;&#x27;</span></span><br><span class="line">    random.shuffle(initial_indices)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">data</span>(<span class="params">pos</span>):</span><br><span class="line">        <span class="keyword">return</span> corpus[pos:pos + num_steps]</span><br><span class="line"></span><br><span class="line">    num_batches = num_subseqs // batch_size<span class="string">&#x27;&#x27;&#x27;在n段里面取batch&#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, batch_size * num_batches, batch_size):</span><br><span class="line">        initial_indices_per_batch = initial_indices[i:i + batch_size]<span class="string">&#x27;&#x27;&#x27;取了batch size个开始的下标&#x27;&#x27;&#x27;</span></span><br><span class="line">        X = [data(j) <span class="keyword">for</span> j <span class="keyword">in</span> initial_indices_per_batch]<span class="string">&#x27;&#x27;&#x27;生成batch size个段&#x27;&#x27;&#x27;</span></span><br><span class="line">        Y = [data(j + <span class="number">1</span>) <span class="keyword">for</span> j <span class="keyword">in</span> initial_indices_per_batch]</span><br><span class="line">        <span class="keyword">yield</span> torch.tensor(X), torch.tensor(Y)</span><br></pre></td></tr></table></figure>
+2.F2:保证两个相邻的小批量中的子序列在原始序列上也是相邻的</li>
+</ul>
+</li>
+</ul>
+<h2 id="8-4-循环神经网络"><a href="#8-4-循环神经网络" class="headerlink" title="8.4 循环神经网络"></a>8.4 循环神经网络</h2><p>1.![[Pasted image 20240807153154.png]]<br>更新隐藏状态：$h_t&#x3D;\phi(W_{hh}h_{t-1}+W_{hx}x_{t-1}+b_h)$ (去掉$W_{hh}h_{t-1}$就是MLP)<br>$o_t&#x3D;W_{ho}h_{t}+b_o$<br>![[Pasted image 20240807153448.png]]<br>![[Pasted image 20240807153946.png]]<br>2.困惑度 perplexity</p>
+<ul>
+<li>衡量一个语言模型的好坏可以用平均交叉熵$\pi&#x3D;\frac{1}{n}\sum_{i&#x3D;1}^{n}-logp(x_t|x_{t-1},…)$ 其中p是语言模型预测的概率，xt是真实词</li>
+<li>NLP使用困惑度exp（pi）来衡量，1表示完美，无穷大是最差情况<br>3.梯度裁剪</li>
+<li>迭代中计算T个时间步上的梯度，在反向传播中产生长度为O（T）的矩阵乘法链，导致数值不稳定</li>
+<li>梯度裁剪能有效预防梯度爆炸<ul>
+<li>如果梯度长度超过$\theta$,那么将拖回$\theta$：$g\leftarrow min(1,\frac{\theta}{\lVert g\rVert})g$<br>4.其他应用<br>  ![[Pasted image 20240807183941.png]]<br>5.由于在当前时间步中， 隐状态使用的定义与前一个时间步中使用的定义相同， 因此 $h_t&#x3D;\phi(W_{hh}h_{t-1}+W_{hx}x_{t-1}+b_h)$的计算是循环的</li>
+</ul>
+</li>
+</ul>
+<h2 id="8-5-循环神经网络的从零开始实现"><a href="#8-5-循环神经网络的从零开始实现" class="headerlink" title="8.5 循环神经网络的从零开始实现"></a>8.5 循环神经网络的从零开始实现</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">%matplotlib inline</span><br><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> nn</span><br><span class="line"><span class="keyword">from</span> torch.nn <span class="keyword">import</span> functional <span class="keyword">as</span> F</span><br><span class="line"><span class="keyword">from</span> d2l <span class="keyword">import</span> torch <span class="keyword">as</span> d2l</span><br><span class="line"></span><br><span class="line">batch_size, num_steps = <span class="number">32</span>, <span class="number">35</span></span><br><span class="line">train_iter, vocab = d2l.load_data_time_machine(batch_size, num_steps)</span><br></pre></td></tr></table></figure>
+<h3 id="独热编码"><a href="#独热编码" class="headerlink" title="独热编码"></a>独热编码</h3><p>给一个下标，用向量来表示<br>将每个索引映射为相互不同的单位向量： 假设词表中不同词元的数目为N（即<code>len(vocab)</code>）， 词元索引的范围为0到N−1。 如果词元的索引是整数i， 那么我们将创建一个长度为N的全0向量， 并将第i处的元素设置为1。 此向量是原始词元的一个独热向量</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">F.one_hot(torch.tensor([<span class="number">0</span>, <span class="number">2</span>]), <span class="built_in">len</span>(vocab))</span><br></pre></td></tr></table></figure>
+<p>tensor([[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,<br>         0, 0, 0, 0],<br>        [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,<br>         0, 0, 0, 0]])</p>
+<h3 id="小批量形状是-批量大小-时间步数"><a href="#小批量形状是-批量大小-时间步数" class="headerlink" title="小批量形状是(批量大小, 时间步数)"></a>小批量形状是(批量大小, 时间步数)</h3><p>转置的目的：使我们能够更方便地通过最外层的维度， 一步一步地更新小批量数据的隐状态</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">X = torch.arange(<span class="number">10</span>).reshape((<span class="number">2</span>, <span class="number">5</span>))</span><br><span class="line">F.one_hot(X.T, <span class="number">28</span>).shape</span><br></pre></td></tr></table></figure>
+<p>torch.Size([5, 2, 28])</p>
+<h3 id="初始化循环神经网络模型的模型参数"><a href="#初始化循环神经网络模型的模型参数" class="headerlink" title="初始化循环神经网络模型的模型参数"></a>初始化循环神经网络模型的模型参数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">get_params</span>(<span class="params">vocab_size, num_hiddens, device</span>):</span><br><span class="line">    num_inputs = num_outputs = vocab_size</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">normal</span>(<span class="params">shape</span>):</span><br><span class="line">        <span class="keyword">return</span> torch.randn(size=shape, device=device) * <span class="number">0.01</span></span><br><span class="line"></span><br><span class="line">    W_xh = normal((num_inputs, num_hiddens))</span><br><span class="line">    W_hh = normal((num_hiddens, num_hiddens))</span><br><span class="line">    b_h = torch.zeros(num_hiddens, device=device)</span><br><span class="line">    W_hq = normal((num_hiddens, num_outputs))</span><br><span class="line">    b_q = torch.zeros(num_outputs, device=device)</span><br><span class="line">    params = [W_xh, W_hh, b_h, W_hq, b_q]</span><br><span class="line">    <span class="keyword">for</span> param <span class="keyword">in</span> params:</span><br><span class="line">        param.requires_grad_(<span class="literal">True</span>)</span><br><span class="line">    <span class="keyword">return</span> params</span><br></pre></td></tr></table></figure>
+<h3 id="一个init-rnn-state函数在初始化时返回隐藏状态"><a href="#一个init-rnn-state函数在初始化时返回隐藏状态" class="headerlink" title="一个init_rnn_state函数在初始化时返回隐藏状态"></a>一个<code>init_rnn_state</code>函数在初始化时返回隐藏状态</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">init_rnn_state</span>(<span class="params">batch_size, num_hiddens, device</span>):</span><br><span class="line">    <span class="keyword">return</span> (torch.zeros((batch_size, num_hiddens), device=device),)</span><br></pre></td></tr></table></figure>
+<h3 id="下面的rnn函数定义了如何在一个时间步计算隐藏状态和输出"><a href="#下面的rnn函数定义了如何在一个时间步计算隐藏状态和输出" class="headerlink" title="下面的rnn函数定义了如何在一个时间步计算隐藏状态和输出"></a>下面的<code>rnn</code>函数定义了如何在一个时间步计算隐藏状态和输出</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">rnn</span>(<span class="params">inputs, state, params</span>):</span><br><span class="line">    W_xh, W_hh, b_h, W_hq, b_q = params</span><br><span class="line">    H, = state</span><br><span class="line">    outputs = []</span><br><span class="line">    <span class="keyword">for</span> X <span class="keyword">in</span> inputs:</span><br><span class="line">        H = torch.tanh(torch.mm(X, W_xh) + torch.mm(H, W_hh) + b_h)</span><br><span class="line">        Y = torch.mm(H, W_hq) + b_q</span><br><span class="line">        outputs.append(Y)</span><br><span class="line">    <span class="keyword">return</span> torch.cat(outputs, dim=<span class="number">0</span>), (H,)</span><br></pre></td></tr></table></figure>
+<h3 id="创建一个类来包装这些函数"><a href="#创建一个类来包装这些函数" class="headerlink" title="创建一个类来包装这些函数"></a>创建一个类来包装这些函数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">RNNModelScratch</span>:  </span><br><span class="line">    <span class="string">&quot;&quot;&quot;从零开始实现的循环神经网络模型&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, vocab_size, num_hiddens, device, get_params,</span></span><br><span class="line"><span class="params">                 init_state, forward_fn</span>):</span><br><span class="line">        <span class="variable language_">self</span>.vocab_size, <span class="variable language_">self</span>.num_hiddens = vocab_size, num_hiddens</span><br><span class="line">        <span class="variable language_">self</span>.params = get_params(vocab_size, num_hiddens, device)</span><br><span class="line">        <span class="variable language_">self</span>.init_state, <span class="variable language_">self</span>.forward_fn = init_state, forward_fn</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__call__</span>(<span class="params">self, X, state</span>):</span><br><span class="line">        X = F.one_hot(X.T, <span class="variable language_">self</span>.vocab_size).<span class="built_in">type</span>(torch.float32)</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.forward_fn(X, state, <span class="variable language_">self</span>.params)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">begin_state</span>(<span class="params">self, batch_size, device</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.init_state(batch_size, <span class="variable language_">self</span>.num_hiddens, device)</span><br></pre></td></tr></table></figure>
+<h3 id="检查输出是否具有正确的形状"><a href="#检查输出是否具有正确的形状" class="headerlink" title="检查输出是否具有正确的形状"></a>检查输出是否具有正确的形状</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">num_hiddens = <span class="number">512</span></span><br><span class="line">net = RNNModelScratch(<span class="built_in">len</span>(vocab), num_hiddens, d2l.try_gpu(), get_params,</span><br><span class="line">                      init_rnn_state, rnn)</span><br><span class="line">state = net.begin_state(X.shape[<span class="number">0</span>], d2l.try_gpu())</span><br><span class="line">Y, new_state = net(X.to(d2l.try_gpu()), state)</span><br><span class="line">Y.shape, <span class="built_in">len</span>(new_state), new_state[<span class="number">0</span>].shape</span><br></pre></td></tr></table></figure>
+<p>(torch.Size([10, 28]), 1, torch.Size([2, 512]))</p>
+<h3 id="首先定义预测函数来生成用户提供的prefix之后的新字符"><a href="#首先定义预测函数来生成用户提供的prefix之后的新字符" class="headerlink" title="首先定义预测函数来生成用户提供的prefix之后的新字符"></a>首先定义预测函数来生成用户提供的<code>prefix</code>之后的新字符</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">predict_ch8</span>(<span class="params">prefix, num_preds, net, vocab, device</span>):  </span><br><span class="line">    <span class="string">&quot;&quot;&quot;在`prefix`后面生成新字符。&quot;&quot;&quot;</span></span><br><span class="line">    state = net.begin_state(batch_size=<span class="number">1</span>, device=device)</span><br><span class="line">    outputs = [vocab[prefix[<span class="number">0</span>]]]</span><br><span class="line">    get_input = <span class="keyword">lambda</span>: torch.tensor([outputs[-<span class="number">1</span>]], device=device).reshape(</span><br><span class="line">        (<span class="number">1</span>, <span class="number">1</span>))</span><br><span class="line">    <span class="keyword">for</span> y <span class="keyword">in</span> prefix[<span class="number">1</span>:]:</span><br><span class="line">        _, state = net(get_input(), state)</span><br><span class="line">        outputs.append(vocab[y])</span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(num_preds):</span><br><span class="line">        y, state = net(get_input(), state)</span><br><span class="line">        outputs.append(<span class="built_in">int</span>(y.argmax(dim=<span class="number">1</span>).reshape(<span class="number">1</span>)))</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;&#x27;</span>.join([vocab.idx_to_token[i] <span class="keyword">for</span> i <span class="keyword">in</span> outputs])</span><br><span class="line"></span><br><span class="line">predict_ch8(<span class="string">&#x27;time traveller &#x27;</span>, <span class="number">10</span>, net, vocab, d2l.try_gpu())</span><br></pre></td></tr></table></figure>
+<h3 id="梯度裁剪"><a href="#梯度裁剪" class="headerlink" title="梯度裁剪"></a>梯度裁剪</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">grad_clipping</span>(<span class="params">net, theta</span>):  </span><br><span class="line">    <span class="string">&quot;&quot;&quot;裁剪梯度。&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">isinstance</span>(net, nn.Module):</span><br><span class="line">        params = [p <span class="keyword">for</span> p <span class="keyword">in</span> net.parameters() <span class="keyword">if</span> p.requires_grad]</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        params = net.params</span><br><span class="line">    norm = torch.sqrt(<span class="built_in">sum</span>(torch.<span class="built_in">sum</span>((p.grad**<span class="number">2</span>)) <span class="keyword">for</span> p <span class="keyword">in</span> params))</span><br><span class="line">    <span class="keyword">if</span> norm &gt; theta:</span><br><span class="line">        <span class="keyword">for</span> param <span class="keyword">in</span> params:</span><br><span class="line">            param.grad[:] *= theta / norm</span><br></pre></td></tr></table></figure>
+<h3 id="定义一个函数来训练只有一个迭代周期的模型"><a href="#定义一个函数来训练只有一个迭代周期的模型" class="headerlink" title="定义一个函数来训练只有一个迭代周期的模型"></a>定义一个函数来训练只有一个迭代周期的模型</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">train_epoch_ch8</span>(<span class="params">net, train_iter, loss, updater, device, use_random_iter</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;训练模型一个迭代周期（定义见第8章）。&quot;&quot;&quot;</span></span><br><span class="line">    state, timer = <span class="literal">None</span>, d2l.Timer()</span><br><span class="line">    metric = d2l.Accumulator(<span class="number">2</span>)</span><br><span class="line">    <span class="keyword">for</span> X, Y <span class="keyword">in</span> train_iter:</span><br><span class="line">        <span class="keyword">if</span> state <span class="keyword">is</span> <span class="literal">None</span> <span class="keyword">or</span> use_random_iter:</span><br><span class="line">            state = net.begin_state(batch_size=X.shape[<span class="number">0</span>], device=device)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">isinstance</span>(net, nn.Module) <span class="keyword">and</span> <span class="keyword">not</span> <span class="built_in">isinstance</span>(state, <span class="built_in">tuple</span>):</span><br><span class="line">                state.detach_()</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">for</span> s <span class="keyword">in</span> state:</span><br><span class="line">                    s.detach_()</span><br><span class="line">        y = Y.T.reshape(-<span class="number">1</span>)</span><br><span class="line">        X, y = X.to(device), y.to(device)</span><br><span class="line">        y_hat, state = net(X, state)</span><br><span class="line">        l = loss(y_hat, y.long()).mean()</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">isinstance</span>(updater, torch.optim.Optimizer):</span><br><span class="line">            updater.zero_grad()</span><br><span class="line">            l.backward()</span><br><span class="line">            grad_clipping(net, <span class="number">1</span>)</span><br><span class="line">            updater.step()</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            l.backward()</span><br><span class="line">            grad_clipping(net, <span class="number">1</span>)</span><br><span class="line">            updater(batch_size=<span class="number">1</span>)</span><br><span class="line">        metric.add(l * y.numel(), y.numel())</span><br><span class="line">    <span class="keyword">return</span> math.exp(metric[<span class="number">0</span>] / metric[<span class="number">1</span>]), metric[<span class="number">1</span>] / timer.stop()</span><br></pre></td></tr></table></figure>
+<h3 id="训练函数支持从零开始或使用高级API实现的循环神经网络模型"><a href="#训练函数支持从零开始或使用高级API实现的循环神经网络模型" class="headerlink" title="训练函数支持从零开始或使用高级API实现的循环神经网络模型"></a>训练函数支持从零开始或使用高级API实现的循环神经网络模型</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">train_ch8</span>(<span class="params">net, train_iter, vocab, lr, num_epochs, device,</span></span><br><span class="line"><span class="params">              use_random_iter=<span class="literal">False</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;训练模型（定义见第8章）。&quot;&quot;&quot;</span></span><br><span class="line">    loss = nn.CrossEntropyLoss()</span><br><span class="line">    animator = d2l.Animator(xlabel=<span class="string">&#x27;epoch&#x27;</span>, ylabel=<span class="string">&#x27;perplexity&#x27;</span>,</span><br><span class="line">                            legend=[<span class="string">&#x27;train&#x27;</span>], xlim=[<span class="number">10</span>, num_epochs])</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">isinstance</span>(net, nn.Module):</span><br><span class="line">        updater = torch.optim.SGD(net.parameters(), lr)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        updater = <span class="keyword">lambda</span> batch_size: d2l.sgd(net.params, lr, batch_size)</span><br><span class="line">    predict = <span class="keyword">lambda</span> prefix: predict_ch8(prefix, <span class="number">50</span>, net, vocab, device)</span><br><span class="line">    <span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(num_epochs):</span><br><span class="line">        ppl, speed = train_epoch_ch8(net, train_iter, loss, updater, device,</span><br><span class="line">                                     use_random_iter)</span><br><span class="line">        <span class="keyword">if</span> (epoch + <span class="number">1</span>) % <span class="number">10</span> == <span class="number">0</span>:</span><br><span class="line">            <span class="built_in">print</span>(predict(<span class="string">&#x27;time traveller&#x27;</span>))</span><br><span class="line">            animator.add(epoch + <span class="number">1</span>, [ppl])</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;困惑度 <span class="subst">&#123;ppl:<span class="number">.1</span>f&#125;</span>, <span class="subst">&#123;speed:<span class="number">.1</span>f&#125;</span> 标记/秒 <span class="subst">&#123;<span class="built_in">str</span>(device)&#125;</span>&#x27;</span>)</span><br><span class="line">    <span class="built_in">print</span>(predict(<span class="string">&#x27;time traveller&#x27;</span>))</span><br><span class="line">    <span class="built_in">print</span>(predict(<span class="string">&#x27;traveller&#x27;</span>))</span><br></pre></td></tr></table></figure>
+<h2 id="8-6-循环神经网络的简洁实现"><a href="#8-6-循环神经网络的简洁实现" class="headerlink" title="8.6 循环神经网络的简洁实现"></a>8.6 循环神经网络的简洁实现</h2><h1 id="第九章-现代循环神经网络"><a href="#第九章-现代循环神经网络" class="headerlink" title="第九章 现代循环神经网络"></a>第九章 现代循环神经网络</h1><h2 id="9-1-门控循环单元GRU"><a href="#9-1-门控循环单元GRU" class="headerlink" title="9.1 门控循环单元GRU"></a>9.1 门控循环单元GRU</h2><p>1.不是所有观察值同等重要-&gt;只记住相关的观察需要</p>
+<ul>
+<li>能关注的机制：更新门</li>
+<li>能遗忘的机制：重置门<br>2.门<br>$\sigma$是sigmoid<br>![[Pasted image 20240810094730.png]]<br>候选隐藏状态<br>![[Pasted image 20240810101658.png]]<br>Rt可以学习，sigmoid介于0-1之间，0就忘了过去的Ht，只和Xt有关，1就过去的Ht全留着，和正常的隐藏状态一样<br>![[Pasted image 20240810103722.png]]<br>Zt可以学习，sigmoid介于0-1之间，0就拿来候选Ht（调整过的，用了<br>Xt），1就直接用上一个Ht，和新输入Xt没有关系<br>3.门控循环单元具有以下两个显著特征：</li>
+<li>重置门有助于捕获序列中的短期依赖关系</li>
+<li>更新门有助于捕获序列中的长期依赖关系</li>
+</ul>
+<h2 id="9-2-长短期记忆网络LSTM"><a href="#9-2-长短期记忆网络LSTM" class="headerlink" title="9.2 长短期记忆网络LSTM"></a>9.2 长短期记忆网络LSTM</h2><ol>
+<li></li>
+</ol>
+<ul>
+<li>忘记门：将值朝0减少</li>
+<li>输入门：决定是否忽略掉输入数据</li>
+<li>输出门：决定是不是使用隐状态<br>2.![[Pasted image 20240810160325.png]]<br>![[Pasted image 20240810160348.png]]<br>![[Pasted image 20240810160512.png]]<br>![[Pasted image 20240810161453.png]]<br>只要输出门接近1，我们就能够有效地将所有记忆信息传递给预测部分， 而对于输出门接近0，我们只保留记忆元内的所有信息，而不需要更新隐状态。（只有隐状态才会传递到输出层， 而记忆元Ct不直接参与输出计算）</li>
+</ul>
+<h2 id="9-3-深度循环神经网络"><a href="#9-3-深度循环神经网络" class="headerlink" title="9.3 深度循环神经网络"></a>9.3 深度循环神经网络</h2><p>![[Pasted image 20240810171115.png]]</p>
+<h2 id="9-4-双向循环神经网络"><a href="#9-4-双向循环神经网络" class="headerlink" title="9.4 双向循环神经网络"></a>9.4 双向循环神经网络</h2><p>1.RNN只看过去，但我们也可以看未来（完形填空）<br>![[Pasted image 20240810175227.png]]<br>2.总结：</p>
+<ul>
+<li>双向循环神经网络通过反向更新的隐藏层来利用反向时间信息</li>
+<li>通常用来对序列抽取特征、填空，而不是预测未来（推理）</li>
+</ul>
+<h2 id="9-5-机器翻译与数据集"><a href="#9-5-机器翻译与数据集" class="headerlink" title="9.5 机器翻译与数据集"></a>9.5 机器翻译与数据集</h2><ul>
+<li>下载和预处理数据集</li>
+<li>几个预处理步骤</li>
+<li>词元化</li>
+<li>词汇表</li>
+<li>序列样本都有一个固定的长度 截断或填充文本序列</li>
+<li>转换成小批量数据集用于训练</li>
+<li>训练模型</li>
+</ul>
+<h2 id="9-6-编码器-解码器架构"><a href="#9-6-编码器-解码器架构" class="headerlink" title="9.6 编码器-解码器架构"></a>9.6 编码器-解码器架构</h2><p>1.CNN</p>
+<ul>
+<li>编码器：将输入编程成中间表达形式（特征）</li>
+<li>解码器：将中间表示解码输出</li>
+<li>![[Pasted image 20240811150033.png]]<br>2.RNN</li>
+<li>编码器：将文本表示成向量</li>
+<li>解码器：向量表示成输出</li>
+<li>![[Pasted image 20240811150238.png]]<br>3.架构</li>
+<li>编码器处理输入</li>
+<li>解码器处理输出</li>
+<li>![[Pasted image 20240811163952.png]]</li>
+</ul>
+<h2 id="9-7-序列到序列学习seq2seq"><a href="#9-7-序列到序列学习seq2seq" class="headerlink" title="9.7 序列到序列学习seq2seq"></a>9.7 序列到序列学习seq2seq</h2><p>1.seq2seq<br>![[Pasted image 20240811170434.png]]</p>
+<ul>
+<li>编码器是一个RNN，读取输入句子（可以是双向）</li>
+<li>解码器使用另外一个RNN来输出<br>2.细节</li>
+<li>编码器是没有输出的RNN</li>
+<li>编码器最后时间步的隐藏状态用作解码器的初始隐藏状态</li>
+<li>![[Pasted image 20240811170122.png]]<br>3.训练<br>训练时解码器使用目标句子作为输入<br>![[Pasted image 20240811170524.png]]<br>4.衡量生成的好坏：BLEU</li>
+<li>pn是预测中所有n-gram的精度<ul>
+<li>e.g.:标签序列A B C D E F 和预测序列A B B C D</li>
+<li>p1&#x3D;4&#x2F;5，预测序列中五个只有第二个B没有出现</li>
+<li>p2&#x3D;3&#x2F;4，预测序列中四个2元，BB没出现</li>
+<li>p3&#x3D;1&#x2F;3，p4&#x3D;0</li>
+</ul>
+</li>
+<li>BLEU：<ul>
+<li>$exp(min(0,1-\frac{len_{label}}{len_{pred}}))\prod_{n&#x3D;1}^{k}p_{n}^{1&#x2F;2^{n}}$</li>
+<li>if len label&gt; len pred,后一项为负，那么exp负数就变成很小的数了，BLEU越大越好，最大就是exp0&#x3D;1，所以min用来惩罚过短的预测</li>
+<li>后面的连乘 pn&lt;1所以n越大这个乘积越大，即长匹配有高权重</li>
+</ul>
+</li>
+</ul>
+<h2 id="9-8-束搜索"><a href="#9-8-束搜索" class="headerlink" title="9.8 束搜索"></a>9.8 束搜索</h2><p>1.贪心搜索</p>
+<ul>
+<li>在seq2seq中使用了贪心搜索来预测序列，即将当前时刻预测概率最大的词输出</li>
+<li>但贪心并不一定最优</li>
+<li>e.g.![[Pasted image 20240811210943.png]]<br>2.穷举搜索</li>
+<li>最优算法：对所有可能的序列，计算概率，选取最好的</li>
+<li>但计算上不可行<br>3.束搜索</li>
+<li>保存最好的k个候选</li>
+<li>在每个时刻，对每个候选新加一项（n种可能），在kn中选出最好的k个</li>
+<li>e.g.![[Pasted image 20240811211711.png]]</li>
+<li>![[Pasted image 20240811211916.png]]</li>
+<li>长句子的概率越低，为了避免每次都只找短的，所以前面乘了一个东西，L是长度，越长，分母越大，这个玩意儿越小，而log出来是负数，所以整体值越大，相当于对长句子做了补偿</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://silkyfinish.github.io/2024/09/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.avif">
+      <meta itemprop="name" content="SilkyFinish">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SilkyFinish">
+      <meta itemprop="description" content="冲天香阵透长安，满城尽带黄金甲">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | SilkyFinish">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/09/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/" class="post-title-link" itemprop="url">计算机视觉</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2024-09-14 17:28:55 / Modified: 17:31:31" itemprop="dateCreated datePublished" datetime="2024-09-14T17:28:55+08:00">2024-09-14</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="第十二章-计算性能"><a href="#第十二章-计算性能" class="headerlink" title="第十二章 计算性能"></a>第十二章 计算性能</h1><h2 id="31-深度学习硬件-CPU和GPU"><a href="#31-深度学习硬件-CPU和GPU" class="headerlink" title="31 深度学习硬件: CPU和GPU"></a>31 深度学习硬件: CPU和GPU</h2><p>![[Pasted image 20240730090134.png]]<br>1.提升CPU利用率</p>
+<ul>
+<li>提升空间和时间的内存本地性<ul>
+<li>时间：重用数据使得保持它们再缓存里</li>
+<li>空间：按序读写数据使得可以预读取</li>
+</ul>
+</li>
+<li>并行来利用所有核<br>![[Pasted image 20240730092200.png]]<br>2.提升GPU利用率</li>
+<li>并行<ul>
+<li>使用数千个线程</li>
+</ul>
+</li>
+<li>内存本地性<ul>
+<li>缓存更小，架构更简单</li>
+</ul>
+</li>
+<li>少用控制语句<ul>
+<li>支持有限</li>
+<li>同步开销大<br>3.不要频繁在CPU和GPU之间传输数据：带宽限制，同步开销<br>4.总结</li>
+</ul>
+</li>
+<li>CPU：可以处理通用计算。性能优化考虑数据读写效率和多线程</li>
+<li>GPU：使用更多的小核和更好的内存带宽，适合能大规模并行的计算任务</li>
+</ul>
+<h2 id="32-深度学习硬件-TPU和其他"><a href="#32-深度学习硬件-TPU和其他" class="headerlink" title="32 深度学习硬件: TPU和其他"></a>32 深度学习硬件: TPU和其他</h2><p>1.DSP：数字信号处理</p>
+<ul>
+<li>为数字信号处理算法设计：点积，卷积，FFT<br>2.FPGA:可编程阵列</li>
+<li>有大量可以编程逻辑单元和可配置的连接<br>3.AI ASIC</li>
+<li>大公司自己的芯片 e.g.Google TPU</li>
+<li>核心：systolic array<ul>
+<li>![[Pasted image 20240730095741.png]]</li>
+<li>计算单元（PE）阵列，特别适合做矩阵乘法<br>4.总结<br>![[Pasted image 20240730102926.png]]</li>
+</ul>
+</li>
+</ul>
+<h2 id="33-单机多卡并行"><a href="#33-单机多卡并行" class="headerlink" title="33 单机多卡并行"></a>33 单机多卡并行</h2><p>1.将小批量计算分到多个GPU上</p>
+<ul>
+<li>数据并行![[Pasted image 20240730140404.png]]</li>
+<li>模型并行</li>
+<li>通道并行（数据+模型）</li>
+</ul>
+<h2 id="34-多GPU训练实现"><a href="#34-多GPU训练实现" class="headerlink" title="34 多GPU训练实现"></a>34 多GPU训练实现</h2><h2 id="35-分布式计算"><a href="#35-分布式计算" class="headerlink" title="35 分布式计算"></a>35 分布式计算</h2><p>![[Pasted image 20240730135630.png]]<br>![[Pasted image 20240730135832.png]]<br>1.计算每一个小批量<br>![[Pasted image 20240730140705.png]]</p>
+<ul>
+<li>每个计算服务器读取小批量中的一块</li>
+<li>进一步将数据切分到每个GPU上</li>
+<li>每个worker从参数服务器那里获取模型参数</li>
+<li>复制参数到每个GPU上</li>
+<li>每个GPU计算精度</li>
+<li>将所有GPU上的梯度求和</li>
+<li>梯度传回服务器，每个服务器对梯度求和并更新参数<br>2.同步SGD：n个GPU，每个每次处理b个样本，同步SGD等价于单GPU运行批量大小为nb的SGD-&gt;也即得到相对单个的n倍加速<br>3.性能的权衡<br>![[Pasted image 20240730143449.png]]<br>批量大小增加导致需要更多计算来得到给定的模型精度</li>
+</ul>
+<h1 id="第十三章-计算机视觉"><a href="#第十三章-计算机视觉" class="headerlink" title="第十三章 计算机视觉"></a>第十三章 计算机视觉</h1><h2 id="13-1-图像增广"><a href="#13-1-图像增广" class="headerlink" title="13.1 图像增广"></a>13.1 图像增广</h2><p>1.数据增强：增加一个已有数据集。使得有更多的多样性</p>
+<ul>
+<li>在语音里加入各种不同的背景噪音</li>
+<li>改变图片的颜色和形状<br>2.类型：</li>
+<li>翻转：上下、左右</li>
+<li>切割：然后变形到固定形状<ul>
+<li>随机高宽比</li>
+<li>随机大小</li>
+<li>随机位置</li>
+</ul>
+</li>
+<li>颜色：色调、饱和度、明亮度、对比度<br>3.总结：数据增广通过变形数据来获取多样性从而使得模型泛化性能更好</li>
+</ul>
+<h2 id="13-2-微调"><a href="#13-2-微调" class="headerlink" title="13.2 微调"></a>13.2 微调</h2><p>1.网络架构<br>![[Pasted image 20240730163834.png]]<br>一个神经网络一般可以分成两块：</p>
+<ul>
+<li>特征抽取将原始像素变成容易线性分割的特征</li>
+<li>线性分类器来做分类<br>2.![[Pasted image 20240730182158.png]]<br>源模型的特征抽取部分可能仍可以对目标模型进行特征抽取，当然线性分类器用不了了了<br>-&gt;预训练的模型的特征抽取部分可以复制给目标模型，然后微调即可使用，输出层就只能从头训练了（随机初始化）<br>即：迁移学习，微调（fine-tuning)是其中一个常用技巧<br>3.训练：使用更小的学习率和更少的数据迭代（更强的正则化）<br>源数据集远复杂与目标数据集的话通常微调效果会更好，有助于泛化<br>4.trick</li>
+<li>重用分类器权重<ul>
+<li>源数据集可能也有目标数据中的部分符号-&gt;可以使用预训练好的模型分类器中对应标号对应的向量来做初始化</li>
+</ul>
+</li>
+<li>固定一些层<ul>
+<li>神经网络学习有层次的特征：低层次的特征更加通用，高层次的特征更跟数据集相关-&gt;可以固定底部一些层的参数不参与更新（更强的正则）</li>
+</ul>
+</li>
+<li>对特征提取部分学习率用小一点，对线性分类层学习率用大的（乘以10）<br>5.总结：微调通过使用在大数据上得到的预训练好的模型来初始化权重来完成提升精度-&gt;<br>预训模型质量很是重要，微调通常速度更快精度更高<br>6.代码：调用net时加上pretrained&#x3D;True</li>
+</ul>
+<h2 id="13-3-目标检测和边界框"><a href="#13-3-目标检测和边界框" class="headerlink" title="13.3 目标检测和边界框"></a>13.3 目标检测和边界框</h2><p>1.边缘框(bounding box)：四个数字定义</p>
+<ul>
+<li>（左上x，左上y，右上x，右上y）</li>
+<li>（左上x，左上y，宽，高）<br> 2.目标检测数据集<br> 图片文件名，物体类别，边缘框<br> 3.总结：物体检测识别图片里面的多个物体的类别和位置，位置通常用边缘框表示</li>
+</ul>
+<h2 id="13-4-锚框"><a href="#13-4-锚框" class="headerlink" title="13.4 锚框"></a>13.4 锚框</h2><p>1.一类目标检测算法基于锚框（anchor box)：</p>
+<ul>
+<li>提出多个被称为锚框的区域（边缘框）</li>
+<li>预测每个锚框是否含有关注的物体</li>
+<li>如果是，基于此预测从这个锚框到真实边缘框的偏移<br>2.IoU-交并比：用来计算两个框之间的相似度<br>0~1.0：无重叠，1：重合<br>![[Pasted image 20240731123551.png]]<br>3.赋予锚框标号（每个锚框是一个训练样本）：</li>
+<li>标注成背景</li>
+<li>关联上一个真实边缘框</li>
+<li>![[Pasted image 20240731125745.png]]<br>4.使用非极大值抑制（NMS）输出</li>
+<li>每个锚框预测一个边缘框，而NMS可以合并相似的预测</li>
+<li>1.选中非背景类（不是背景是物体）的最大预测值（softmax回归，概率最大值），即计算每个类别的预测概率，最大的概率p所对应的类别就是预测的类别</li>
+<li>2.去掉其他所有和这个被选中的的IoU值大于$\theta$的预测</li>
+<li>3.重复上述过程直到所有预测要么被选中要么被去掉<br>5.总结</li>
+<li>首先生成大量锚框，并赋予编号，每个锚框作为一个样本来进行训练</li>
+<li>在预测的时候，使用NMS来去掉冗余的预测<br>6.代码实现<br><strong>以每一个像素为中心，生成不同高宽的锚框</strong><br>锚框的宽度和高度分别是$w\sqrt{s}\sqrt{r}$和$h\sqrt{s}&#x2F;\sqrt{r}$。我们只考虑组合：<br>$(s_1,r_1),(s_1,r_2),…,(s_1,r_m),(s_2,r_1),(s_3,r_1),…,(s_n,r_1)$<br>其中w’、h’是锚框的宽和高，w、h是图片的宽和高，s是锚框的大小（占图片大小的百分比），r是锚框的宽高比与图片的宽高比之比<br>$w\times\sqrt\frac{size\ of\ box}{size\ of\ picture}\times\sqrt{\frac{w’}{h’}&#x2F;\frac{w}{h}}&#x3D;w\times\sqrt{\frac{h’\times w’}{h\times w}}\times\sqrt\frac{w’\times h}{h’\times w}&#x3D;w’$</li>
+</ul>
+<p><strong>训练</strong>流程：<br>训练数据集是带有ground truth bounding box和class的，就像图片分类的带有class一样</p>
+<ul>
+<li>用上述算法，<strong>生成许多锚框</strong>。(这里是对每个pixel作用）<ul>
+<li>multibox_prior(data,sizes,ratios)-&gt;Y(批量大小，锚框的数量，4）（1，图片像素数x（s+r-1），4个坐标量）</li>
+</ul>
+</li>
+<li>用ground truth 框（真实边界框）去标记所有1中生成的锚框(对应代码中的multibox_targe函数）           标记方法：计算所有锚框和ground-truth的IoU值，<strong>给每一个锚框分配一个真实边界框</strong>（小于阈值的为背景，大于的选一个最接近的ground-truth），即用最近的那个标记，详见3.<ul>
+<li>assign_anchor_to_bbox(ground_truth, anchors, device, iou_threshold&#x3D;0.5)-&gt;anchors_bbox_map</li>
+</ul>
+</li>
+<li><strong>标注类别</strong>：锚框的类别与被分配的真实边界框的类别相同</li>
+<li><strong>标注偏移量</strong>：对刚刚标记好的所有锚框预测偏移量(offset)（背景类偏移量为零（负类）新类别的整数索引递增一，对应offset_boxes函数） ![[Pasted image 20240731183316.png]]<ul>
+<li>offset_boxes(anchors, assigned_bb, eps&#x3D;1e-6)-&gt;offset</li>
+<li>multibox_target(anchors, labels（真实边框）)-&gt;(bbox_offset, bbox_mask, class_labels)</li>
+<li>返回的第二个元素是掩码（mask）变量，形状为（批量大小，锚框数的四倍）。 掩码变量中的元素与每个锚框的4个偏移量一一对应。 由于我们不关心对背景的检测，负类的偏移量不应影响目标函数。 通过元素乘法，掩码变量中的零将在计算目标函数之前过滤掉负类偏移量。</li>
+</ul>
+</li>
+<li>一个预测好的边界框根据其中某个带有预测偏移量的锚框生成-&gt;offset_inverse函数，该函数将锚框和偏移量预测作为输入，并应用逆偏移变换来返回预测的边界框坐标。<ul>
+<li>offset_inverse(anchors, offset_preds)-&gt;predicted_bbox</li>
+</ul>
+</li>
+<li>用<strong>NMS</strong>合并属于同一目标的类似的预测边界框（选）（挑一个预测最好的，然后把没我预测的好，但是和我预测的很近的框框删掉）<ul>
+<li>multibox_detection(cls_probs(预测的概率), offset_preds, anchors, nms_threshold&#x3D;0.5,pos_threshold&#x3D;0.009999999)-&gt;torch.stack(out)</li>
+<li>我们可以看到返回结果的形状是（批量大小，锚框的数量，6）。 最内层维度中的六个元素提供了同一预测边界框的输出信息。 第一个元素是预测的类索引，从0开始（0代表狗，1代表猫），值-1表示背景或在非极大值抑制中被移除了。 第二个元素是预测的边界框的置信度。 其余四个元素分别是预测边界框左上角和右下角的(x,y)轴坐标（范围介于0和1之间）</li>
+<li>tensor([[[ 0.00,  0.90,  0.10,  0.08,  0.52,  0.92],<br>   [ 1.00,  0.90,  0.55,  0.20,  0.90,  0.88],<br>   [-1.00,  0.80,  0.08,  0.20,  0.56,  0.95],<br>   [-1.00,  0.70,  0.15,  0.30,  0.62,  0.91]]])</li>
+</ul>
+</li>
+<li>最终得到 每一个 对象或物体 的 一个 最终预测边界框</li>
+</ul>
+<h2 id="13-5-多尺度目标检测"><a href="#13-5-多尺度目标检测" class="headerlink" title="13.5 多尺度目标检测"></a>13.5 多尺度目标检测</h2><p>问题：为每个像素生成锚框太多了-&gt;均匀抽样一小部分像素，以他们为中心生成锚框<br>另外，在不同尺度下，可以生成不同数量和不同大小的锚框</p>
+<ul>
+<li>比起较大的目标，较小的目标在图像上出现的可能性更多样。 例如，1×1、1×2和2×2的目标可以分别以4、2和1种可能的方式出现在2×2图像上。 因此，当使用较小的锚框检测较小的物体时，我们可以采样更多的区域（压缩阶段的开始），而对于较大的物体，我们可以采样较少的区域</li>
+</ul>
+<h3 id="13-5-1-多尺度锚框"><a href="#13-5-1-多尺度锚框" class="headerlink" title="13.5.1 多尺度锚框"></a>13.5.1 多尺度锚框</h3><p>1.读取图像，获得高和宽</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">%matplotlib inline</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> d2l <span class="keyword">import</span> torch <span class="keyword">as</span> d2l</span><br><span class="line"></span><br><span class="line">img = d2l.plt.imread(<span class="string">&#x27;../img/catdog.jpg&#x27;</span>)</span><br><span class="line">h, w = img.shape[:<span class="number">2</span>]</span><br><span class="line">h, w</span><br></pre></td></tr></table></figure>
+<p>2.在特征图 (<code>fmap</code>) 上生成锚框 (<code>anchors</code>)，每个单位（像素）作为锚框的中心<br>在特征图上按像素生成-&gt;在原图上均匀生成<br>feature map：某个卷积层的输出</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">display_anchors</span>(<span class="params">fmap_w, fmap_h, s</span>):</span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;获得特征图的宽和高，得到有多少个像素,然后以每个像素为中心生成对应(size)的锚框&#x27;&#x27;&#x27;</span></span><br><span class="line">    d2l.set_figsize()</span><br><span class="line">    fmap = torch.zeros((<span class="number">1</span>, <span class="number">10</span>, fmap_h, fmap_w))</span><br><span class="line">    anchors = d2l.multibox_prior(fmap, sizes=s, ratios=[<span class="number">1</span>, <span class="number">2</span>, <span class="number">0.5</span>])<span class="string">&#x27;&#x27;&#x27;13.4实现的生成锚框的函数&#x27;&#x27;&#x27;</span></span><br><span class="line">    bbox_scale = torch.tensor((w, h, w, h))<span class="string">&#x27;&#x27;&#x27;anchor出来的是介于0~1所以显示的时候需要乘以真实图片的高和宽&#x27;&#x27;&#x27;</span></span><br><span class="line">    d2l.show_bboxes(d2l.plt.imshow(img).axes, anchors[<span class="number">0</span>] * bbox_scale)</span><br></pre></td></tr></table></figure>
+<p>3.探测小目标</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">display_anchors(fmap_w=<span class="number">4</span>, fmap_h=<span class="number">4</span>, s=[<span class="number">0.15</span>])</span><br></pre></td></tr></table></figure>
+<p>![[Pasted image 20240801175908.png]]<br>压缩成了4x4，一共十六个像素，每个像素生成s+r-1&#x3D;1+3-1&#x3D;3个锚框<br>4.将特征图的高度和宽度减小一半，然后使用较大的锚框来检测较大的目标</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">display_anchors(fmap_w=<span class="number">2</span>, fmap_h=<span class="number">2</span>, s=[<span class="number">0.4</span>])</span><br></pre></td></tr></table></figure>
+<p>![[Pasted image 20240801180507.png]]<br>5.将特征图的高度和宽度减小一半，然后将锚框的尺度增加到0.8</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">display_anchors(fmap_w=<span class="number">1</span>, fmap_h=<span class="number">1</span>, s=[<span class="number">0.8</span>])</span><br></pre></td></tr></table></figure>
+<p>6.总结，s的设置，越后面的段越大</p>
+<h3 id="13-5-2-多尺度检测"><a href="#13-5-2-多尺度检测" class="headerlink" title="13.5.2 多尺度检测"></a>13.5.2 多尺度检测</h3><p>假设我们有c张hxw的特征图，这c张特征图是CNN基于输入图像的前向传播算法获得的中间输出。每张特征图上都有hw个不同的空间位置，相同空间位置可以看作含有c个单元。特征图在相同空间位置的c个单元在输入图像上的感受野相同： 它们表征了同一感受野内的输入图像信息。 因此，我们可以将特征图在同一空间位置的c个单元变换为使用此空间位置生成的a个锚框类别和偏移量。 <strong>本质上，我们用输入图像在某个感受野区域内的信息，来预测输入图像上与该区域位置相近的锚框类别和偏移量</strong><br>注：在卷积神经网络中，对于某一层的任意元素x，其感受野（receptive field）是指在前向传播期间可能影响x计算的所有元素（来自所有先前层）</p>
+<h2 id="13-6-目标检测数据集"><a href="#13-6-目标检测数据集" class="headerlink" title="13.6 目标检测数据集"></a>13.6 目标检测数据集</h2><p>目标检测中的标签还包含真实边界框的信息 </p>
+<h2 id="13-7-单发多框检测SSD"><a href="#13-7-单发多框检测SSD" class="headerlink" title="13.7 单发多框检测SSD"></a>13.7 单发多框检测SSD</h2><h3 id="1-SSD模型"><a href="#1-SSD模型" class="headerlink" title="1.SSD模型"></a>1.SSD模型</h3><p>由13.5.2，当不同层的特征图在输入图像上分别拥有不同大小的感受野时，它们可以用于检测不同大小的目标-&gt;利用深层神经网络在多个层次上对图像进行分层表示，从而实现多尺度目标检测<br>接近顶部的多尺度特征图较小，但具有较大的感受野，它们适合检测较少但较大的物体<br>![[Pasted image 20240801112731.png]]</p>
+<ul>
+<li>首先进入base network（CNN),进行抽取特征</li>
+<li>然后进入右边的anchor box，对每一个像素生成锚框，然后预测类别和真实边界框</li>
+<li>之后通过多个卷积层来减半高宽</li>
+<li>在每段都生成锚框：越到后面压的越小，那么稍微取大一点的锚框，最后映射回原始的图片框的地方就很大了，所以底部端来拟合小物体，顶部段来拟合大物体</li>
+<li>不在一开始就搞size很大的原因是，这样的重复就会很多</li>
+</ul>
+<h3 id="2-总结"><a href="#2-总结" class="headerlink" title="2.总结"></a>2.总结</h3><ul>
+<li>SSD通过单神经网络来检测模型</li>
+<li>在多个段的输出上进行多尺度的检测</li>
+<li>训练算法：首先把训练数据集中的图片分别经过上面那个ssd模型，得到一堆不同尺度下的锚框，和他们预测的类别与偏差，作为预测值。然后利用这些图片本来就标好的真实边界框为每个锚框标注类别和偏移量，作为标签值。最后利用预测值和标签值之间的差别，计算损失函数，通过优化算法训练。</li>
+<li>预测算法：把需要预测的图片放到训练好的模型中，输出生成的锚框的预测的类别和和偏差，然后计算每个锚框的概率，放入nms中去重，最后筛掉置信度低于阈值的，输出。</li>
+</ul>
+<h3 id="3-代码"><a href="#3-代码" class="headerlink" title="3.代码"></a>3.代码</h3><h4 id="1-类别预测层"><a href="#1-类别预测层" class="headerlink" title="1.类别预测层"></a>1.类别预测层</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">%matplotlib inline</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torchvision</span><br><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> nn</span><br><span class="line"><span class="keyword">from</span> torch.nn <span class="keyword">import</span> functional <span class="keyword">as</span> F</span><br><span class="line"><span class="keyword">from</span> d2l <span class="keyword">import</span> torch <span class="keyword">as</span> d2l</span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;这里采用卷积层进行预测而不是全连接层，类似于NiN。在NiN中已经经过global pooling，高宽变成了1x1，所以输出通道数就是类别数。</span></span><br><span class="line"><span class="string">我们这里需要预测的是每个像素生成的每个锚框的类别，所以总数量应该是总像素数（输入的高x宽）x每个像素的锚框数（s+r-1）x每个锚框预测的类别数（类别数+1）</span></span><br><span class="line"><span class="string">这里卷积层kernal size=3，padding=1，也即输出保留输入的高宽，这样输出和输入在特征图宽和高上的空间坐标一一对应。</span></span><br><span class="line"><span class="string">扫一遍我们对每个像素通过周围3x3的块来判断这个像素的类别，反应为一个数，然后通过通道数（在通道里）最后反映出这个像素的所有锚框在每个类别上的得分，index为i(q+1)+j（0≤j≤q）的通道代表了索引为i的锚框有关类别索引为j的预测</span></span><br><span class="line"><span class="string">所以最后的输出每个维度都是信息，高、宽和通道</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cls_predictor</span>(<span class="params">num_inputs, num_anchors, num_classes</span>):</span><br><span class="line">    <span class="keyword">return</span> nn.Conv2d(num_inputs, num_anchors * (num_classes + <span class="number">1</span>),</span><br><span class="line">                     kernel_size=<span class="number">3</span>, padding=<span class="number">1</span>)<span class="string">&#x27;&#x27;&#x27;+1是加上背景类，对每一个锚框都需要预测是哪一类的概率&#x27;&#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
+<h4 id="2-边界框预测层"><a href="#2-边界框预测层" class="headerlink" title="2.边界框预测层"></a>2.边界框预测层</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;&#x27;&#x27;预测和真实的bounding box的offset,offset是四个值（差）-&gt;num_anchors*4&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">bbox_predictor</span>(<span class="params">num_inputs, num_anchors</span>):</span><br><span class="line">    <span class="keyword">return</span> nn.Conv2d(num_inputs, num_anchors * <span class="number">4</span>, kernel_size=<span class="number">3</span>, padding=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="3-连接多尺度的预测"><a href="#3-连接多尺度的预测" class="headerlink" title="3.连接多尺度的预测"></a>3.连接多尺度的预测</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">x, block</span>):</span><br><span class="line">    <span class="keyword">return</span> block(x)</span><br><span class="line"></span><br><span class="line">Y1 = forward(torch.zeros((<span class="number">2</span>, <span class="number">8</span>, <span class="number">20</span>, <span class="number">20</span>)), cls_predictor(<span class="number">8</span>, <span class="number">5</span>, <span class="number">10</span>))</span><br><span class="line">Y2 = forward(torch.zeros((<span class="number">2</span>, <span class="number">16</span>, <span class="number">10</span>, <span class="number">10</span>)), cls_predictor(<span class="number">16</span>, <span class="number">3</span>, <span class="number">10</span>))</span><br><span class="line">Y1.shape, Y2.shape</span><br></pre></td></tr></table></figure>
+<p>(torch.Size([2, 55, 20, 20]), torch.Size([2, 33, 10, 10]))<br>-&gt;在不同的尺度下，特征图的形状或以同一单元为中心的锚框的数量可能会有所不同。 因此，不同尺度下预测输出的形状可能会有所不同</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">flatten_pred</span>(<span class="params">pred</span>):</span><br><span class="line">	<span class="string">&#x27;&#x27;&#x27;permute是调换顺序，这里把通道维放到了最后，这样就是对像素拉，把每个像素的每个锚框预测出来的类别放在一起。然后把4d的展成了2d的（batch size为一个维度，后面的三个展成一个维度&#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> torch.flatten(pred.permute(<span class="number">0</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">1</span>), start_dim=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">concat_preds</span>(<span class="params">preds</span>):</span><br><span class="line">	<span class="string">&#x27;&#x27;&#x27;几个张量先flatten然后再合并,方便后面处理&#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> torch.cat([flatten_pred(p) <span class="keyword">for</span> p <span class="keyword">in</span> preds], dim=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">concat_preds([Y1, Y2]).shape</span><br></pre></td></tr></table></figure>
+<p>torch.Size([2, 25300])（55x20x20+33x10x10）</p>
+<h4 id="4-高和宽减半块"><a href="#4-高和宽减半块" class="headerlink" title="4.高和宽减半块"></a>4.高和宽减半块</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">down_sample_blk</span>(<span class="params">in_channels, out_channels</span>):</span><br><span class="line">    blk = []</span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">2</span>):</span><br><span class="line">        blk.append(</span><br><span class="line">            nn.Conv2d(in_channels, out_channels, kernel_size=<span class="number">3</span>, padding=<span class="number">1</span>))</span><br><span class="line">        blk.append(nn.BatchNorm2d(out_channels))</span><br><span class="line">        blk.append(nn.ReLU())</span><br><span class="line">        in_channels = out_channels</span><br><span class="line">    blk.append(nn.MaxPool2d(<span class="number">2</span>))</span><br><span class="line">    <span class="keyword">return</span> nn.Sequential(*blk)</span><br><span class="line"></span><br><span class="line">forward(torch.zeros((<span class="number">2</span>, <span class="number">3</span>, <span class="number">20</span>, <span class="number">20</span>)), down_sample_blk(<span class="number">3</span>, <span class="number">10</span>)).shape</span><br></pre></td></tr></table></figure>
+<p>torch.Size([2, 10, 10, 10])<br>同时改变通道数，和之前的神经网络架构中的stage一样</p>
+<h4 id="5-基本网络块"><a href="#5-基本网络块" class="headerlink" title="5.基本网络块"></a>5.基本网络块</h4><p>从抽特征到第一次对feature map做锚框中间的net</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">base_net</span>():</span><br><span class="line">    blk = []</span><br><span class="line">    num_filters = [<span class="number">3</span>, <span class="number">16</span>, <span class="number">32</span>, <span class="number">64</span>]</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(num_filters) - <span class="number">1</span>):</span><br><span class="line">        blk.append(down_sample_blk(num_filters[i], num_filters[i + <span class="number">1</span>]))</span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;接了三个block，通道数3到16，16到32，32到64，每次高宽减半&#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> nn.Sequential(*blk)</span><br><span class="line"></span><br><span class="line">forward(torch.zeros((<span class="number">2</span>, <span class="number">3</span>, <span class="number">256</span>, <span class="number">256</span>)), base_net()).shape</span><br></pre></td></tr></table></figure>
+<p>torch.Size([2, 64, 32, 32])</p>
+<h4 id="6-完整的单发多框检测模型由五个模块组成"><a href="#6-完整的单发多框检测模型由五个模块组成" class="headerlink" title="6.完整的单发多框检测模型由五个模块组成"></a>6.完整的单发多框检测模型由五个模块组成</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">get_blk</span>(<span class="params">i</span>):</span><br><span class="line">    <span class="keyword">if</span> i == <span class="number">0</span>:</span><br><span class="line">        blk = base_net()</span><br><span class="line">    <span class="keyword">elif</span> i == <span class="number">1</span>:</span><br><span class="line">        blk = down_sample_blk(<span class="number">64</span>, <span class="number">128</span>)</span><br><span class="line">    <span class="keyword">elif</span> i == <span class="number">4</span>:</span><br><span class="line">        blk = nn.AdaptiveMaxPool2d((<span class="number">1</span>, <span class="number">1</span>))</span><br><span class="line">    <span class="keyword">else</span>:<span class="string">&#x27;&#x27;&#x27;i=2,3&#x27;&#x27;&#x27;</span></span><br><span class="line">        blk = down_sample_blk(<span class="number">128</span>, <span class="number">128</span>)</span><br><span class="line">    <span class="keyword">return</span> blk</span><br></pre></td></tr></table></figure>
+<h4 id="7-为每个块定义前向计算"><a href="#7-为每个块定义前向计算" class="headerlink" title="7.为每个块定义前向计算"></a>7.为每个块定义前向计算</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">blk_forward</span>(<span class="params">X, blk, size, ratio, cls_predictor, bbox_predictor</span>):</span><br><span class="line">    Y = blk(X)</span><br><span class="line">    anchors = d2l.multibox_prior(Y, sizes=size, ratios=ratio)<span class="string">&#x27;&#x27;&#x27;生成锚框&#x27;&#x27;&#x27;</span></span><br><span class="line">    cls_preds = cls_predictor(Y)<span class="string">&#x27;&#x27;&#x27;这里直接把Y传进去就可以了，因为函数不需要知道具体锚框长什么样，知道数量就可以了&#x27;&#x27;&#x27;</span></span><br><span class="line">    bbox_preds = bbox_predictor(Y)</span><br><span class="line">    <span class="keyword">return</span> (Y, anchors, cls_preds, bbox_preds)</span><br></pre></td></tr></table></figure>
+<h4 id="8-超参数"><a href="#8-超参数" class="headerlink" title="8.超参数"></a>8.超参数</h4><p>0.2,0.37,0.54:0.17;0.272&#x3D;$\sqrt{0.2\times0.54}$,从零到一逐步增大</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sizes = [[<span class="number">0.2</span>, <span class="number">0.272</span>], [<span class="number">0.37</span>, <span class="number">0.447</span>], [<span class="number">0.54</span>, <span class="number">0.619</span>], [<span class="number">0.71</span>, <span class="number">0.79</span>],</span><br><span class="line">         [<span class="number">0.88</span>, <span class="number">0.961</span>]]</span><br><span class="line">ratios = [[<span class="number">1</span>, <span class="number">2</span>, <span class="number">0.5</span>]] * <span class="number">5</span><span class="string">&#x27;&#x27;&#x27;常用组合&#x27;&#x27;&#x27;</span></span><br><span class="line">num_anchors = <span class="built_in">len</span>(sizes[<span class="number">0</span>]) + <span class="built_in">len</span>(ratios[<span class="number">0</span>]) - <span class="number">1</span><span class="string">&#x27;&#x27;&#x27;每一层两个size，三个ratio，所以4个锚框</span></span><br></pre></td></tr></table></figure>
+<h4 id="9-定义完整的模型"><a href="#9-定义完整的模型" class="headerlink" title="9.定义完整的模型"></a>9.定义完整的模型</h4><p>setattr(object, name, value):object – 对象,name – 字符串，对象属性,value – 属性值<br>getattr(object, name[, default]): default – 默认返回值，如果不提供该参数，在没有对应属性时，将触发 AttributeError</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">TinySSD</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, num_classes, **kwargs</span>):</span><br><span class="line">        <span class="built_in">super</span>(TinySSD, <span class="variable language_">self</span>).__init__(**kwargs)</span><br><span class="line">        <span class="variable language_">self</span>.num_classes = num_classes</span><br><span class="line">        idx_to_in_channels = [<span class="number">64</span>, <span class="number">128</span>, <span class="number">128</span>, <span class="number">128</span>, <span class="number">128</span>]</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line">            <span class="built_in">setattr</span>(<span class="variable language_">self</span>, <span class="string">f&#x27;blk_<span class="subst">&#123;i&#125;</span>&#x27;</span>, get_blk(i))</span><br><span class="line">            <span class="built_in">setattr</span>(</span><br><span class="line">                <span class="variable language_">self</span>, <span class="string">f&#x27;cls_<span class="subst">&#123;i&#125;</span>&#x27;</span>,</span><br><span class="line">                cls_predictor(idx_to_in_channels[i], num_anchors,</span><br><span class="line">                              num_classes))</span><br><span class="line">            <span class="built_in">setattr</span>(<span class="variable language_">self</span>, <span class="string">f&#x27;bbox_<span class="subst">&#123;i&#125;</span>&#x27;</span>,</span><br><span class="line">                    bbox_predictor(idx_to_in_channels[i], num_anchors))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, X</span>):</span><br><span class="line">        anchors, cls_preds, bbox_preds = [<span class="literal">None</span>] * <span class="number">5</span>, [<span class="literal">None</span>] * <span class="number">5</span>, [<span class="literal">None</span>] * <span class="number">5</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line">            X, anchors[i], cls_preds[i], bbox_preds[i] = blk_forward(</span><br><span class="line">                X, <span class="built_in">getattr</span>(<span class="variable language_">self</span>, <span class="string">f&#x27;blk_<span class="subst">&#123;i&#125;</span>&#x27;</span>), sizes[i], ratios[i],</span><br><span class="line">                <span class="built_in">getattr</span>(<span class="variable language_">self</span>, <span class="string">f&#x27;cls_<span class="subst">&#123;i&#125;</span>&#x27;</span>), <span class="built_in">getattr</span>(<span class="variable language_">self</span>, <span class="string">f&#x27;bbox_<span class="subst">&#123;i&#125;</span>&#x27;</span>))</span><br><span class="line">        anchors = torch.cat(anchors, dim=<span class="number">1</span>)</span><br><span class="line">        cls_preds = concat_preds(cls_preds)</span><br><span class="line">        cls_preds = cls_preds.reshape(cls_preds.shape[<span class="number">0</span>], -<span class="number">1</span>,</span><br><span class="line">                                      <span class="variable language_">self</span>.num_classes + <span class="number">1</span>)</span><br><span class="line">        bbox_preds = concat_preds(bbox_preds)</span><br><span class="line">        <span class="keyword">return</span> anchors, cls_preds, bbox_preds</span><br></pre></td></tr></table></figure>
+<h4 id="10-创建一个模型实例，然后使用它-执行前向计算"><a href="#10-创建一个模型实例，然后使用它-执行前向计算" class="headerlink" title="10.创建一个模型实例，然后使用它 执行前向计算"></a>10.创建一个模型实例，然后使用它 执行前向计算</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">net = TinySSD(num_classes=<span class="number">1</span>)</span><br><span class="line">X = torch.zeros((<span class="number">32</span>, <span class="number">3</span>, <span class="number">256</span>, <span class="number">256</span>))</span><br><span class="line">anchors, cls_preds, bbox_preds = net(X)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;output anchors:&#x27;</span>, anchors.shape)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;output class preds:&#x27;</span>, cls_preds.shape)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;output bbox preds:&#x27;</span>, bbox_preds.shape)</span><br></pre></td></tr></table></figure>
+<p>output anchors: torch.Size([1, 5444, 4])1（所有的图片都和一张一样，因为是按像素生成的）,5444个，4个坐标<br>output class preds: torch.Size([32, 5444, 2])批量大小32，5444个，1+1类<br>output bbox preds: torch.Size([32, 21776])批量大小32，5444个x4个差距</p>
+<h4 id="11-读取香蕉检测数据集"><a href="#11-读取香蕉检测数据集" class="headerlink" title="11.读取香蕉检测数据集"></a>11.读取香蕉检测数据集</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">batch_size = <span class="number">32</span></span><br><span class="line">train_iter, _ = d2l.load_data_bananas(batch_size)</span><br></pre></td></tr></table></figure>
+<p>read 1000 training examples<br>read 100 validation examples</p>
+<h4 id="12-初始化其参数并定义优化算法"><a href="#12-初始化其参数并定义优化算法" class="headerlink" title="12.初始化其参数并定义优化算法"></a>12.初始化其参数并定义优化算法</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">device, net = d2l.try_gpu(), TinySSD(num_classes=<span class="number">1</span>)</span><br><span class="line">trainer = torch.optim.SGD(net.parameters(), lr=<span class="number">0.2</span>, weight_decay=<span class="number">5e-4</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="13-定义损失函数和评价函数"><a href="#13-定义损失函数和评价函数" class="headerlink" title="13.定义损失函数和评价函数"></a>13.定义损失函数和评价函数</h4><p> 由于我们不关心对背景的检测，负类的偏移量不应影响目标函数。 通过元素乘法，掩码变量中的零将在计算目标函数之前过滤掉负类偏移量。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">cls_loss = nn.CrossEntropyLoss(reduction=<span class="string">&#x27;none&#x27;</span>)</span><br><span class="line">bbox_loss = nn.L1Loss(reduction=<span class="string">&#x27;none&#x27;</span>)</span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;可以看作是分类loss和回归loss加一起&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">calc_loss</span>(<span class="params">cls_preds, cls_labels, bbox_preds, bbox_labels, bbox_masks</span>):</span><br><span class="line">	<span class="string">&#x27;&#x27;&#x27;labels就是真实的类别和boundingbox，参见13.4&#x27;&#x27;&#x27;</span></span><br><span class="line">    batch_size, num_classes = cls_preds.shape[<span class="number">0</span>], cls_preds.shape[<span class="number">2</span>]</span><br><span class="line">    cls = cls_loss(cls_preds.reshape(-<span class="number">1</span>, num_classes),<span class="string">&#x27;&#x27;&#x27;把batch size和个数合一&#x27;&#x27;&#x27;</span></span><br><span class="line">                   cls_labels.reshape(-<span class="number">1</span>)).reshape(batch_size, -<span class="number">1</span>).mean(dim=<span class="number">1</span>)</span><br><span class="line">    bbox = bbox_loss(bbox_preds * bbox_masks,</span><br><span class="line">                     bbox_labels * bbox_masks).mean(dim=<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">return</span> cls + bbox</span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;下面的是评价函数&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cls_eval</span>(<span class="params">cls_preds, cls_labels</span>):</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">float</span>(</span><br><span class="line">        (cls_preds.argmax(dim=-<span class="number">1</span>).<span class="built_in">type</span>(cls_labels.dtype) == cls_labels).<span class="built_in">sum</span>())<span class="string">&#x27;&#x27;&#x27;类似之前分类问题的准确率&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">bbox_eval</span>(<span class="params">bbox_preds, bbox_labels, bbox_masks</span>):</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">float</span>((torch.<span class="built_in">abs</span>((bbox_labels - bbox_preds) * bbox_masks)).<span class="built_in">sum</span>())<span class="string">&#x27;&#x27;&#x27;平均绝对误差&#x27;&#x27;&#x27;</span>```</span><br><span class="line"><span class="comment">#### 14.训练模型</span></span><br><span class="line">```python</span><br><span class="line">num_epochs, timer = <span class="number">20</span>, d2l.Timer()</span><br><span class="line">animator = d2l.Animator(xlabel=<span class="string">&#x27;epoch&#x27;</span>, xlim=[<span class="number">1</span>, num_epochs],</span><br><span class="line">                        legend=[<span class="string">&#x27;class error&#x27;</span>, <span class="string">&#x27;bbox mae&#x27;</span>])</span><br><span class="line">net = net.to(device)</span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(num_epochs):</span><br><span class="line">    metric = d2l.Accumulator(<span class="number">4</span>)</span><br><span class="line">    net.train()</span><br><span class="line">    <span class="keyword">for</span> features, target <span class="keyword">in</span> train_iter:</span><br><span class="line">        timer.start()</span><br><span class="line">        trainer.zero_grad()</span><br><span class="line">        X, Y = features.to(device), target.to(device)</span><br><span class="line">        anchors, cls_preds, bbox_preds = net(X)<span class="string">&#x27;&#x27;&#x27;生成多尺度锚框，为每个锚框预测类别和偏移量，对应图片分类的生成各类别的softmax概率值&#x27;&#x27;&#x27;</span></span><br><span class="line">        bbox_labels, bbox_masks, cls_labels = d2l.multibox_target(anchors, Y)<span class="string">&#x27;&#x27;&#x27;使用真实边界框为每个锚框标注类别和偏移量，在图片分类中直接用数据集中标注好的标签&#x27;&#x27;&#x27;</span></span><br><span class="line">        l = calc_loss(cls_preds, cls_labels, bbox_preds, bbox_labels,</span><br><span class="line">                      bbox_masks)<span class="string">&#x27;&#x27;&#x27;根据上面算的预测值和label算损失函数&#x27;&#x27;&#x27;</span></span><br><span class="line">        l.mean().backward()</span><br><span class="line">        trainer.step()</span><br><span class="line">        metric.add(cls_eval(cls_preds, cls_labels), cls_labels.numel(),</span><br><span class="line">                   bbox_eval(bbox_preds, bbox_labels, bbox_masks),</span><br><span class="line">                   bbox_labels.numel())</span><br><span class="line">    cls_err, bbox_mae = <span class="number">1</span> - metric[<span class="number">0</span>] / metric[<span class="number">1</span>], metric[<span class="number">2</span>] / metric[<span class="number">3</span>]</span><br><span class="line">    animator.add(epoch + <span class="number">1</span>, (cls_err, bbox_mae))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&#x27;class err <span class="subst">&#123;cls_err:<span class="number">.2</span>e&#125;</span>, bbox mae <span class="subst">&#123;bbox_mae:<span class="number">.2</span>e&#125;</span>&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&#x27;<span class="subst">&#123;<span class="built_in">len</span>(train_iter.dataset) / timer.stop():<span class="number">.1</span>f&#125;</span> examples/sec on &#x27;</span></span><br><span class="line">      <span class="string">f&#x27;<span class="subst">&#123;<span class="built_in">str</span>(device)&#125;</span>&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="15-预测目标"><a href="#15-预测目标" class="headerlink" title="15.预测目标"></a>15.预测目标</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">X=torchvision.io.read_image(<span class="string">&#x27;../img/banana.jpg&#x27;</span>).unsqueeze(<span class="number">0</span>).<span class="built_in">float</span>()</span><br><span class="line">img = X.squeeze(<span class="number">0</span>).permute(<span class="number">1</span>, <span class="number">2</span>, <span class="number">0</span>).long()</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">predict</span>(<span class="params">X</span>):</span><br><span class="line">    net.<span class="built_in">eval</span>()<span class="string">&#x27;&#x27;&#x27;预测模式&#x27;&#x27;&#x27;</span></span><br><span class="line">    anchors, cls_preds, bbox_preds = net(X.to(device))</span><br><span class="line">    cls_probs = F.softmax(cls_preds, dim=<span class="number">2</span>).permute(<span class="number">0</span>, <span class="number">2</span>, <span class="number">1</span>)<span class="string">&#x27;&#x27;&#x27;算每个的概率，用于后面的nms&#x27;&#x27;&#x27;</span></span><br><span class="line">    output = d2l.multibox_detection(cls_probs, bbox_preds, anchors)</span><br><span class="line">    idx = [i <span class="keyword">for</span> i, row <span class="keyword">in</span> <span class="built_in">enumerate</span>(output[<span class="number">0</span>]) <span class="keyword">if</span> row[<span class="number">0</span>] != -<span class="number">1</span>]</span><br><span class="line">    <span class="keyword">return</span> output[<span class="number">0</span>, idx]</span><br><span class="line"></span><br><span class="line">output = predict(X)</span><br></pre></td></tr></table></figure>
+<h4 id="16-筛选所有置信度不低于-0-9-的边界框，做为最终输出"><a href="#16-筛选所有置信度不低于-0-9-的边界框，做为最终输出" class="headerlink" title="16.筛选所有置信度不低于 0.9 的边界框，做为最终输出"></a>16.筛选所有置信度不低于 0.9 的边界框，做为最终输出</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">display</span>(<span class="params">img, output, threshold</span>):</span><br><span class="line">    d2l.set_figsize((<span class="number">5</span>, <span class="number">5</span>))</span><br><span class="line">    fig = d2l.plt.imshow(img)</span><br><span class="line">    <span class="keyword">for</span> row <span class="keyword">in</span> output:</span><br><span class="line">        score = <span class="built_in">float</span>(row[<span class="number">1</span>])</span><br><span class="line">        <span class="keyword">if</span> score &lt; threshold:</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        h, w = img.shape[<span class="number">0</span>:<span class="number">2</span>]</span><br><span class="line">        bbox = [row[<span class="number">2</span>:<span class="number">6</span>] * torch.tensor((w, h, w, h), device=row.device)]</span><br><span class="line">        d2l.show_bboxes(fig.axes, bbox, <span class="string">&#x27;%.2f&#x27;</span> % score, <span class="string">&#x27;w&#x27;</span>)</span><br><span class="line"></span><br><span class="line">display(img, output.cpu(), threshold=<span class="number">0.9</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="13-8-区域卷积神经网络-R-CNN"><a href="#13-8-区域卷积神经网络-R-CNN" class="headerlink" title="13.8 区域卷积神经网络 R-CNN"></a>13.8 区域卷积神经网络 R-CNN</h2><p>![[Pasted image 20240801095608.png]]</p>
+<h3 id="1-R-CNN"><a href="#1-R-CNN" class="headerlink" title="1.R-CNN"></a>1.R-CNN</h3><ul>
+<li>使用启发式搜索算法来选取多个高质量提议区域（锚框也是一种选取方法）（多尺度下），每个提议区域标注类别和真实边缘框</li>
+<li>使用预训练好的模型（CNN），将每个提议区域变形为网络所需尺寸，并通过前向传播输出抽取的提议区域特征</li>
+<li>将每个提议区域的特征连同其标注的类别作为一个样本。训练多个支持向量机对目标分类，其中每个支持向量机用来判断样本是否属于某一个类别</li>
+<li>将每个提议区域的特征连同其标注的边界框作为一个样本，训练线性回归模型来预测真实边界框<br>问题：第一、二步计算量太大</li>
+</ul>
+<h3 id="2-兴趣区域（RoI）池化层"><a href="#2-兴趣区域（RoI）池化层" class="headerlink" title="2.兴趣区域（RoI）池化层"></a>2.兴趣区域（RoI）池化层</h3><p>利于做batch<br>![[Pasted image 20240801100248.png]]</p>
+<h3 id="3-Fast-R-CNN"><a href="#3-Fast-R-CNN" class="headerlink" title="3.Fast R-CNN"></a>3.Fast R-CNN</h3><p>关键：CNN不再是对每个锚框抽取，而是对整个图片<br>R-CNN的主要性能瓶颈在于，对每个提议区域，卷积神经网络的前向传播是独立的，而没有共享计算。 由于这些区域通常有重叠，独立的特征抽取会导致重复的计算<br>![[Pasted image 20240801100618.png]]</p>
+<ul>
+<li>首先对图片用CNN进行处理，设输入为一张图像，将卷积神经网络的输出的形状记为1×c×h1×w1</li>
+<li>同时在原始图片上进行选择性搜索（选择锚框），n个。（标出了形状各异的兴趣区域）</li>
+<li>然后将选择好的锚框映射到处理过的图像上</li>
+<li>这些感兴趣的区域需要进一步抽取出形状相同的特征（比如指定高度h2和宽度w2），以便于连结后输出。<ul>
+<li>在R-CNN中，先生成区域，在用卷积修改尺寸和提取特征，最后能不同区域统一用svm和回归进行预测，缺点就是每个都要卷一次。在fast里面，就卷一次，直接对图片卷，然后把区域映射上去，相当于先框区域再压缩，缺点是尺寸不一样，所以要用RoI</li>
+</ul>
+</li>
+<li>再对锚框进行RoI pooling，变成一个形状<ul>
+<li>将卷积神经网络的输出和提议区域作为输入，输出连结后的各个提议区域抽取的特征，形状为n×c×h2×w2</li>
+</ul>
+</li>
+<li>通过全连接层将输出形状变换为n×d</li>
+<li>预测n个提议区域中每个区域的类别和边界框。更具体地说，在预测类别和边界框时，将全连接层的输出分别转换为形状为n×q（q是类别的数量）的输出和形状为n×4的输出。其中预测类别时使用softmax回归</li>
+</ul>
+<h3 id="4-Faster-R-CNN"><a href="#4-Faster-R-CNN" class="headerlink" title="4.Faster R-CNN"></a>4.Faster R-CNN</h3><p>![[Pasted image 20240801101841.png]]<br>用Regional proposal network来代替原来的Selective search获得更好的锚框（减少提议区域的生成数量，生成不怎么重复的），一个比较糙的目标检测算法：two stage</p>
+<ul>
+<li>图片先CNN</li>
+<li>然后输出进入RPN，先再CNN，将输出通道数记为c。这样，卷积神经网络为图像抽取的特征图中的每个单元均得到一个长度为c的新特征<ul>
+<li>在这个小network里先要筛一次，所以需要有特征，然后后面可以预测、筛选</li>
+</ul>
+</li>
+<li>然后生成锚框（13.4的生成方法）</li>
+<li>使用长度为c的特征，两件事<ul>
+<li>binary category prediction：是否圈住</li>
+<li>bounding box prediction</li>
+</ul>
+</li>
+<li>NMS-&gt;从预测类别为目标的预测边界框中移除相似的结果。最终输出的预测边界框即是兴趣区域汇聚层所需的提议区域</li>
+</ul>
+<h3 id="5-Mask-R-CNN"><a href="#5-Mask-R-CNN" class="headerlink" title="5.Mask R-CNN"></a>5.Mask R-CNN</h3><p>![[Pasted image 20240801104324.png]]<br>如果有像素级别的标号，使用FCN来利用这些信息（fully convolutional network）<br>RoI pooling-&gt;RoI align,直接中间切开，不管原有边缘，对于被切开的像素，进行加权，保留特征图上的空间信息，从而更适于像素级预测</p>
+<h3 id="6-总结"><a href="#6-总结" class="headerlink" title="6.总结"></a>6.总结</h3><p>1.R-CNN基于锚框和CNN的目标检测算法<br>2.Faster R-CNN &amp;Mask R-CNN是在追求高精度场景下的常用算法</p>
+<h2 id="44-物体检测算法：YOLO"><a href="#44-物体检测算法：YOLO" class="headerlink" title="44.物体检测算法：YOLO"></a>44.物体检测算法：YOLO</h2><p>1.you look only once<br>2.问题：SSD中锚框大量重叠，浪费了很多计算-&gt;YOLO将图片均匀分成SxS个锚框，每个锚框预测B个边缘框<br>3.总结：目标检测算法主要分为两个类型</p>
+<ul>
+<li>（1）two-stage方法，如R-CNN系算法（region-based CNN），其主要思路是先通过启发式方法（selective search）或者CNN网络（RPN)产生一系列稀疏的候选框，然后对这些候选框进行分类与回归，two-stage方法的优势是准确度高</li>
+<li>（2）one-stage方法，如Yolo和SSD，其主要思路是均匀地在图片的不同位置进行密集抽样，抽样时可以采用不同尺度和长宽比，然后利用CNN提取特征后直接进行分类与回归，整个过程只需要一步，所以其优势是速度快，但是均匀的密集采样的一个重要缺点是训练比较困难，这主要是因为正样本与负样本（背景）极其不均衡，导致模型准确度稍低</li>
+</ul>
+<h2 id="13-9-语义分割和数据集"><a href="#13-9-语义分割和数据集" class="headerlink" title="13.9 语义分割和数据集"></a>13.9 语义分割和数据集</h2><p>1.语义分割（semantic segementation）将图片中的每个像素分类到对应的类别：语义区域的标注和预测是像素级的<br>2.应用：背景虚化、路面分割<br>3.与实例分割的区别：![[Pasted image 20240804120451.png]]</p>
+<h2 id="13-10-转置卷积"><a href="#13-10-转置卷积" class="headerlink" title="13.10 转置卷积"></a>13.10 转置卷积</h2><p>1.问题：之前的卷积不会增大输入的高宽，通常要么不变，要么减半。这对于像素级处理是不行的。转置卷积（transposed convolution）可以用来增大输入高宽<br>2.计算方法![[Pasted image 20240804163822.png]]<br>0和kernal中的元素逐个做乘法，然后逐个写上去（保持核的大小）<br>$Y[i:i+h,j:j+w]+&#x3D;X[i,j]\cdot K$<br>3.为什么是“转置”</p>
+<ul>
+<li>对于卷积$Y&#x3D;X\bigstar W$<ul>
+<li>可以对W构造一个V，使得卷积等价于矩阵乘法Y‘&#x3D;VX’($n&#x3D;n\times m \cdot m$)</li>
+<li>Y‘，X’是Y，X对应的向量版本</li>
+</ul>
+</li>
+<li>转置卷积等价于$Y’&#x3D;V^T X’$’($m&#x3D;m\times n \cdot n$)</li>
+<li>-&gt;如果卷积将输入从（h，w）变成（h‘，w）<ul>
+<li>同样超参数的转置卷积则从（h‘，w’）变成（h，w）</li>
+</ul>
+</li>
+<li>转置卷积层能够交换卷积层的正向传播函数和反向传播函数<br>4.填充<br>tconv &#x3D; nn.Conv2DTranspose(1, kernel_size&#x3D;2, padding&#x3D;1)<br>转置卷积的输出中将删除第一和最后的行与列<br>就是说转置卷积可以理解为就是卷积反着来，padding&#x3D;1是加在输入层上。先想个卷积的过程，一个1x1的图像用(1, kernel_size&#x3D;2, padding&#x3D;1)卷积，得到1-2+2+1，也就是2x2的输出。所以逆过程2x2的经过转置卷积，得到1x1的输出。所以转置卷积填充是让输入变小。<br>5.步幅<br>![[Pasted image 20240804174538.png]]<br>所以转置卷积步幅是让输入变大<br>6.通道<br>与卷积相同 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">X = torch.rand(size=(<span class="number">1</span>, <span class="number">10</span>, <span class="number">16</span>, <span class="number">16</span>))</span><br><span class="line">conv = nn.Conv2d(<span class="number">10</span>, <span class="number">20</span>, kernel_size=<span class="number">5</span>, padding=<span class="number">2</span>, stride=<span class="number">3</span>)</span><br><span class="line">tconv = nn.ConvTranspose2d(<span class="number">20</span>, <span class="number">10</span>, kernel_size=<span class="number">5</span>, padding=<span class="number">2</span>, stride=<span class="number">3</span>)</span><br><span class="line">tconv(conv(X)).shape == X.shape</span><br></pre></td></tr></table></figure>
+True</li>
+</ul>
+<ol start="7">
+<li>反卷积的意义是卷积之后的矩阵的每个元素有一个感受视野，反卷积希望通过这个元素还原感受视野里面的内容。并且由于卷积后的元素的感受视野有相交的情况，所以反卷积中也出现了结果中有些元素的值来源于卷积结果的一个或多个元素的现象，理论上通过反卷积，我们可以通过将特征图反卷积还原到原图大小从而获取到我们的卷积核在原图中提取的是什么信息</li>
+</ol>
+<h2 id="13-11-全卷积网络"><a href="#13-11-全卷积网络" class="headerlink" title="13.11 全卷积网络"></a>13.11 全卷积网络</h2><p>1.FCN（fully convolutional network）<br>它用转置卷积层来替换CNN最后的全连接层，从而可以实现每个像素的预测<br>![[Pasted image 20240804213024.png]]<br>k（通道数）是k个类别，表示每个像素k个类别的概率</p>
+<h2 id="13-12-风格迁移"><a href="#13-12-风格迁移" class="headerlink" title="13.12 风格迁移"></a>13.12 风格迁移</h2><p>1.样式迁移：将样式中图片中的样式迁移到内容图片上，得到合成图片<br>2.基于CNN的样式迁移</p>
+<ul>
+<li>奠基性工作![[Pasted image 20240805100507.png]]</li>
+<li>合成图像是风格迁移过程中唯一需要更新的变量，即风格迁移所需迭代的模型参数</li>
+<li>全变分损失有助于减少合成图像中的噪点</li>
+<li>假设该输出的样本数为1，通道数为c，高和宽分别为h和w，我们可以将此输出转换为矩阵X，其有c行和hw列。 这个矩阵可以被看作由c个长度为hw的向量$x_1,…,x_c$组合而成的。其中向量xi代表了通道i上的风格特征。在这些向量的格拉姆矩阵$XX^T∈R^{c\times c}$中，i行j列的元素$x_{ij}$即向量$x_i$和$x_j$的内积。它表达了通道i和通道j上风格特征的相关性。我们用这样的格拉姆矩阵来表达风格层输出的风格</li>
+<li>简而言之，用通道表示一个点的特征，用通道之间的统计关系表示图片的风格（gram matrix）</li>
+<li>合成图像里面有大量高频噪点，即有特别亮或者特别暗的颗粒像素。 一种常见的去噪方法是全变分去噪（total variation denoising）： 假设xi,j表示坐标(i,j)处的像素值，降低全变分损失$\sum_{i,j}|x_{i,j}-x_{i+1,j}|+|x_{i,j}-x_{i,j+1}|$能够尽可能使邻近的像素值相似。</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://silkyfinish.github.io/2024/09/13/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.avif">
+      <meta itemprop="name" content="SilkyFinish">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SilkyFinish">
+      <meta itemprop="description" content="冲天香阵透长安，满城尽带黄金甲">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | SilkyFinish">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/09/13/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" class="post-title-link" itemprop="url">卷积神经网络</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-09-13 11:29:12" itemprop="dateCreated datePublished" datetime="2024-09-13T11:29:12+08:00">2024-09-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-09-14 17:31:23" itemprop="dateModified" datetime="2024-09-14T17:31:23+08:00">2024-09-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -243,87 +1026,6 @@
 BN在训练模式：每个小批量的均值和方差；在预测模式：整个数据集的均值和方差</li>
 </ul>
 <h2 id="7-6-残差网络-ResNet"><a href="#7-6-残差网络-ResNet" class="headerlink" title="7.6 残差网络 ResNet"></a>7.6 残差网络 ResNet</h2><p>![[Pasted image 20240729181750.png]]<br>1.后面的层覆盖范围包含之前的层覆盖范围，防止走偏离目标越来越远-&gt;使得很深的网络更加容易训练<br>也即残差快（residual block)核心：每一个附加层都应该更容易地包含原始函数作为其元素之一<br>![[Pasted image 20240729182440.png]]<br>![[Pasted image 20240729182557.png]]<br>![[Pasted image 20240729183132.png]]<br>2.通常在第一块步幅为2来使高宽减半，同时用1x1kernal来增加通道数，后接多个高宽不变的ResNet块<br>3.总体架构类似VGG、GoogleNet，替换成ResNet块<br>4.学习嵌套函数是训练神经网络的理想情况。在深层神经网络中，学习另一层作为恒等映射较容易（尽管这是一个极端情况）<br>5.残差映射可以更容易地学习同一函数，例如将权重层中的参数近似为零</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://silkyfinish.github.io/2024/09/13/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.avif">
-      <meta itemprop="name" content="SilkyFinish">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="SilkyFinish">
-      <meta itemprop="description" content="冲天香阵透长安，满城尽带黄金甲">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | SilkyFinish">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/09/13/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2024-09-13 11:21:09" itemprop="dateCreated datePublished" datetime="2024-09-13T11:21:09+08:00">2024-09-13</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 
       
     </div>

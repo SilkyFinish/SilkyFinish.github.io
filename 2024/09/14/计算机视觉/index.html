@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"silkyfinish.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="第十二章 计算性能31 深度学习硬件: CPU和GPU![[Pasted image 20240730090134.png]]1.提升CPU利用率  提升空间和时间的内存本地性 时间：重用数据使得保持它们再缓存里 空间：按序读写数据使得可以预读取   并行来利用所有核![[Pasted image 20240730092200.png]]2.提升GPU利用率 并行 使用数千个线程   内存本地性">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机视觉">
+<meta property="og:url" content="https://silkyfinish.github.io/2024/09/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/index.html">
+<meta property="og:site_name" content="SilkyFinish">
+<meta property="og:description" content="第十二章 计算性能31 深度学习硬件: CPU和GPU![[Pasted image 20240730090134.png]]1.提升CPU利用率  提升空间和时间的内存本地性 时间：重用数据使得保持它们再缓存里 空间：按序读写数据使得可以预读取   并行来利用所有核![[Pasted image 20240730092200.png]]2.提升GPU利用率 并行 使用数千个线程   内存本地性">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-09-14T09:28:55.000Z">
+<meta property="article:modified_time" content="2024-09-14T09:31:31.037Z">
+<meta property="article:author" content="SilkyFinish">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://silkyfinish.github.io/2024/09/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://silkyfinish.github.io/2024/09/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/","path":"2024/09/14/计算机视觉/","title":"计算机视觉"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>计算机视觉 | SilkyFinish</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">SilkyFinish</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">SilkyFinish的个人博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E5%8D%81%E4%BA%8C%E7%AB%A0-%E8%AE%A1%E7%AE%97%E6%80%A7%E8%83%BD"><span class="nav-number">1.</span> <span class="nav-text">第十二章 计算性能</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#31-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%A1%AC%E4%BB%B6-CPU%E5%92%8CGPU"><span class="nav-number">1.1.</span> <span class="nav-text">31 深度学习硬件: CPU和GPU</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#32-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%A1%AC%E4%BB%B6-TPU%E5%92%8C%E5%85%B6%E4%BB%96"><span class="nav-number">1.2.</span> <span class="nav-text">32 深度学习硬件: TPU和其他</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#33-%E5%8D%95%E6%9C%BA%E5%A4%9A%E5%8D%A1%E5%B9%B6%E8%A1%8C"><span class="nav-number">1.3.</span> <span class="nav-text">33 单机多卡并行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#34-%E5%A4%9AGPU%E8%AE%AD%E7%BB%83%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.4.</span> <span class="nav-text">34 多GPU训练实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#35-%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97"><span class="nav-number">1.5.</span> <span class="nav-text">35 分布式计算</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E5%8D%81%E4%B8%89%E7%AB%A0-%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89"><span class="nav-number">2.</span> <span class="nav-text">第十三章 计算机视觉</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#13-1-%E5%9B%BE%E5%83%8F%E5%A2%9E%E5%B9%BF"><span class="nav-number">2.1.</span> <span class="nav-text">13.1 图像增广</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13-2-%E5%BE%AE%E8%B0%83"><span class="nav-number">2.2.</span> <span class="nav-text">13.2 微调</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13-3-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E5%92%8C%E8%BE%B9%E7%95%8C%E6%A1%86"><span class="nav-number">2.3.</span> <span class="nav-text">13.3 目标检测和边界框</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13-4-%E9%94%9A%E6%A1%86"><span class="nav-number">2.4.</span> <span class="nav-text">13.4 锚框</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13-5-%E5%A4%9A%E5%B0%BA%E5%BA%A6%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B"><span class="nav-number">2.5.</span> <span class="nav-text">13.5 多尺度目标检测</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#13-5-1-%E5%A4%9A%E5%B0%BA%E5%BA%A6%E9%94%9A%E6%A1%86"><span class="nav-number">2.5.1.</span> <span class="nav-text">13.5.1 多尺度锚框</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#13-5-2-%E5%A4%9A%E5%B0%BA%E5%BA%A6%E6%A3%80%E6%B5%8B"><span class="nav-number">2.5.2.</span> <span class="nav-text">13.5.2 多尺度检测</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13-6-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="nav-number">2.6.</span> <span class="nav-text">13.6 目标检测数据集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13-7-%E5%8D%95%E5%8F%91%E5%A4%9A%E6%A1%86%E6%A3%80%E6%B5%8BSSD"><span class="nav-number">2.7.</span> <span class="nav-text">13.7 单发多框检测SSD</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-SSD%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.7.1.</span> <span class="nav-text">1.SSD模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%80%BB%E7%BB%93"><span class="nav-number">2.7.2.</span> <span class="nav-text">2.总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E4%BB%A3%E7%A0%81"><span class="nav-number">2.7.3.</span> <span class="nav-text">3.代码</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E7%B1%BB%E5%88%AB%E9%A2%84%E6%B5%8B%E5%B1%82"><span class="nav-number">2.7.3.1.</span> <span class="nav-text">1.类别预测层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E8%BE%B9%E7%95%8C%E6%A1%86%E9%A2%84%E6%B5%8B%E5%B1%82"><span class="nav-number">2.7.3.2.</span> <span class="nav-text">2.边界框预测层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E8%BF%9E%E6%8E%A5%E5%A4%9A%E5%B0%BA%E5%BA%A6%E7%9A%84%E9%A2%84%E6%B5%8B"><span class="nav-number">2.7.3.3.</span> <span class="nav-text">3.连接多尺度的预测</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E9%AB%98%E5%92%8C%E5%AE%BD%E5%87%8F%E5%8D%8A%E5%9D%97"><span class="nav-number">2.7.3.4.</span> <span class="nav-text">4.高和宽减半块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-%E5%9F%BA%E6%9C%AC%E7%BD%91%E7%BB%9C%E5%9D%97"><span class="nav-number">2.7.3.5.</span> <span class="nav-text">5.基本网络块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-%E5%AE%8C%E6%95%B4%E7%9A%84%E5%8D%95%E5%8F%91%E5%A4%9A%E6%A1%86%E6%A3%80%E6%B5%8B%E6%A8%A1%E5%9E%8B%E7%94%B1%E4%BA%94%E4%B8%AA%E6%A8%A1%E5%9D%97%E7%BB%84%E6%88%90"><span class="nav-number">2.7.3.6.</span> <span class="nav-text">6.完整的单发多框检测模型由五个模块组成</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-%E4%B8%BA%E6%AF%8F%E4%B8%AA%E5%9D%97%E5%AE%9A%E4%B9%89%E5%89%8D%E5%90%91%E8%AE%A1%E7%AE%97"><span class="nav-number">2.7.3.7.</span> <span class="nav-text">7.为每个块定义前向计算</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-%E8%B6%85%E5%8F%82%E6%95%B0"><span class="nav-number">2.7.3.8.</span> <span class="nav-text">8.超参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-%E5%AE%9A%E4%B9%89%E5%AE%8C%E6%95%B4%E7%9A%84%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.7.3.9.</span> <span class="nav-text">9.定义完整的模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E6%A8%A1%E5%9E%8B%E5%AE%9E%E4%BE%8B%EF%BC%8C%E7%84%B6%E5%90%8E%E4%BD%BF%E7%94%A8%E5%AE%83-%E6%89%A7%E8%A1%8C%E5%89%8D%E5%90%91%E8%AE%A1%E7%AE%97"><span class="nav-number">2.7.3.10.</span> <span class="nav-text">10.创建一个模型实例，然后使用它 执行前向计算</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#11-%E8%AF%BB%E5%8F%96%E9%A6%99%E8%95%89%E6%A3%80%E6%B5%8B%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="nav-number">2.7.3.11.</span> <span class="nav-text">11.读取香蕉检测数据集</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#12-%E5%88%9D%E5%A7%8B%E5%8C%96%E5%85%B6%E5%8F%82%E6%95%B0%E5%B9%B6%E5%AE%9A%E4%B9%89%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95"><span class="nav-number">2.7.3.12.</span> <span class="nav-text">12.初始化其参数并定义优化算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#13-%E5%AE%9A%E4%B9%89%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0%E5%92%8C%E8%AF%84%E4%BB%B7%E5%87%BD%E6%95%B0"><span class="nav-number">2.7.3.13.</span> <span class="nav-text">13.定义损失函数和评价函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#15-%E9%A2%84%E6%B5%8B%E7%9B%AE%E6%A0%87"><span class="nav-number">2.7.3.14.</span> <span class="nav-text">15.预测目标</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#16-%E7%AD%9B%E9%80%89%E6%89%80%E6%9C%89%E7%BD%AE%E4%BF%A1%E5%BA%A6%E4%B8%8D%E4%BD%8E%E4%BA%8E-0-9-%E7%9A%84%E8%BE%B9%E7%95%8C%E6%A1%86%EF%BC%8C%E5%81%9A%E4%B8%BA%E6%9C%80%E7%BB%88%E8%BE%93%E5%87%BA"><span class="nav-number">2.7.3.15.</span> <span class="nav-text">16.筛选所有置信度不低于 0.9 的边界框，做为最终输出</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13-8-%E5%8C%BA%E5%9F%9F%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-R-CNN"><span class="nav-number">2.8.</span> <span class="nav-text">13.8 区域卷积神经网络 R-CNN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-R-CNN"><span class="nav-number">2.8.1.</span> <span class="nav-text">1.R-CNN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%85%B4%E8%B6%A3%E5%8C%BA%E5%9F%9F%EF%BC%88RoI%EF%BC%89%E6%B1%A0%E5%8C%96%E5%B1%82"><span class="nav-number">2.8.2.</span> <span class="nav-text">2.兴趣区域（RoI）池化层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Fast-R-CNN"><span class="nav-number">2.8.3.</span> <span class="nav-text">3.Fast R-CNN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Faster-R-CNN"><span class="nav-number">2.8.4.</span> <span class="nav-text">4.Faster R-CNN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-Mask-R-CNN"><span class="nav-number">2.8.5.</span> <span class="nav-text">5.Mask R-CNN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E6%80%BB%E7%BB%93"><span class="nav-number">2.8.6.</span> <span class="nav-text">6.总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#44-%E7%89%A9%E4%BD%93%E6%A3%80%E6%B5%8B%E7%AE%97%E6%B3%95%EF%BC%9AYOLO"><span class="nav-number">2.9.</span> <span class="nav-text">44.物体检测算法：YOLO</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13-9-%E8%AF%AD%E4%B9%89%E5%88%86%E5%89%B2%E5%92%8C%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="nav-number">2.10.</span> <span class="nav-text">13.9 语义分割和数据集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13-10-%E8%BD%AC%E7%BD%AE%E5%8D%B7%E7%A7%AF"><span class="nav-number">2.11.</span> <span class="nav-text">13.10 转置卷积</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13-11-%E5%85%A8%E5%8D%B7%E7%A7%AF%E7%BD%91%E7%BB%9C"><span class="nav-number">2.12.</span> <span class="nav-text">13.11 全卷积网络</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13-12-%E9%A3%8E%E6%A0%BC%E8%BF%81%E7%A7%BB"><span class="nav-number">2.13.</span> <span class="nav-text">13.12 风格迁移</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="SilkyFinish"
+      src="/images/avatar.avif">
+  <p class="site-author-name" itemprop="name">SilkyFinish</p>
+  <div class="site-description" itemprop="description">冲天香阵透长安，满城尽带黄金甲</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://silkyfinish.github.io/2024/09/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.avif">
+      <meta itemprop="name" content="SilkyFinish">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SilkyFinish">
+      <meta itemprop="description" content="冲天香阵透长安，满城尽带黄金甲">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="计算机视觉 | SilkyFinish">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          计算机视觉
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2024-09-14 17:28:55 / Modified: 17:31:31" itemprop="dateCreated datePublished" datetime="2024-09-14T17:28:55+08:00">2024-09-14</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="第十二章-计算性能"><a href="#第十二章-计算性能" class="headerlink" title="第十二章 计算性能"></a>第十二章 计算性能</h1><h2 id="31-深度学习硬件-CPU和GPU"><a href="#31-深度学习硬件-CPU和GPU" class="headerlink" title="31 深度学习硬件: CPU和GPU"></a>31 深度学习硬件: CPU和GPU</h2><p>![[Pasted image 20240730090134.png]]<br>1.提升CPU利用率</p>
+<ul>
+<li>提升空间和时间的内存本地性<ul>
+<li>时间：重用数据使得保持它们再缓存里</li>
+<li>空间：按序读写数据使得可以预读取</li>
+</ul>
+</li>
+<li>并行来利用所有核<br>![[Pasted image 20240730092200.png]]<br>2.提升GPU利用率</li>
+<li>并行<ul>
+<li>使用数千个线程</li>
+</ul>
+</li>
+<li>内存本地性<ul>
+<li>缓存更小，架构更简单</li>
+</ul>
+</li>
+<li>少用控制语句<ul>
+<li>支持有限</li>
+<li>同步开销大<br>3.不要频繁在CPU和GPU之间传输数据：带宽限制，同步开销<br>4.总结</li>
+</ul>
+</li>
+<li>CPU：可以处理通用计算。性能优化考虑数据读写效率和多线程</li>
+<li>GPU：使用更多的小核和更好的内存带宽，适合能大规模并行的计算任务</li>
+</ul>
+<h2 id="32-深度学习硬件-TPU和其他"><a href="#32-深度学习硬件-TPU和其他" class="headerlink" title="32 深度学习硬件: TPU和其他"></a>32 深度学习硬件: TPU和其他</h2><p>1.DSP：数字信号处理</p>
+<ul>
+<li>为数字信号处理算法设计：点积，卷积，FFT<br>2.FPGA:可编程阵列</li>
+<li>有大量可以编程逻辑单元和可配置的连接<br>3.AI ASIC</li>
+<li>大公司自己的芯片 e.g.Google TPU</li>
+<li>核心：systolic array<ul>
+<li>![[Pasted image 20240730095741.png]]</li>
+<li>计算单元（PE）阵列，特别适合做矩阵乘法<br>4.总结<br>![[Pasted image 20240730102926.png]]</li>
+</ul>
+</li>
+</ul>
+<h2 id="33-单机多卡并行"><a href="#33-单机多卡并行" class="headerlink" title="33 单机多卡并行"></a>33 单机多卡并行</h2><p>1.将小批量计算分到多个GPU上</p>
+<ul>
+<li>数据并行![[Pasted image 20240730140404.png]]</li>
+<li>模型并行</li>
+<li>通道并行（数据+模型）</li>
+</ul>
+<h2 id="34-多GPU训练实现"><a href="#34-多GPU训练实现" class="headerlink" title="34 多GPU训练实现"></a>34 多GPU训练实现</h2><h2 id="35-分布式计算"><a href="#35-分布式计算" class="headerlink" title="35 分布式计算"></a>35 分布式计算</h2><p>![[Pasted image 20240730135630.png]]<br>![[Pasted image 20240730135832.png]]<br>1.计算每一个小批量<br>![[Pasted image 20240730140705.png]]</p>
+<ul>
+<li>每个计算服务器读取小批量中的一块</li>
+<li>进一步将数据切分到每个GPU上</li>
+<li>每个worker从参数服务器那里获取模型参数</li>
+<li>复制参数到每个GPU上</li>
+<li>每个GPU计算精度</li>
+<li>将所有GPU上的梯度求和</li>
+<li>梯度传回服务器，每个服务器对梯度求和并更新参数<br>2.同步SGD：n个GPU，每个每次处理b个样本，同步SGD等价于单GPU运行批量大小为nb的SGD-&gt;也即得到相对单个的n倍加速<br>3.性能的权衡<br>![[Pasted image 20240730143449.png]]<br>批量大小增加导致需要更多计算来得到给定的模型精度</li>
+</ul>
+<h1 id="第十三章-计算机视觉"><a href="#第十三章-计算机视觉" class="headerlink" title="第十三章 计算机视觉"></a>第十三章 计算机视觉</h1><h2 id="13-1-图像增广"><a href="#13-1-图像增广" class="headerlink" title="13.1 图像增广"></a>13.1 图像增广</h2><p>1.数据增强：增加一个已有数据集。使得有更多的多样性</p>
+<ul>
+<li>在语音里加入各种不同的背景噪音</li>
+<li>改变图片的颜色和形状<br>2.类型：</li>
+<li>翻转：上下、左右</li>
+<li>切割：然后变形到固定形状<ul>
+<li>随机高宽比</li>
+<li>随机大小</li>
+<li>随机位置</li>
+</ul>
+</li>
+<li>颜色：色调、饱和度、明亮度、对比度<br>3.总结：数据增广通过变形数据来获取多样性从而使得模型泛化性能更好</li>
+</ul>
+<h2 id="13-2-微调"><a href="#13-2-微调" class="headerlink" title="13.2 微调"></a>13.2 微调</h2><p>1.网络架构<br>![[Pasted image 20240730163834.png]]<br>一个神经网络一般可以分成两块：</p>
+<ul>
+<li>特征抽取将原始像素变成容易线性分割的特征</li>
+<li>线性分类器来做分类<br>2.![[Pasted image 20240730182158.png]]<br>源模型的特征抽取部分可能仍可以对目标模型进行特征抽取，当然线性分类器用不了了了<br>-&gt;预训练的模型的特征抽取部分可以复制给目标模型，然后微调即可使用，输出层就只能从头训练了（随机初始化）<br>即：迁移学习，微调（fine-tuning)是其中一个常用技巧<br>3.训练：使用更小的学习率和更少的数据迭代（更强的正则化）<br>源数据集远复杂与目标数据集的话通常微调效果会更好，有助于泛化<br>4.trick</li>
+<li>重用分类器权重<ul>
+<li>源数据集可能也有目标数据中的部分符号-&gt;可以使用预训练好的模型分类器中对应标号对应的向量来做初始化</li>
+</ul>
+</li>
+<li>固定一些层<ul>
+<li>神经网络学习有层次的特征：低层次的特征更加通用，高层次的特征更跟数据集相关-&gt;可以固定底部一些层的参数不参与更新（更强的正则）</li>
+</ul>
+</li>
+<li>对特征提取部分学习率用小一点，对线性分类层学习率用大的（乘以10）<br>5.总结：微调通过使用在大数据上得到的预训练好的模型来初始化权重来完成提升精度-&gt;<br>预训模型质量很是重要，微调通常速度更快精度更高<br>6.代码：调用net时加上pretrained&#x3D;True</li>
+</ul>
+<h2 id="13-3-目标检测和边界框"><a href="#13-3-目标检测和边界框" class="headerlink" title="13.3 目标检测和边界框"></a>13.3 目标检测和边界框</h2><p>1.边缘框(bounding box)：四个数字定义</p>
+<ul>
+<li>（左上x，左上y，右上x，右上y）</li>
+<li>（左上x，左上y，宽，高）<br> 2.目标检测数据集<br> 图片文件名，物体类别，边缘框<br> 3.总结：物体检测识别图片里面的多个物体的类别和位置，位置通常用边缘框表示</li>
+</ul>
+<h2 id="13-4-锚框"><a href="#13-4-锚框" class="headerlink" title="13.4 锚框"></a>13.4 锚框</h2><p>1.一类目标检测算法基于锚框（anchor box)：</p>
+<ul>
+<li>提出多个被称为锚框的区域（边缘框）</li>
+<li>预测每个锚框是否含有关注的物体</li>
+<li>如果是，基于此预测从这个锚框到真实边缘框的偏移<br>2.IoU-交并比：用来计算两个框之间的相似度<br>0~1.0：无重叠，1：重合<br>![[Pasted image 20240731123551.png]]<br>3.赋予锚框标号（每个锚框是一个训练样本）：</li>
+<li>标注成背景</li>
+<li>关联上一个真实边缘框</li>
+<li>![[Pasted image 20240731125745.png]]<br>4.使用非极大值抑制（NMS）输出</li>
+<li>每个锚框预测一个边缘框，而NMS可以合并相似的预测</li>
+<li>1.选中非背景类（不是背景是物体）的最大预测值（softmax回归，概率最大值），即计算每个类别的预测概率，最大的概率p所对应的类别就是预测的类别</li>
+<li>2.去掉其他所有和这个被选中的的IoU值大于$\theta$的预测</li>
+<li>3.重复上述过程直到所有预测要么被选中要么被去掉<br>5.总结</li>
+<li>首先生成大量锚框，并赋予编号，每个锚框作为一个样本来进行训练</li>
+<li>在预测的时候，使用NMS来去掉冗余的预测<br>6.代码实现<br><strong>以每一个像素为中心，生成不同高宽的锚框</strong><br>锚框的宽度和高度分别是$w\sqrt{s}\sqrt{r}$和$h\sqrt{s}&#x2F;\sqrt{r}$。我们只考虑组合：<br>$(s_1,r_1),(s_1,r_2),…,(s_1,r_m),(s_2,r_1),(s_3,r_1),…,(s_n,r_1)$<br>其中w’、h’是锚框的宽和高，w、h是图片的宽和高，s是锚框的大小（占图片大小的百分比），r是锚框的宽高比与图片的宽高比之比<br>$w\times\sqrt\frac{size\ of\ box}{size\ of\ picture}\times\sqrt{\frac{w’}{h’}&#x2F;\frac{w}{h}}&#x3D;w\times\sqrt{\frac{h’\times w’}{h\times w}}\times\sqrt\frac{w’\times h}{h’\times w}&#x3D;w’$</li>
+</ul>
+<p><strong>训练</strong>流程：<br>训练数据集是带有ground truth bounding box和class的，就像图片分类的带有class一样</p>
+<ul>
+<li>用上述算法，<strong>生成许多锚框</strong>。(这里是对每个pixel作用）<ul>
+<li>multibox_prior(data,sizes,ratios)-&gt;Y(批量大小，锚框的数量，4）（1，图片像素数x（s+r-1），4个坐标量）</li>
+</ul>
+</li>
+<li>用ground truth 框（真实边界框）去标记所有1中生成的锚框(对应代码中的multibox_targe函数）           标记方法：计算所有锚框和ground-truth的IoU值，<strong>给每一个锚框分配一个真实边界框</strong>（小于阈值的为背景，大于的选一个最接近的ground-truth），即用最近的那个标记，详见3.<ul>
+<li>assign_anchor_to_bbox(ground_truth, anchors, device, iou_threshold&#x3D;0.5)-&gt;anchors_bbox_map</li>
+</ul>
+</li>
+<li><strong>标注类别</strong>：锚框的类别与被分配的真实边界框的类别相同</li>
+<li><strong>标注偏移量</strong>：对刚刚标记好的所有锚框预测偏移量(offset)（背景类偏移量为零（负类）新类别的整数索引递增一，对应offset_boxes函数） ![[Pasted image 20240731183316.png]]<ul>
+<li>offset_boxes(anchors, assigned_bb, eps&#x3D;1e-6)-&gt;offset</li>
+<li>multibox_target(anchors, labels（真实边框）)-&gt;(bbox_offset, bbox_mask, class_labels)</li>
+<li>返回的第二个元素是掩码（mask）变量，形状为（批量大小，锚框数的四倍）。 掩码变量中的元素与每个锚框的4个偏移量一一对应。 由于我们不关心对背景的检测，负类的偏移量不应影响目标函数。 通过元素乘法，掩码变量中的零将在计算目标函数之前过滤掉负类偏移量。</li>
+</ul>
+</li>
+<li>一个预测好的边界框根据其中某个带有预测偏移量的锚框生成-&gt;offset_inverse函数，该函数将锚框和偏移量预测作为输入，并应用逆偏移变换来返回预测的边界框坐标。<ul>
+<li>offset_inverse(anchors, offset_preds)-&gt;predicted_bbox</li>
+</ul>
+</li>
+<li>用<strong>NMS</strong>合并属于同一目标的类似的预测边界框（选）（挑一个预测最好的，然后把没我预测的好，但是和我预测的很近的框框删掉）<ul>
+<li>multibox_detection(cls_probs(预测的概率), offset_preds, anchors, nms_threshold&#x3D;0.5,pos_threshold&#x3D;0.009999999)-&gt;torch.stack(out)</li>
+<li>我们可以看到返回结果的形状是（批量大小，锚框的数量，6）。 最内层维度中的六个元素提供了同一预测边界框的输出信息。 第一个元素是预测的类索引，从0开始（0代表狗，1代表猫），值-1表示背景或在非极大值抑制中被移除了。 第二个元素是预测的边界框的置信度。 其余四个元素分别是预测边界框左上角和右下角的(x,y)轴坐标（范围介于0和1之间）</li>
+<li>tensor([[[ 0.00,  0.90,  0.10,  0.08,  0.52,  0.92],<br>   [ 1.00,  0.90,  0.55,  0.20,  0.90,  0.88],<br>   [-1.00,  0.80,  0.08,  0.20,  0.56,  0.95],<br>   [-1.00,  0.70,  0.15,  0.30,  0.62,  0.91]]])</li>
+</ul>
+</li>
+<li>最终得到 每一个 对象或物体 的 一个 最终预测边界框</li>
+</ul>
+<h2 id="13-5-多尺度目标检测"><a href="#13-5-多尺度目标检测" class="headerlink" title="13.5 多尺度目标检测"></a>13.5 多尺度目标检测</h2><p>问题：为每个像素生成锚框太多了-&gt;均匀抽样一小部分像素，以他们为中心生成锚框<br>另外，在不同尺度下，可以生成不同数量和不同大小的锚框</p>
+<ul>
+<li>比起较大的目标，较小的目标在图像上出现的可能性更多样。 例如，1×1、1×2和2×2的目标可以分别以4、2和1种可能的方式出现在2×2图像上。 因此，当使用较小的锚框检测较小的物体时，我们可以采样更多的区域（压缩阶段的开始），而对于较大的物体，我们可以采样较少的区域</li>
+</ul>
+<h3 id="13-5-1-多尺度锚框"><a href="#13-5-1-多尺度锚框" class="headerlink" title="13.5.1 多尺度锚框"></a>13.5.1 多尺度锚框</h3><p>1.读取图像，获得高和宽</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">%matplotlib inline</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> d2l <span class="keyword">import</span> torch <span class="keyword">as</span> d2l</span><br><span class="line"></span><br><span class="line">img = d2l.plt.imread(<span class="string">&#x27;../img/catdog.jpg&#x27;</span>)</span><br><span class="line">h, w = img.shape[:<span class="number">2</span>]</span><br><span class="line">h, w</span><br></pre></td></tr></table></figure>
+<p>2.在特征图 (<code>fmap</code>) 上生成锚框 (<code>anchors</code>)，每个单位（像素）作为锚框的中心<br>在特征图上按像素生成-&gt;在原图上均匀生成<br>feature map：某个卷积层的输出</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">display_anchors</span>(<span class="params">fmap_w, fmap_h, s</span>):</span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;获得特征图的宽和高，得到有多少个像素,然后以每个像素为中心生成对应(size)的锚框&#x27;&#x27;&#x27;</span></span><br><span class="line">    d2l.set_figsize()</span><br><span class="line">    fmap = torch.zeros((<span class="number">1</span>, <span class="number">10</span>, fmap_h, fmap_w))</span><br><span class="line">    anchors = d2l.multibox_prior(fmap, sizes=s, ratios=[<span class="number">1</span>, <span class="number">2</span>, <span class="number">0.5</span>])<span class="string">&#x27;&#x27;&#x27;13.4实现的生成锚框的函数&#x27;&#x27;&#x27;</span></span><br><span class="line">    bbox_scale = torch.tensor((w, h, w, h))<span class="string">&#x27;&#x27;&#x27;anchor出来的是介于0~1所以显示的时候需要乘以真实图片的高和宽&#x27;&#x27;&#x27;</span></span><br><span class="line">    d2l.show_bboxes(d2l.plt.imshow(img).axes, anchors[<span class="number">0</span>] * bbox_scale)</span><br></pre></td></tr></table></figure>
+<p>3.探测小目标</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">display_anchors(fmap_w=<span class="number">4</span>, fmap_h=<span class="number">4</span>, s=[<span class="number">0.15</span>])</span><br></pre></td></tr></table></figure>
+<p>![[Pasted image 20240801175908.png]]<br>压缩成了4x4，一共十六个像素，每个像素生成s+r-1&#x3D;1+3-1&#x3D;3个锚框<br>4.将特征图的高度和宽度减小一半，然后使用较大的锚框来检测较大的目标</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">display_anchors(fmap_w=<span class="number">2</span>, fmap_h=<span class="number">2</span>, s=[<span class="number">0.4</span>])</span><br></pre></td></tr></table></figure>
+<p>![[Pasted image 20240801180507.png]]<br>5.将特征图的高度和宽度减小一半，然后将锚框的尺度增加到0.8</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">display_anchors(fmap_w=<span class="number">1</span>, fmap_h=<span class="number">1</span>, s=[<span class="number">0.8</span>])</span><br></pre></td></tr></table></figure>
+<p>6.总结，s的设置，越后面的段越大</p>
+<h3 id="13-5-2-多尺度检测"><a href="#13-5-2-多尺度检测" class="headerlink" title="13.5.2 多尺度检测"></a>13.5.2 多尺度检测</h3><p>假设我们有c张hxw的特征图，这c张特征图是CNN基于输入图像的前向传播算法获得的中间输出。每张特征图上都有hw个不同的空间位置，相同空间位置可以看作含有c个单元。特征图在相同空间位置的c个单元在输入图像上的感受野相同： 它们表征了同一感受野内的输入图像信息。 因此，我们可以将特征图在同一空间位置的c个单元变换为使用此空间位置生成的a个锚框类别和偏移量。 <strong>本质上，我们用输入图像在某个感受野区域内的信息，来预测输入图像上与该区域位置相近的锚框类别和偏移量</strong><br>注：在卷积神经网络中，对于某一层的任意元素x，其感受野（receptive field）是指在前向传播期间可能影响x计算的所有元素（来自所有先前层）</p>
+<h2 id="13-6-目标检测数据集"><a href="#13-6-目标检测数据集" class="headerlink" title="13.6 目标检测数据集"></a>13.6 目标检测数据集</h2><p>目标检测中的标签还包含真实边界框的信息 </p>
+<h2 id="13-7-单发多框检测SSD"><a href="#13-7-单发多框检测SSD" class="headerlink" title="13.7 单发多框检测SSD"></a>13.7 单发多框检测SSD</h2><h3 id="1-SSD模型"><a href="#1-SSD模型" class="headerlink" title="1.SSD模型"></a>1.SSD模型</h3><p>由13.5.2，当不同层的特征图在输入图像上分别拥有不同大小的感受野时，它们可以用于检测不同大小的目标-&gt;利用深层神经网络在多个层次上对图像进行分层表示，从而实现多尺度目标检测<br>接近顶部的多尺度特征图较小，但具有较大的感受野，它们适合检测较少但较大的物体<br>![[Pasted image 20240801112731.png]]</p>
+<ul>
+<li>首先进入base network（CNN),进行抽取特征</li>
+<li>然后进入右边的anchor box，对每一个像素生成锚框，然后预测类别和真实边界框</li>
+<li>之后通过多个卷积层来减半高宽</li>
+<li>在每段都生成锚框：越到后面压的越小，那么稍微取大一点的锚框，最后映射回原始的图片框的地方就很大了，所以底部端来拟合小物体，顶部段来拟合大物体</li>
+<li>不在一开始就搞size很大的原因是，这样的重复就会很多</li>
+</ul>
+<h3 id="2-总结"><a href="#2-总结" class="headerlink" title="2.总结"></a>2.总结</h3><ul>
+<li>SSD通过单神经网络来检测模型</li>
+<li>在多个段的输出上进行多尺度的检测</li>
+<li>训练算法：首先把训练数据集中的图片分别经过上面那个ssd模型，得到一堆不同尺度下的锚框，和他们预测的类别与偏差，作为预测值。然后利用这些图片本来就标好的真实边界框为每个锚框标注类别和偏移量，作为标签值。最后利用预测值和标签值之间的差别，计算损失函数，通过优化算法训练。</li>
+<li>预测算法：把需要预测的图片放到训练好的模型中，输出生成的锚框的预测的类别和和偏差，然后计算每个锚框的概率，放入nms中去重，最后筛掉置信度低于阈值的，输出。</li>
+</ul>
+<h3 id="3-代码"><a href="#3-代码" class="headerlink" title="3.代码"></a>3.代码</h3><h4 id="1-类别预测层"><a href="#1-类别预测层" class="headerlink" title="1.类别预测层"></a>1.类别预测层</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">%matplotlib inline</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torchvision</span><br><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> nn</span><br><span class="line"><span class="keyword">from</span> torch.nn <span class="keyword">import</span> functional <span class="keyword">as</span> F</span><br><span class="line"><span class="keyword">from</span> d2l <span class="keyword">import</span> torch <span class="keyword">as</span> d2l</span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;这里采用卷积层进行预测而不是全连接层，类似于NiN。在NiN中已经经过global pooling，高宽变成了1x1，所以输出通道数就是类别数。</span></span><br><span class="line"><span class="string">我们这里需要预测的是每个像素生成的每个锚框的类别，所以总数量应该是总像素数（输入的高x宽）x每个像素的锚框数（s+r-1）x每个锚框预测的类别数（类别数+1）</span></span><br><span class="line"><span class="string">这里卷积层kernal size=3，padding=1，也即输出保留输入的高宽，这样输出和输入在特征图宽和高上的空间坐标一一对应。</span></span><br><span class="line"><span class="string">扫一遍我们对每个像素通过周围3x3的块来判断这个像素的类别，反应为一个数，然后通过通道数（在通道里）最后反映出这个像素的所有锚框在每个类别上的得分，index为i(q+1)+j（0≤j≤q）的通道代表了索引为i的锚框有关类别索引为j的预测</span></span><br><span class="line"><span class="string">所以最后的输出每个维度都是信息，高、宽和通道</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cls_predictor</span>(<span class="params">num_inputs, num_anchors, num_classes</span>):</span><br><span class="line">    <span class="keyword">return</span> nn.Conv2d(num_inputs, num_anchors * (num_classes + <span class="number">1</span>),</span><br><span class="line">                     kernel_size=<span class="number">3</span>, padding=<span class="number">1</span>)<span class="string">&#x27;&#x27;&#x27;+1是加上背景类，对每一个锚框都需要预测是哪一类的概率&#x27;&#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
+<h4 id="2-边界框预测层"><a href="#2-边界框预测层" class="headerlink" title="2.边界框预测层"></a>2.边界框预测层</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;&#x27;&#x27;预测和真实的bounding box的offset,offset是四个值（差）-&gt;num_anchors*4&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">bbox_predictor</span>(<span class="params">num_inputs, num_anchors</span>):</span><br><span class="line">    <span class="keyword">return</span> nn.Conv2d(num_inputs, num_anchors * <span class="number">4</span>, kernel_size=<span class="number">3</span>, padding=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="3-连接多尺度的预测"><a href="#3-连接多尺度的预测" class="headerlink" title="3.连接多尺度的预测"></a>3.连接多尺度的预测</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">x, block</span>):</span><br><span class="line">    <span class="keyword">return</span> block(x)</span><br><span class="line"></span><br><span class="line">Y1 = forward(torch.zeros((<span class="number">2</span>, <span class="number">8</span>, <span class="number">20</span>, <span class="number">20</span>)), cls_predictor(<span class="number">8</span>, <span class="number">5</span>, <span class="number">10</span>))</span><br><span class="line">Y2 = forward(torch.zeros((<span class="number">2</span>, <span class="number">16</span>, <span class="number">10</span>, <span class="number">10</span>)), cls_predictor(<span class="number">16</span>, <span class="number">3</span>, <span class="number">10</span>))</span><br><span class="line">Y1.shape, Y2.shape</span><br></pre></td></tr></table></figure>
+<p>(torch.Size([2, 55, 20, 20]), torch.Size([2, 33, 10, 10]))<br>-&gt;在不同的尺度下，特征图的形状或以同一单元为中心的锚框的数量可能会有所不同。 因此，不同尺度下预测输出的形状可能会有所不同</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">flatten_pred</span>(<span class="params">pred</span>):</span><br><span class="line">	<span class="string">&#x27;&#x27;&#x27;permute是调换顺序，这里把通道维放到了最后，这样就是对像素拉，把每个像素的每个锚框预测出来的类别放在一起。然后把4d的展成了2d的（batch size为一个维度，后面的三个展成一个维度&#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> torch.flatten(pred.permute(<span class="number">0</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">1</span>), start_dim=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">concat_preds</span>(<span class="params">preds</span>):</span><br><span class="line">	<span class="string">&#x27;&#x27;&#x27;几个张量先flatten然后再合并,方便后面处理&#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> torch.cat([flatten_pred(p) <span class="keyword">for</span> p <span class="keyword">in</span> preds], dim=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">concat_preds([Y1, Y2]).shape</span><br></pre></td></tr></table></figure>
+<p>torch.Size([2, 25300])（55x20x20+33x10x10）</p>
+<h4 id="4-高和宽减半块"><a href="#4-高和宽减半块" class="headerlink" title="4.高和宽减半块"></a>4.高和宽减半块</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">down_sample_blk</span>(<span class="params">in_channels, out_channels</span>):</span><br><span class="line">    blk = []</span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">2</span>):</span><br><span class="line">        blk.append(</span><br><span class="line">            nn.Conv2d(in_channels, out_channels, kernel_size=<span class="number">3</span>, padding=<span class="number">1</span>))</span><br><span class="line">        blk.append(nn.BatchNorm2d(out_channels))</span><br><span class="line">        blk.append(nn.ReLU())</span><br><span class="line">        in_channels = out_channels</span><br><span class="line">    blk.append(nn.MaxPool2d(<span class="number">2</span>))</span><br><span class="line">    <span class="keyword">return</span> nn.Sequential(*blk)</span><br><span class="line"></span><br><span class="line">forward(torch.zeros((<span class="number">2</span>, <span class="number">3</span>, <span class="number">20</span>, <span class="number">20</span>)), down_sample_blk(<span class="number">3</span>, <span class="number">10</span>)).shape</span><br></pre></td></tr></table></figure>
+<p>torch.Size([2, 10, 10, 10])<br>同时改变通道数，和之前的神经网络架构中的stage一样</p>
+<h4 id="5-基本网络块"><a href="#5-基本网络块" class="headerlink" title="5.基本网络块"></a>5.基本网络块</h4><p>从抽特征到第一次对feature map做锚框中间的net</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">base_net</span>():</span><br><span class="line">    blk = []</span><br><span class="line">    num_filters = [<span class="number">3</span>, <span class="number">16</span>, <span class="number">32</span>, <span class="number">64</span>]</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(num_filters) - <span class="number">1</span>):</span><br><span class="line">        blk.append(down_sample_blk(num_filters[i], num_filters[i + <span class="number">1</span>]))</span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;接了三个block，通道数3到16，16到32，32到64，每次高宽减半&#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> nn.Sequential(*blk)</span><br><span class="line"></span><br><span class="line">forward(torch.zeros((<span class="number">2</span>, <span class="number">3</span>, <span class="number">256</span>, <span class="number">256</span>)), base_net()).shape</span><br></pre></td></tr></table></figure>
+<p>torch.Size([2, 64, 32, 32])</p>
+<h4 id="6-完整的单发多框检测模型由五个模块组成"><a href="#6-完整的单发多框检测模型由五个模块组成" class="headerlink" title="6.完整的单发多框检测模型由五个模块组成"></a>6.完整的单发多框检测模型由五个模块组成</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">get_blk</span>(<span class="params">i</span>):</span><br><span class="line">    <span class="keyword">if</span> i == <span class="number">0</span>:</span><br><span class="line">        blk = base_net()</span><br><span class="line">    <span class="keyword">elif</span> i == <span class="number">1</span>:</span><br><span class="line">        blk = down_sample_blk(<span class="number">64</span>, <span class="number">128</span>)</span><br><span class="line">    <span class="keyword">elif</span> i == <span class="number">4</span>:</span><br><span class="line">        blk = nn.AdaptiveMaxPool2d((<span class="number">1</span>, <span class="number">1</span>))</span><br><span class="line">    <span class="keyword">else</span>:<span class="string">&#x27;&#x27;&#x27;i=2,3&#x27;&#x27;&#x27;</span></span><br><span class="line">        blk = down_sample_blk(<span class="number">128</span>, <span class="number">128</span>)</span><br><span class="line">    <span class="keyword">return</span> blk</span><br></pre></td></tr></table></figure>
+<h4 id="7-为每个块定义前向计算"><a href="#7-为每个块定义前向计算" class="headerlink" title="7.为每个块定义前向计算"></a>7.为每个块定义前向计算</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">blk_forward</span>(<span class="params">X, blk, size, ratio, cls_predictor, bbox_predictor</span>):</span><br><span class="line">    Y = blk(X)</span><br><span class="line">    anchors = d2l.multibox_prior(Y, sizes=size, ratios=ratio)<span class="string">&#x27;&#x27;&#x27;生成锚框&#x27;&#x27;&#x27;</span></span><br><span class="line">    cls_preds = cls_predictor(Y)<span class="string">&#x27;&#x27;&#x27;这里直接把Y传进去就可以了，因为函数不需要知道具体锚框长什么样，知道数量就可以了&#x27;&#x27;&#x27;</span></span><br><span class="line">    bbox_preds = bbox_predictor(Y)</span><br><span class="line">    <span class="keyword">return</span> (Y, anchors, cls_preds, bbox_preds)</span><br></pre></td></tr></table></figure>
+<h4 id="8-超参数"><a href="#8-超参数" class="headerlink" title="8.超参数"></a>8.超参数</h4><p>0.2,0.37,0.54:0.17;0.272&#x3D;$\sqrt{0.2\times0.54}$,从零到一逐步增大</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sizes = [[<span class="number">0.2</span>, <span class="number">0.272</span>], [<span class="number">0.37</span>, <span class="number">0.447</span>], [<span class="number">0.54</span>, <span class="number">0.619</span>], [<span class="number">0.71</span>, <span class="number">0.79</span>],</span><br><span class="line">         [<span class="number">0.88</span>, <span class="number">0.961</span>]]</span><br><span class="line">ratios = [[<span class="number">1</span>, <span class="number">2</span>, <span class="number">0.5</span>]] * <span class="number">5</span><span class="string">&#x27;&#x27;&#x27;常用组合&#x27;&#x27;&#x27;</span></span><br><span class="line">num_anchors = <span class="built_in">len</span>(sizes[<span class="number">0</span>]) + <span class="built_in">len</span>(ratios[<span class="number">0</span>]) - <span class="number">1</span><span class="string">&#x27;&#x27;&#x27;每一层两个size，三个ratio，所以4个锚框</span></span><br></pre></td></tr></table></figure>
+<h4 id="9-定义完整的模型"><a href="#9-定义完整的模型" class="headerlink" title="9.定义完整的模型"></a>9.定义完整的模型</h4><p>setattr(object, name, value):object – 对象,name – 字符串，对象属性,value – 属性值<br>getattr(object, name[, default]): default – 默认返回值，如果不提供该参数，在没有对应属性时，将触发 AttributeError</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">TinySSD</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, num_classes, **kwargs</span>):</span><br><span class="line">        <span class="built_in">super</span>(TinySSD, <span class="variable language_">self</span>).__init__(**kwargs)</span><br><span class="line">        <span class="variable language_">self</span>.num_classes = num_classes</span><br><span class="line">        idx_to_in_channels = [<span class="number">64</span>, <span class="number">128</span>, <span class="number">128</span>, <span class="number">128</span>, <span class="number">128</span>]</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line">            <span class="built_in">setattr</span>(<span class="variable language_">self</span>, <span class="string">f&#x27;blk_<span class="subst">&#123;i&#125;</span>&#x27;</span>, get_blk(i))</span><br><span class="line">            <span class="built_in">setattr</span>(</span><br><span class="line">                <span class="variable language_">self</span>, <span class="string">f&#x27;cls_<span class="subst">&#123;i&#125;</span>&#x27;</span>,</span><br><span class="line">                cls_predictor(idx_to_in_channels[i], num_anchors,</span><br><span class="line">                              num_classes))</span><br><span class="line">            <span class="built_in">setattr</span>(<span class="variable language_">self</span>, <span class="string">f&#x27;bbox_<span class="subst">&#123;i&#125;</span>&#x27;</span>,</span><br><span class="line">                    bbox_predictor(idx_to_in_channels[i], num_anchors))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, X</span>):</span><br><span class="line">        anchors, cls_preds, bbox_preds = [<span class="literal">None</span>] * <span class="number">5</span>, [<span class="literal">None</span>] * <span class="number">5</span>, [<span class="literal">None</span>] * <span class="number">5</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line">            X, anchors[i], cls_preds[i], bbox_preds[i] = blk_forward(</span><br><span class="line">                X, <span class="built_in">getattr</span>(<span class="variable language_">self</span>, <span class="string">f&#x27;blk_<span class="subst">&#123;i&#125;</span>&#x27;</span>), sizes[i], ratios[i],</span><br><span class="line">                <span class="built_in">getattr</span>(<span class="variable language_">self</span>, <span class="string">f&#x27;cls_<span class="subst">&#123;i&#125;</span>&#x27;</span>), <span class="built_in">getattr</span>(<span class="variable language_">self</span>, <span class="string">f&#x27;bbox_<span class="subst">&#123;i&#125;</span>&#x27;</span>))</span><br><span class="line">        anchors = torch.cat(anchors, dim=<span class="number">1</span>)</span><br><span class="line">        cls_preds = concat_preds(cls_preds)</span><br><span class="line">        cls_preds = cls_preds.reshape(cls_preds.shape[<span class="number">0</span>], -<span class="number">1</span>,</span><br><span class="line">                                      <span class="variable language_">self</span>.num_classes + <span class="number">1</span>)</span><br><span class="line">        bbox_preds = concat_preds(bbox_preds)</span><br><span class="line">        <span class="keyword">return</span> anchors, cls_preds, bbox_preds</span><br></pre></td></tr></table></figure>
+<h4 id="10-创建一个模型实例，然后使用它-执行前向计算"><a href="#10-创建一个模型实例，然后使用它-执行前向计算" class="headerlink" title="10.创建一个模型实例，然后使用它 执行前向计算"></a>10.创建一个模型实例，然后使用它 执行前向计算</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">net = TinySSD(num_classes=<span class="number">1</span>)</span><br><span class="line">X = torch.zeros((<span class="number">32</span>, <span class="number">3</span>, <span class="number">256</span>, <span class="number">256</span>))</span><br><span class="line">anchors, cls_preds, bbox_preds = net(X)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;output anchors:&#x27;</span>, anchors.shape)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;output class preds:&#x27;</span>, cls_preds.shape)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;output bbox preds:&#x27;</span>, bbox_preds.shape)</span><br></pre></td></tr></table></figure>
+<p>output anchors: torch.Size([1, 5444, 4])1（所有的图片都和一张一样，因为是按像素生成的）,5444个，4个坐标<br>output class preds: torch.Size([32, 5444, 2])批量大小32，5444个，1+1类<br>output bbox preds: torch.Size([32, 21776])批量大小32，5444个x4个差距</p>
+<h4 id="11-读取香蕉检测数据集"><a href="#11-读取香蕉检测数据集" class="headerlink" title="11.读取香蕉检测数据集"></a>11.读取香蕉检测数据集</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">batch_size = <span class="number">32</span></span><br><span class="line">train_iter, _ = d2l.load_data_bananas(batch_size)</span><br></pre></td></tr></table></figure>
+<p>read 1000 training examples<br>read 100 validation examples</p>
+<h4 id="12-初始化其参数并定义优化算法"><a href="#12-初始化其参数并定义优化算法" class="headerlink" title="12.初始化其参数并定义优化算法"></a>12.初始化其参数并定义优化算法</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">device, net = d2l.try_gpu(), TinySSD(num_classes=<span class="number">1</span>)</span><br><span class="line">trainer = torch.optim.SGD(net.parameters(), lr=<span class="number">0.2</span>, weight_decay=<span class="number">5e-4</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="13-定义损失函数和评价函数"><a href="#13-定义损失函数和评价函数" class="headerlink" title="13.定义损失函数和评价函数"></a>13.定义损失函数和评价函数</h4><p> 由于我们不关心对背景的检测，负类的偏移量不应影响目标函数。 通过元素乘法，掩码变量中的零将在计算目标函数之前过滤掉负类偏移量。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">cls_loss = nn.CrossEntropyLoss(reduction=<span class="string">&#x27;none&#x27;</span>)</span><br><span class="line">bbox_loss = nn.L1Loss(reduction=<span class="string">&#x27;none&#x27;</span>)</span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;可以看作是分类loss和回归loss加一起&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">calc_loss</span>(<span class="params">cls_preds, cls_labels, bbox_preds, bbox_labels, bbox_masks</span>):</span><br><span class="line">	<span class="string">&#x27;&#x27;&#x27;labels就是真实的类别和boundingbox，参见13.4&#x27;&#x27;&#x27;</span></span><br><span class="line">    batch_size, num_classes = cls_preds.shape[<span class="number">0</span>], cls_preds.shape[<span class="number">2</span>]</span><br><span class="line">    cls = cls_loss(cls_preds.reshape(-<span class="number">1</span>, num_classes),<span class="string">&#x27;&#x27;&#x27;把batch size和个数合一&#x27;&#x27;&#x27;</span></span><br><span class="line">                   cls_labels.reshape(-<span class="number">1</span>)).reshape(batch_size, -<span class="number">1</span>).mean(dim=<span class="number">1</span>)</span><br><span class="line">    bbox = bbox_loss(bbox_preds * bbox_masks,</span><br><span class="line">                     bbox_labels * bbox_masks).mean(dim=<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">return</span> cls + bbox</span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;下面的是评价函数&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cls_eval</span>(<span class="params">cls_preds, cls_labels</span>):</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">float</span>(</span><br><span class="line">        (cls_preds.argmax(dim=-<span class="number">1</span>).<span class="built_in">type</span>(cls_labels.dtype) == cls_labels).<span class="built_in">sum</span>())<span class="string">&#x27;&#x27;&#x27;类似之前分类问题的准确率&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">bbox_eval</span>(<span class="params">bbox_preds, bbox_labels, bbox_masks</span>):</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">float</span>((torch.<span class="built_in">abs</span>((bbox_labels - bbox_preds) * bbox_masks)).<span class="built_in">sum</span>())<span class="string">&#x27;&#x27;&#x27;平均绝对误差&#x27;&#x27;&#x27;</span>```</span><br><span class="line"><span class="comment">#### 14.训练模型</span></span><br><span class="line">```python</span><br><span class="line">num_epochs, timer = <span class="number">20</span>, d2l.Timer()</span><br><span class="line">animator = d2l.Animator(xlabel=<span class="string">&#x27;epoch&#x27;</span>, xlim=[<span class="number">1</span>, num_epochs],</span><br><span class="line">                        legend=[<span class="string">&#x27;class error&#x27;</span>, <span class="string">&#x27;bbox mae&#x27;</span>])</span><br><span class="line">net = net.to(device)</span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(num_epochs):</span><br><span class="line">    metric = d2l.Accumulator(<span class="number">4</span>)</span><br><span class="line">    net.train()</span><br><span class="line">    <span class="keyword">for</span> features, target <span class="keyword">in</span> train_iter:</span><br><span class="line">        timer.start()</span><br><span class="line">        trainer.zero_grad()</span><br><span class="line">        X, Y = features.to(device), target.to(device)</span><br><span class="line">        anchors, cls_preds, bbox_preds = net(X)<span class="string">&#x27;&#x27;&#x27;生成多尺度锚框，为每个锚框预测类别和偏移量，对应图片分类的生成各类别的softmax概率值&#x27;&#x27;&#x27;</span></span><br><span class="line">        bbox_labels, bbox_masks, cls_labels = d2l.multibox_target(anchors, Y)<span class="string">&#x27;&#x27;&#x27;使用真实边界框为每个锚框标注类别和偏移量，在图片分类中直接用数据集中标注好的标签&#x27;&#x27;&#x27;</span></span><br><span class="line">        l = calc_loss(cls_preds, cls_labels, bbox_preds, bbox_labels,</span><br><span class="line">                      bbox_masks)<span class="string">&#x27;&#x27;&#x27;根据上面算的预测值和label算损失函数&#x27;&#x27;&#x27;</span></span><br><span class="line">        l.mean().backward()</span><br><span class="line">        trainer.step()</span><br><span class="line">        metric.add(cls_eval(cls_preds, cls_labels), cls_labels.numel(),</span><br><span class="line">                   bbox_eval(bbox_preds, bbox_labels, bbox_masks),</span><br><span class="line">                   bbox_labels.numel())</span><br><span class="line">    cls_err, bbox_mae = <span class="number">1</span> - metric[<span class="number">0</span>] / metric[<span class="number">1</span>], metric[<span class="number">2</span>] / metric[<span class="number">3</span>]</span><br><span class="line">    animator.add(epoch + <span class="number">1</span>, (cls_err, bbox_mae))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&#x27;class err <span class="subst">&#123;cls_err:<span class="number">.2</span>e&#125;</span>, bbox mae <span class="subst">&#123;bbox_mae:<span class="number">.2</span>e&#125;</span>&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&#x27;<span class="subst">&#123;<span class="built_in">len</span>(train_iter.dataset) / timer.stop():<span class="number">.1</span>f&#125;</span> examples/sec on &#x27;</span></span><br><span class="line">      <span class="string">f&#x27;<span class="subst">&#123;<span class="built_in">str</span>(device)&#125;</span>&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="15-预测目标"><a href="#15-预测目标" class="headerlink" title="15.预测目标"></a>15.预测目标</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">X=torchvision.io.read_image(<span class="string">&#x27;../img/banana.jpg&#x27;</span>).unsqueeze(<span class="number">0</span>).<span class="built_in">float</span>()</span><br><span class="line">img = X.squeeze(<span class="number">0</span>).permute(<span class="number">1</span>, <span class="number">2</span>, <span class="number">0</span>).long()</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">predict</span>(<span class="params">X</span>):</span><br><span class="line">    net.<span class="built_in">eval</span>()<span class="string">&#x27;&#x27;&#x27;预测模式&#x27;&#x27;&#x27;</span></span><br><span class="line">    anchors, cls_preds, bbox_preds = net(X.to(device))</span><br><span class="line">    cls_probs = F.softmax(cls_preds, dim=<span class="number">2</span>).permute(<span class="number">0</span>, <span class="number">2</span>, <span class="number">1</span>)<span class="string">&#x27;&#x27;&#x27;算每个的概率，用于后面的nms&#x27;&#x27;&#x27;</span></span><br><span class="line">    output = d2l.multibox_detection(cls_probs, bbox_preds, anchors)</span><br><span class="line">    idx = [i <span class="keyword">for</span> i, row <span class="keyword">in</span> <span class="built_in">enumerate</span>(output[<span class="number">0</span>]) <span class="keyword">if</span> row[<span class="number">0</span>] != -<span class="number">1</span>]</span><br><span class="line">    <span class="keyword">return</span> output[<span class="number">0</span>, idx]</span><br><span class="line"></span><br><span class="line">output = predict(X)</span><br></pre></td></tr></table></figure>
+<h4 id="16-筛选所有置信度不低于-0-9-的边界框，做为最终输出"><a href="#16-筛选所有置信度不低于-0-9-的边界框，做为最终输出" class="headerlink" title="16.筛选所有置信度不低于 0.9 的边界框，做为最终输出"></a>16.筛选所有置信度不低于 0.9 的边界框，做为最终输出</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">display</span>(<span class="params">img, output, threshold</span>):</span><br><span class="line">    d2l.set_figsize((<span class="number">5</span>, <span class="number">5</span>))</span><br><span class="line">    fig = d2l.plt.imshow(img)</span><br><span class="line">    <span class="keyword">for</span> row <span class="keyword">in</span> output:</span><br><span class="line">        score = <span class="built_in">float</span>(row[<span class="number">1</span>])</span><br><span class="line">        <span class="keyword">if</span> score &lt; threshold:</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        h, w = img.shape[<span class="number">0</span>:<span class="number">2</span>]</span><br><span class="line">        bbox = [row[<span class="number">2</span>:<span class="number">6</span>] * torch.tensor((w, h, w, h), device=row.device)]</span><br><span class="line">        d2l.show_bboxes(fig.axes, bbox, <span class="string">&#x27;%.2f&#x27;</span> % score, <span class="string">&#x27;w&#x27;</span>)</span><br><span class="line"></span><br><span class="line">display(img, output.cpu(), threshold=<span class="number">0.9</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="13-8-区域卷积神经网络-R-CNN"><a href="#13-8-区域卷积神经网络-R-CNN" class="headerlink" title="13.8 区域卷积神经网络 R-CNN"></a>13.8 区域卷积神经网络 R-CNN</h2><p>![[Pasted image 20240801095608.png]]</p>
+<h3 id="1-R-CNN"><a href="#1-R-CNN" class="headerlink" title="1.R-CNN"></a>1.R-CNN</h3><ul>
+<li>使用启发式搜索算法来选取多个高质量提议区域（锚框也是一种选取方法）（多尺度下），每个提议区域标注类别和真实边缘框</li>
+<li>使用预训练好的模型（CNN），将每个提议区域变形为网络所需尺寸，并通过前向传播输出抽取的提议区域特征</li>
+<li>将每个提议区域的特征连同其标注的类别作为一个样本。训练多个支持向量机对目标分类，其中每个支持向量机用来判断样本是否属于某一个类别</li>
+<li>将每个提议区域的特征连同其标注的边界框作为一个样本，训练线性回归模型来预测真实边界框<br>问题：第一、二步计算量太大</li>
+</ul>
+<h3 id="2-兴趣区域（RoI）池化层"><a href="#2-兴趣区域（RoI）池化层" class="headerlink" title="2.兴趣区域（RoI）池化层"></a>2.兴趣区域（RoI）池化层</h3><p>利于做batch<br>![[Pasted image 20240801100248.png]]</p>
+<h3 id="3-Fast-R-CNN"><a href="#3-Fast-R-CNN" class="headerlink" title="3.Fast R-CNN"></a>3.Fast R-CNN</h3><p>关键：CNN不再是对每个锚框抽取，而是对整个图片<br>R-CNN的主要性能瓶颈在于，对每个提议区域，卷积神经网络的前向传播是独立的，而没有共享计算。 由于这些区域通常有重叠，独立的特征抽取会导致重复的计算<br>![[Pasted image 20240801100618.png]]</p>
+<ul>
+<li>首先对图片用CNN进行处理，设输入为一张图像，将卷积神经网络的输出的形状记为1×c×h1×w1</li>
+<li>同时在原始图片上进行选择性搜索（选择锚框），n个。（标出了形状各异的兴趣区域）</li>
+<li>然后将选择好的锚框映射到处理过的图像上</li>
+<li>这些感兴趣的区域需要进一步抽取出形状相同的特征（比如指定高度h2和宽度w2），以便于连结后输出。<ul>
+<li>在R-CNN中，先生成区域，在用卷积修改尺寸和提取特征，最后能不同区域统一用svm和回归进行预测，缺点就是每个都要卷一次。在fast里面，就卷一次，直接对图片卷，然后把区域映射上去，相当于先框区域再压缩，缺点是尺寸不一样，所以要用RoI</li>
+</ul>
+</li>
+<li>再对锚框进行RoI pooling，变成一个形状<ul>
+<li>将卷积神经网络的输出和提议区域作为输入，输出连结后的各个提议区域抽取的特征，形状为n×c×h2×w2</li>
+</ul>
+</li>
+<li>通过全连接层将输出形状变换为n×d</li>
+<li>预测n个提议区域中每个区域的类别和边界框。更具体地说，在预测类别和边界框时，将全连接层的输出分别转换为形状为n×q（q是类别的数量）的输出和形状为n×4的输出。其中预测类别时使用softmax回归</li>
+</ul>
+<h3 id="4-Faster-R-CNN"><a href="#4-Faster-R-CNN" class="headerlink" title="4.Faster R-CNN"></a>4.Faster R-CNN</h3><p>![[Pasted image 20240801101841.png]]<br>用Regional proposal network来代替原来的Selective search获得更好的锚框（减少提议区域的生成数量，生成不怎么重复的），一个比较糙的目标检测算法：two stage</p>
+<ul>
+<li>图片先CNN</li>
+<li>然后输出进入RPN，先再CNN，将输出通道数记为c。这样，卷积神经网络为图像抽取的特征图中的每个单元均得到一个长度为c的新特征<ul>
+<li>在这个小network里先要筛一次，所以需要有特征，然后后面可以预测、筛选</li>
+</ul>
+</li>
+<li>然后生成锚框（13.4的生成方法）</li>
+<li>使用长度为c的特征，两件事<ul>
+<li>binary category prediction：是否圈住</li>
+<li>bounding box prediction</li>
+</ul>
+</li>
+<li>NMS-&gt;从预测类别为目标的预测边界框中移除相似的结果。最终输出的预测边界框即是兴趣区域汇聚层所需的提议区域</li>
+</ul>
+<h3 id="5-Mask-R-CNN"><a href="#5-Mask-R-CNN" class="headerlink" title="5.Mask R-CNN"></a>5.Mask R-CNN</h3><p>![[Pasted image 20240801104324.png]]<br>如果有像素级别的标号，使用FCN来利用这些信息（fully convolutional network）<br>RoI pooling-&gt;RoI align,直接中间切开，不管原有边缘，对于被切开的像素，进行加权，保留特征图上的空间信息，从而更适于像素级预测</p>
+<h3 id="6-总结"><a href="#6-总结" class="headerlink" title="6.总结"></a>6.总结</h3><p>1.R-CNN基于锚框和CNN的目标检测算法<br>2.Faster R-CNN &amp;Mask R-CNN是在追求高精度场景下的常用算法</p>
+<h2 id="44-物体检测算法：YOLO"><a href="#44-物体检测算法：YOLO" class="headerlink" title="44.物体检测算法：YOLO"></a>44.物体检测算法：YOLO</h2><p>1.you look only once<br>2.问题：SSD中锚框大量重叠，浪费了很多计算-&gt;YOLO将图片均匀分成SxS个锚框，每个锚框预测B个边缘框<br>3.总结：目标检测算法主要分为两个类型</p>
+<ul>
+<li>（1）two-stage方法，如R-CNN系算法（region-based CNN），其主要思路是先通过启发式方法（selective search）或者CNN网络（RPN)产生一系列稀疏的候选框，然后对这些候选框进行分类与回归，two-stage方法的优势是准确度高</li>
+<li>（2）one-stage方法，如Yolo和SSD，其主要思路是均匀地在图片的不同位置进行密集抽样，抽样时可以采用不同尺度和长宽比，然后利用CNN提取特征后直接进行分类与回归，整个过程只需要一步，所以其优势是速度快，但是均匀的密集采样的一个重要缺点是训练比较困难，这主要是因为正样本与负样本（背景）极其不均衡，导致模型准确度稍低</li>
+</ul>
+<h2 id="13-9-语义分割和数据集"><a href="#13-9-语义分割和数据集" class="headerlink" title="13.9 语义分割和数据集"></a>13.9 语义分割和数据集</h2><p>1.语义分割（semantic segementation）将图片中的每个像素分类到对应的类别：语义区域的标注和预测是像素级的<br>2.应用：背景虚化、路面分割<br>3.与实例分割的区别：![[Pasted image 20240804120451.png]]</p>
+<h2 id="13-10-转置卷积"><a href="#13-10-转置卷积" class="headerlink" title="13.10 转置卷积"></a>13.10 转置卷积</h2><p>1.问题：之前的卷积不会增大输入的高宽，通常要么不变，要么减半。这对于像素级处理是不行的。转置卷积（transposed convolution）可以用来增大输入高宽<br>2.计算方法![[Pasted image 20240804163822.png]]<br>0和kernal中的元素逐个做乘法，然后逐个写上去（保持核的大小）<br>$Y[i:i+h,j:j+w]+&#x3D;X[i,j]\cdot K$<br>3.为什么是“转置”</p>
+<ul>
+<li>对于卷积$Y&#x3D;X\bigstar W$<ul>
+<li>可以对W构造一个V，使得卷积等价于矩阵乘法Y‘&#x3D;VX’($n&#x3D;n\times m \cdot m$)</li>
+<li>Y‘，X’是Y，X对应的向量版本</li>
+</ul>
+</li>
+<li>转置卷积等价于$Y’&#x3D;V^T X’$’($m&#x3D;m\times n \cdot n$)</li>
+<li>-&gt;如果卷积将输入从（h，w）变成（h‘，w）<ul>
+<li>同样超参数的转置卷积则从（h‘，w’）变成（h，w）</li>
+</ul>
+</li>
+<li>转置卷积层能够交换卷积层的正向传播函数和反向传播函数<br>4.填充<br>tconv &#x3D; nn.Conv2DTranspose(1, kernel_size&#x3D;2, padding&#x3D;1)<br>转置卷积的输出中将删除第一和最后的行与列<br>就是说转置卷积可以理解为就是卷积反着来，padding&#x3D;1是加在输入层上。先想个卷积的过程，一个1x1的图像用(1, kernel_size&#x3D;2, padding&#x3D;1)卷积，得到1-2+2+1，也就是2x2的输出。所以逆过程2x2的经过转置卷积，得到1x1的输出。所以转置卷积填充是让输入变小。<br>5.步幅<br>![[Pasted image 20240804174538.png]]<br>所以转置卷积步幅是让输入变大<br>6.通道<br>与卷积相同 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">X = torch.rand(size=(<span class="number">1</span>, <span class="number">10</span>, <span class="number">16</span>, <span class="number">16</span>))</span><br><span class="line">conv = nn.Conv2d(<span class="number">10</span>, <span class="number">20</span>, kernel_size=<span class="number">5</span>, padding=<span class="number">2</span>, stride=<span class="number">3</span>)</span><br><span class="line">tconv = nn.ConvTranspose2d(<span class="number">20</span>, <span class="number">10</span>, kernel_size=<span class="number">5</span>, padding=<span class="number">2</span>, stride=<span class="number">3</span>)</span><br><span class="line">tconv(conv(X)).shape == X.shape</span><br></pre></td></tr></table></figure>
+True</li>
+</ul>
+<ol start="7">
+<li>反卷积的意义是卷积之后的矩阵的每个元素有一个感受视野，反卷积希望通过这个元素还原感受视野里面的内容。并且由于卷积后的元素的感受视野有相交的情况，所以反卷积中也出现了结果中有些元素的值来源于卷积结果的一个或多个元素的现象，理论上通过反卷积，我们可以通过将特征图反卷积还原到原图大小从而获取到我们的卷积核在原图中提取的是什么信息</li>
+</ol>
+<h2 id="13-11-全卷积网络"><a href="#13-11-全卷积网络" class="headerlink" title="13.11 全卷积网络"></a>13.11 全卷积网络</h2><p>1.FCN（fully convolutional network）<br>它用转置卷积层来替换CNN最后的全连接层，从而可以实现每个像素的预测<br>![[Pasted image 20240804213024.png]]<br>k（通道数）是k个类别，表示每个像素k个类别的概率</p>
+<h2 id="13-12-风格迁移"><a href="#13-12-风格迁移" class="headerlink" title="13.12 风格迁移"></a>13.12 风格迁移</h2><p>1.样式迁移：将样式中图片中的样式迁移到内容图片上，得到合成图片<br>2.基于CNN的样式迁移</p>
+<ul>
+<li>奠基性工作![[Pasted image 20240805100507.png]]</li>
+<li>合成图像是风格迁移过程中唯一需要更新的变量，即风格迁移所需迭代的模型参数</li>
+<li>全变分损失有助于减少合成图像中的噪点</li>
+<li>假设该输出的样本数为1，通道数为c，高和宽分别为h和w，我们可以将此输出转换为矩阵X，其有c行和hw列。 这个矩阵可以被看作由c个长度为hw的向量$x_1,…,x_c$组合而成的。其中向量xi代表了通道i上的风格特征。在这些向量的格拉姆矩阵$XX^T∈R^{c\times c}$中，i行j列的元素$x_{ij}$即向量$x_i$和$x_j$的内积。它表达了通道i和通道j上风格特征的相关性。我们用这样的格拉姆矩阵来表达风格层输出的风格</li>
+<li>简而言之，用通道表示一个点的特征，用通道之间的统计关系表示图片的风格（gram matrix）</li>
+<li>合成图像里面有大量高频噪点，即有特别亮或者特别暗的颗粒像素。 一种常见的去噪方法是全变分去噪（total variation denoising）： 假设xi,j表示坐标(i,j)处的像素值，降低全变分损失$\sum_{i,j}|x_{i,j}-x_{i+1,j}|+|x_{i,j}-x_{i,j+1}|$能够尽可能使邻近的像素值相似。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/09/13/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="prev" title="卷积神经网络">
+                  <i class="fa fa-angle-left"></i> 卷积神经网络
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/09/14/%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="next" title="循环神经网络">
+                  循环神经网络 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">SilkyFinish</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

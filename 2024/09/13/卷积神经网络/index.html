@@ -21,26 +21,26 @@
 
     <meta name="description" content="第六章 卷积神经网络经典卷积神经网络 LeNet![[Pasted image 20240726120300.png]]1.卷积层代替全连接层：1.可以在图像中保留空间结构；2.模型更简洁，所需参数更少2.LeCun 1989：识别图像中的手写数字，第一篇通过反向传播成功训练卷积神经网络论文3.LeNet（LeNet-5）由两个部分组成：    卷积编码器：由两个卷积层组成;    全连接层密集块">
 <meta property="og:type" content="article">
-<meta property="og:title" content="hello">
-<meta property="og:url" content="https://silkyfinish.github.io/2024/09/13/hello/index.html">
+<meta property="og:title" content="卷积神经网络">
+<meta property="og:url" content="https://silkyfinish.github.io/2024/09/13/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/index.html">
 <meta property="og:site_name" content="SilkyFinish">
 <meta property="og:description" content="第六章 卷积神经网络经典卷积神经网络 LeNet![[Pasted image 20240726120300.png]]1.卷积层代替全连接层：1.可以在图像中保留空间结构；2.模型更简洁，所需参数更少2.LeCun 1989：识别图像中的手写数字，第一篇通过反向传播成功训练卷积神经网络论文3.LeNet（LeNet-5）由两个部分组成：    卷积编码器：由两个卷积层组成;    全连接层密集块">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-09-13T03:29:12.000Z">
-<meta property="article:modified_time" content="2024-09-13T09:48:12.265Z">
+<meta property="article:modified_time" content="2024-09-14T09:31:23.456Z">
 <meta property="article:author" content="SilkyFinish">
 <meta property="article:tag" content="Deep Learning">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://silkyfinish.github.io/2024/09/13/hello/">
+<link rel="canonical" href="https://silkyfinish.github.io/2024/09/13/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://silkyfinish.github.io/2024/09/13/hello/","path":"2024/09/13/hello/","title":"hello"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://silkyfinish.github.io/2024/09/13/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/","path":"2024/09/13/卷积神经网络/","title":"卷积神经网络"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>hello | SilkyFinish</title>
+<title>卷积神经网络 | SilkyFinish</title>
   
 
 
@@ -128,7 +128,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">4</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -164,7 +164,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://silkyfinish.github.io/2024/09/13/hello/">
+    <link itemprop="mainEntityOfPage" href="https://silkyfinish.github.io/2024/09/13/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.avif">
@@ -177,12 +177,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="hello | SilkyFinish">
+      <meta itemprop="name" content="卷积神经网络 | SilkyFinish">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          hello
+          卷积神经网络
         </h1>
 
         <div class="post-meta-container">
@@ -192,9 +192,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
-      
 
-      <time title="Created: 2024-09-13 11:29:12 / Modified: 17:48:12" itemprop="dateCreated datePublished" datetime="2024-09-13T11:29:12+08:00">2024-09-13</time>
+      <time title="Created: 2024-09-13 11:29:12" itemprop="dateCreated datePublished" datetime="2024-09-13T11:29:12+08:00">2024-09-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-09-14 17:31:23" itemprop="dateModified" datetime="2024-09-14T17:31:23+08:00">2024-09-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -263,11 +269,11 @@ BN在训练模式：每个小批量的均值和方差；在预测模式：整个
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2024/09/13/hello-world/" rel="prev" title="Hello World">
-                  <i class="fa fa-angle-left"></i> Hello World
-                </a>
             </div>
             <div class="post-nav-item">
+                <a href="/2024/09/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/" rel="next" title="计算机视觉">
+                  计算机视觉 <i class="fa fa-angle-right"></i>
+                </a>
             </div>
           </div>
     </footer>
