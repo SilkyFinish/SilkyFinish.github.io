@@ -19,18 +19,25 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"silkyfinish.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="第六章 卷积神经网络 经典卷积神经网络 LeNet ![[Pasted image 20240726120300.png]] 1.卷积层代替全连接层：1.可以在图像中保留空间结构；2.模型更简洁，所需参数更少 2.LeCun 1989：识别图像中的手写数字，第一篇通过反向传播成功训练卷积神经网络论文 3.LeNet（LeNet-5）由两个部分组成： 卷积编码器：由两个卷积层组成; 全">
+    <meta name="description" content="第六章 卷积神经网络 经典卷积神经网络 LeNet   卷积层代替全连接层：1.可以在图像中保留空间结构；2.模型更简洁，所需参数更少 LeCun 1989：识别图像中的手写数字，第一篇通过反向传播成功训练卷积神经网络论文 LeNet（LeNet-5）由两个部分组成： 卷积编码器：由两个卷积层组成; 全连接层密集块：由三个全连接层组成 每个卷积块中的基本单元是一个卷积层、一个si">
 <meta property="og:type" content="article">
 <meta property="og:title" content="卷积神经网络">
 <meta property="og:url" content="https://silkyfinish.github.io/2024/09/13/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/index.html">
 <meta property="og:site_name" content="SilkyFinish">
-<meta property="og:description" content="第六章 卷积神经网络 经典卷积神经网络 LeNet ![[Pasted image 20240726120300.png]] 1.卷积层代替全连接层：1.可以在图像中保留空间结构；2.模型更简洁，所需参数更少 2.LeCun 1989：识别图像中的手写数字，第一篇通过反向传播成功训练卷积神经网络论文 3.LeNet（LeNet-5）由两个部分组成： 卷积编码器：由两个卷积层组成; 全">
+<meta property="og:description" content="第六章 卷积神经网络 经典卷积神经网络 LeNet   卷积层代替全连接层：1.可以在图像中保留空间结构；2.模型更简洁，所需参数更少 LeCun 1989：识别图像中的手写数字，第一篇通过反向传播成功训练卷积神经网络论文 LeNet（LeNet-5）由两个部分组成： 卷积编码器：由两个卷积层组成; 全连接层密集块：由三个全连接层组成 每个卷积块中的基本单元是一个卷积层、一个si">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://silkyfinish.github.io/pic/Pasted%20image%2020240726120300.png">
+<meta property="og:image" content="https://silkyfinish.github.io/pic/Pasted%20image%2020240726164513.png">
+<meta property="og:image" content="https://silkyfinish.github.io/pic/Pasted%20image%2020240726220715.png">
+<meta property="og:image" content="https://silkyfinish.github.io/pic/Pasted%20image%2020240727095550.png">
+<meta property="og:image" content="https://silkyfinish.github.io/pic/Pasted%20image%2020240727103941.png">
+<meta property="og:image" content="https://silkyfinish.github.io/pic/Pasted%20image%2020240729181750.png">
 <meta property="article:published_time" content="2024-09-13T03:29:12.000Z">
-<meta property="article:modified_time" content="2024-09-14T09:57:51.990Z">
+<meta property="article:modified_time" content="2024-09-15T11:46:51.520Z">
 <meta property="article:author" content="SilkyFinish">
 <meta property="article:tag" content="Deep Learning">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://silkyfinish.github.io/pic/Pasted%20image%2020240726120300.png">
 
 
 <link rel="canonical" href="https://silkyfinish.github.io/2024/09/13/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/">
@@ -113,7 +120,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E5%85%AD%E7%AB%A0-%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"><span class="nav-number">1.</span> <span class="nav-text">第六章 卷积神经网络</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%8F%E5%85%B8%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-lenet"><span class="nav-number">1.1.</span> <span class="nav-text">经典卷积神经网络 LeNet</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E4%B8%83%E7%AB%A0-%E7%8E%B0%E4%BB%A3%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"><span class="nav-number">2.</span> <span class="nav-text">第七章 现代卷积神经网络</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%B1%E5%BA%A6%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-alexnet"><span class="nav-number">2.1.</span> <span class="nav-text">7.1 深度卷积神经网络 AlexNet</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E5%85%AD%E7%AB%A0-%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"><span class="nav-number">1.</span> <span class="nav-text">第六章 卷积神经网络</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%8F%E5%85%B8%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-lenet"><span class="nav-number">1.1.</span> <span class="nav-text">经典卷积神经网络 LeNet</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC%E4%B8%83%E7%AB%A0-%E7%8E%B0%E4%BB%A3%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"><span class="nav-number">2.</span> <span class="nav-text">第七章 现代卷积神经网络</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%B1%E5%BA%A6%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-alexnet"><span class="nav-number">2.1.</span> <span class="nav-text">7.1 深度卷积神经网络 AlexNet</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9D%97%E7%9A%84%E7%BD%91%E7%BB%9C-vgg"><span class="nav-number">2.2.</span> <span class="nav-text">7.2 使用块的网络 VGG</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E7%BD%91%E7%BB%9C-nin"><span class="nav-number">2.3.</span> <span class="nav-text">7.3 网络中的网络 NiN</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AB%E5%B9%B6%E8%A1%8C%E8%BF%9E%E6%8E%A5%E7%9A%84%E7%BD%91%E7%BB%9C-googlenet"><span class="nav-number">2.4.</span> <span class="nav-text">7.4 含并行连接的网络 GoogLeNet</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%B9%E9%87%8F%E8%A7%84%E8%8C%83%E5%8C%96"><span class="nav-number">2.5.</span> <span class="nav-text">7.5 批量规范化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AE%8B%E5%B7%AE%E7%BD%91%E7%BB%9C-resnet"><span class="nav-number">2.6.</span> <span class="nav-text">7.6 残差网络 ResNet</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -133,12 +140,14 @@
         </a>
       </div>
       <div class="site-state-item site-state-categories">
+          <a href="/categories/">
         <span class="site-state-item-count">1</span>
-        <span class="site-state-item-name">categories</span>
+        <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
+          <a href="/tags/">
         <span class="site-state-item-count">1</span>
-        <span class="site-state-item-name">tags</span>
+        <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>
@@ -200,7 +209,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2024-09-14 17:57:51" itemprop="dateModified" datetime="2024-09-14T17:57:51+08:00">2024-09-14</time>
+      <time title="Modified: 2024-09-15 19:46:51" itemprop="dateModified" datetime="2024-09-15T19:46:51+08:00">2024-09-15</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -223,61 +232,83 @@
     
     <div class="post-body" itemprop="articleBody"><h1 id="第六章-卷积神经网络">第六章 卷积神经网络</h1>
 <h2 id="经典卷积神经网络-lenet">经典卷积神经网络 LeNet</h2>
-<p>![[Pasted image 20240726120300.png]]
-1.卷积层代替全连接层：1.可以在图像中保留空间结构；2.模型更简洁，所需参数更少
-2.LeCun
-1989：识别图像中的手写数字，第一篇通过反向传播成功训练卷积神经网络论文
-3.LeNet（LeNet-5）由两个部分组成： 卷积编码器：由两个卷积层组成;
+<p><img src="/pic/Pasted%20image%2020240726120300.png" /></p>
+<ol type="1">
+<li>卷积层代替全连接层：1.可以在图像中保留空间结构；2.模型更简洁，所需参数更少</li>
+<li>LeCun
+1989：识别图像中的手写数字，第一篇通过反向传播成功训练卷积神经网络论文</li>
+<li>LeNet（LeNet-5）由两个部分组成： 卷积编码器：由两个卷积层组成;
 全连接层密集块：由三个全连接层组成
-每个卷积块中的基本单元是一个卷积层、一个sigmoid激活函数和平均汇聚层
-![[Pasted image 20240726151845.png]]</p>
+每个卷积块中的基本单元是一个卷积层、一个sigmoid激活函数和平均汇聚层 <img
+src="/pic/Pasted%20image%2020240726151845.png" /></li>
+</ol>
 <h1 id="第七章-现代卷积神经网络">第七章 现代卷积神经网络</h1>
 <h2 id="深度卷积神经网络-alexnet">7.1 深度卷积神经网络 AlexNet</h2>
-<p>1.更深更大的LeNet
-2.主要改进：dropout（模型控制，正则）、relu（梯度更大）、maxpooling（输出大，梯度更大）、数据增强（模拟改变）
-3.past：image-人工特征提取（重点）-SVM（标准机器学习模型：后两部份独立
+<ol type="1">
+<li>更深更大的LeNet</li>
+<li>主要改进：dropout（模型控制，正则）、relu（梯度更大）、maxpooling（输出大，梯度更大）、数据增强（模拟改变）</li>
+<li>past：image-人工特征提取（重点）-SVM（标准机器学习模型：后两部份独立
 now：image-通过CNN学习特征-Softmax回归：后两部份一起，一起训练
 优势：1.CNN相对简单，不需要太多cv知识；2.一起训练更加高效，端到端（原始输入直接到结果（分类等））
-![[Pasted image 20240726164513.png]] ## 7.2 使用块的网络 VGG
-1.更大更深的AlexNet（重复的VGG块） 2.深且窄的卷积比浅且宽的更有效
-![[Pasted image 20240726204521.png]] ## 7.3 网络中的网络 NiN
-1.前述网络卷积层后第一个全连接层的参数太多了，内存+过拟合
-2.用1x1kernal，stride=1，padding=0起到全连接层作用。在每个像素位置应用一个全连接层
-![[Pasted image 20240726220715.png]]
-3.全局平均池化层：输入通道是类别数，每一个通道算出平均值，再用softmax作为概率（用卷积层的通道来输出类别预测）
-4.卷积层输入输出-四维张量：样本、通道、高度、宽度
+<img src="/pic/Pasted%20image%2020240726164513.png" /></li>
+</ol>
+<h2 id="使用块的网络-vgg">7.2 使用块的网络 VGG</h2>
+<ol type="1">
+<li>更大更深的AlexNet（重复的VGG块）</li>
+<li>深且窄的卷积比浅且宽的更有效 <img
+src="/pic/Pasted%20image%2020240726204521.png" /></li>
+</ol>
+<h2 id="网络中的网络-nin">7.3 网络中的网络 NiN</h2>
+<ol type="1">
+<li>前述网络卷积层后第一个全连接层的参数太多了，内存+过拟合</li>
+<li>用1x1kernal，stride=1，padding=0起到全连接层作用。在每个像素位置应用一个全连接层
+<img src="/pic/Pasted%20image%2020240726220715.png" /></li>
+<li>全局平均池化层：输入通道是类别数，每一个通道算出平均值，再用softmax作为概率（用卷积层的通道来输出类别预测）</li>
+<li>卷积层输入输出-四维张量：样本、通道、高度、宽度
 全连接层输入输出-二维张量：样本、特征
-——&gt;空间维度中的每个像素视为单个样本，通道维度视为不同特征 ## 7.4
-含并行连接的网络 GoogLeNet ![[Pasted image 20240727095550.png]]
-1.模型复杂度-参数个数-输入通道x输出通道xkernal大小 2.白色1x1：改变通道数
-蓝色：抽取空间信息
-3.inception块比单3x3、5x5卷积层有更少的参数个数和计算复杂度 ![[Pasted
-image 20240727102947.png]]
-4.每个stage代表高宽减半，inception不改变高宽，只改变通道数 ![[Pasted
-image 20240727103642.png]]
-5.段1、2：比AlexNet小的kernal，保留更大的高宽，方便后续更深的网络，同时增加通道数
-![[Pasted image 20240727103941.png]]
-6.inception块用4条有不同超参数的卷积层和池化层的路来抽取不一样的信息，解决了多大卷积核是合适的这个问题，不同滤波器可以识别不同范围的图像细节
-7.注意： -
-卷积层：通常用来提取特征（识别相邻元素间作用力），并且通常不希望改变图像的大小（老的也有就让他变小的），所以通常会取padding=（k-1）/2
-（这个padding值是一边加多少）。同时也可以通过kernal的数量来改变通道数（主要是增加）
-- 1x1卷积层：通常用于调整网络层的通道数量和控制模型复杂度，可增加可减少
--
-汇聚层：通常用于降低卷积层对位置的敏感性和对空间降采样表示的敏感性，通常会取stride=2来使得高宽减半(默认情况下，深度学习框架中的步幅与汇聚窗口的大小相，所以直接MaxPoo2d(2))（在inception中也可以起到提取信息的作用）
-- flatten层：用于展平（直接列成像素），用于后面的全连接层 -
-线性层（全连接）：用于把那些值的数量最后变成分类种类的数量 ## 7.5
-批量规范化
-1.问题：损失在最后计算，在反向传播中，后面的层梯度较大，因此后面的层训练较快，底部的层训练较慢。而底部往往训练底层的东西（线段之类），导致底部层一变化所有都得变，最后的那些层需要重新学习多次，导致收敛变慢---&gt;学习底部层时能否避免改变顶部层
-也即加速深层网络的收敛 - 1.数据预处理（标准化）可以将参数的量级进行统一
--
-2.控制中间层变量的变化，控制变量分布的偏移（不同层如果参数可变范围不同，学习率也应该对应不同，所以在适用一个学习率的情况下，就需要控制）
-- 3.更深的网络很复杂，容易过拟合，需要正则化 -
-Regularization，中文翻译过来可以称为正则化，或者是规范化。可以说是一个限制通过这种规则去规范他们再接下来的循环迭代中，不要自我膨胀
-- 欠拟合原因：1.训练样本数量少2.模型复杂度过低3.参数还未收敛就停止循环 -
-欠拟合的解决办法：1.增加样本数量2.增加模型参数，提高模型复杂度3.增加循环次数4.查看是否是学习率过高导致模型无法收敛
-- 过拟合原因：1.数据噪声太大2.特征太多3.模型太复杂 -
-过拟合的解决办法：1.清洗数据2.减少模型参数，降低模型复杂度3.增加惩罚因子（正则化），保留所有的特征，但是减少参数的大小（magnitude）。
-2.批量归一化：
+——&gt;空间维度中的每个像素视为单个样本，通道维度视为不同特征</li>
+</ol>
+<h2 id="含并行连接的网络-googlenet">7.4 含并行连接的网络 GoogLeNet</h2>
+<p><img src="/pic/Pasted%20image%2020240727095550.png" /></p>
+<ol type="1">
+<li>模型复杂度-参数个数-输入通道x输出通道xkernal大小</li>
+<li>白色1x1：改变通道数 蓝色：抽取空间信息</li>
+<li>inception块比单3x3、5x5卷积层有更少的参数个数和计算复杂度 <img
+src="/pic/Pasted%20image%2020240727102947.png" /></li>
+<li>每个stage代表高宽减半，inception不改变高宽，只改变通道数 <img
+src="/pic/Pasted%20image%2020240727103642.png" /></li>
+<li>段1、2：比AlexNet小的kernal，保留更大的高宽，方便后续更深的网络，同时增加通道数
+<img src="/pic/Pasted%20image%2020240727103941.png" /></li>
+<li>inception块用4条有不同超参数的卷积层和池化层的路来抽取不一样的信息，解决了多大卷积核是合适的这个问题，不同滤波器可以识别不同范围的图像细节</li>
+<li>注意：</li>
+</ol>
+<ul>
+<li>卷积层：通常用来提取特征（识别相邻元素间作用力），并且通常不希望改变图像的大小（老的也有就让他变小的），所以通常会取padding=（k-1）/2
+（这个padding值是一边加多少）。同时也可以通过kernal的数量来改变通道数（主要是增加）</li>
+<li>1x1卷积层：通常用于调整网络层的通道数量和控制模型复杂度，可增加可减少</li>
+<li>汇聚层：通常用于降低卷积层对位置的敏感性和对空间降采样表示的敏感性，通常会取stride=2来使得高宽减半(默认情况下，深度学习框架中的步幅与汇聚窗口的大小相，所以直接MaxPoo2d(2))（在inception中也可以起到提取信息的作用）</li>
+<li>flatten层：用于展平（直接列成像素），用于后面的全连接层</li>
+<li>线性层（全连接）：用于把那些值的数量最后变成分类种类的数量</li>
+</ul>
+<h2 id="批量规范化">7.5 批量规范化</h2>
+<ol type="1">
+<li>问题：损失在最后计算，在反向传播中，后面的层梯度较大，因此后面的层训练较快，底部的层训练较慢。而底部往往训练底层的东西（线段之类），导致底部层一变化所有都得变，最后的那些层需要重新学习多次，导致收敛变慢---&gt;学习底部层时能否避免改变顶部层
+也即加速深层网络的收敛</li>
+</ol>
+<ul>
+<li>1.数据预处理（标准化）可以将参数的量级进行统一</li>
+<li>2.控制中间层变量的变化，控制变量分布的偏移（不同层如果参数可变范围不同，学习率也应该对应不同，所以在适用一个学习率的情况下，就需要控制）</li>
+<li>3.更深的网络很复杂，容易过拟合，需要正则化
+<ul>
+<li>Regularization，中文翻译过来可以称为正则化，或者是规范化。可以说是一个限制通过这种规则去规范他们再接下来的循环迭代中，不要自我膨胀</li>
+<li>欠拟合原因：1.训练样本数量少2.模型复杂度过低3.参数还未收敛就停止循环</li>
+<li>欠拟合的解决办法：1.增加样本数量2.增加模型参数，提高模型复杂度3.增加循环次数4.查看是否是学习率过高导致模型无法收敛</li>
+<li>过拟合原因：1.数据噪声太大2.特征太多3.模型太复杂</li>
+<li>过拟合的解决办法：1.清洗数据2.减少模型参数，降低模型复杂度3.增加惩罚因子（正则化），保留所有的特征，但是减少参数的大小（magnitude）。</li>
+</ul></li>
+</ul>
+<ol start="2" type="1">
+<li>批量归一化：
 要使得分布在不同层之间尽量不变化-&gt;固定小批量里面的均值和方差 <span
 class="math inline">\(\mu_B=\frac{1}{|B|}\sum\limits_{i\in
 B}x_i\)</span> <span
@@ -288,37 +319,50 @@ x_{i+1}=\gamma\frac{x_i-\mu_B}{\sigma_B}+\beta\)</span> 其中<span
 class="math inline">\(\gamma\)</span>和<span
 class="math inline">\(\beta\)</span>是可以学习的参数（比例系数和比例偏移or拉伸参数和偏移参数），因为如果变成均值为0，方差为1的分布不那么合适的话可以学习新的均值（后者）和方差（前者）--&gt;基于批量统计的标准化--&gt;批量规范化
 注：<span
-class="math inline">\(+\epsilon\)</span>以保证分母永远不会等于零
-3.全连接层：作用在特征维，仿射变化和激活函数之间 -
-线性模型：输入包含d个特征：<span
-class="math inline">\(\hat{y}=w_1x_1+...+w_dx_d+b\)</span> -
-将所有特征放在一个向量<span
+class="math inline">\(+\epsilon\)</span>以保证分母永远不会等于零</li>
+<li>全连接层：作用在特征维，仿射变化和激活函数之间</li>
+</ol>
+<ul>
+<li>线性模型：输入包含d个特征：<span
+class="math inline">\(\hat{y}=w_1x_1+...+w_dx_d+b\)</span></li>
+<li>将所有特征放在一个向量<span
 class="math inline">\(\mathbf{x}\in\mathbb{R}^d\)</span>里,将所有权重放在向量<span
 class="math inline">\(\mathbf{w}\in\mathbb{R}^d\)</span>里：<span
-class="math inline">\(\hat{y}=\mathbf{w}^T\mathbf{x}+b\)</span> -
-这里的向量x是单个数据的样本特征，所以可以用矩阵<span
+class="math inline">\(\hat{y}=\mathbf{w}^T\mathbf{x}+b\)</span></li>
+<li>这里的向量x是单个数据的样本特征，所以可以用矩阵<span
 class="math inline">\(\mathbf{X}\in\mathbb{R}^{n\times
 d}\)</span>引用n个样本，每一行是一个样本，每一列是一种特征：<span
-class="math inline">\(\hat{y}=\mathbf{X}\mathbf{w}+b\)</span> -
-也即对每一个特征。计算标量的均值和方差，然后进行变换
-4.卷积层：作用在通道维，卷积层和激活函数之间 -
-对于卷积层的输入，假设批量大小为1，输入一个图片，每一个像素就是一个样本，所以样本的数量就是高乘以宽，而多个通道就是每个样本的不同特征，因此通道维可以看作是全连接层的特征维
-5.最初的想法是控制分布，后来发现可能是将<span
+class="math inline">\(\hat{y}=\mathbf{X}\mathbf{w}+b\)</span></li>
+<li>也即对每一个特征。计算标量的均值和方差，然后进行变换</li>
+</ul>
+<ol start="4" type="1">
+<li>卷积层：作用在通道维，卷积层和激活函数之间</li>
+</ol>
+<ul>
+<li>对于卷积层的输入，假设批量大小为1，输入一个图片，每一个像素就是一个样本，所以样本的数量就是高乘以宽，而多个通道就是每个样本的不同特征，因此通道维可以看作是全连接层的特征维</li>
+</ul>
+<ol start="5" type="1">
+<li>最初的想法是控制分布，后来发现可能是将<span
 class="math inline">\(\hat{\mu}_B\)</span>作为随机偏移，<span
-class="math inline">\(\hat{\sigma}_B\)</span>作为随机缩放，也即可以理解为在每个小批量加入噪音来控制模型复杂度，因此没必要和dropout混合使用
-6.批量归一化可以加速收敛速度（学习率可以调的更大），但一般不改变模型精度
-7.代码部分： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#在定义batch_norm函数中</span></span><br><span class="line"><span class="comment">#moving_是全局变量，momentum用于更新</span></span><br><span class="line"><span class="comment"># 更新移动平均的均值和方差</span></span><br><span class="line">       moving_mean = momentum * moving_mean + (<span class="number">1.0</span> - momentum) * mean</span><br><span class="line">       moving_var = momentum * moving_var + (<span class="number">1.0</span> - momentum) * var</span><br></pre></td></tr></table></figure>
-BN在训练模式：每个小批量的均值和方差；在预测模式：整个数据集的均值和方差
-## 7.6 残差网络 ResNet ![[Pasted image 20240729181750.png]]
-1.后面的层覆盖范围包含之前的层覆盖范围，防止走偏离目标越来越远-&gt;使得很深的网络更加容易训练
+class="math inline">\(\hat{\sigma}_B\)</span>作为随机缩放，也即可以理解为在每个小批量加入噪音来控制模型复杂度，因此没必要和dropout混合使用</li>
+<li>批量归一化可以加速收敛速度（学习率可以调的更大），但一般不改变模型精度</li>
+<li>代码部分： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#在定义batch_norm函数中</span></span><br><span class="line"><span class="comment">#moving_是全局变量，momentum用于更新</span></span><br><span class="line"><span class="comment"># 更新移动平均的均值和方差</span></span><br><span class="line">       moving_mean = momentum * moving_mean + (<span class="number">1.0</span> - momentum) * mean</span><br><span class="line">       moving_var = momentum * moving_var + (<span class="number">1.0</span> - momentum) * var</span><br></pre></td></tr></table></figure>
+BN在训练模式：每个小批量的均值和方差；在预测模式：整个数据集的均值和方差</li>
+</ol>
+<h2 id="残差网络-resnet">7.6 残差网络 ResNet</h2>
+<p><img src="/pic/Pasted%20image%2020240729181750.png" /></p>
+<ol type="1">
+<li>后面的层覆盖范围包含之前的层覆盖范围，防止走偏离目标越来越远-&gt;使得很深的网络更加容易训练
 也即残差快（residual
-block)核心：每一个附加层都应该更容易地包含原始函数作为其元素之一
-![[Pasted image 20240729182440.png]] ![[Pasted image
-20240729182557.png]] ![[Pasted image 20240729183132.png]]
-2.通常在第一块步幅为2来使高宽减半，同时用1x1kernal来增加通道数，后接多个高宽不变的ResNet块
-3.总体架构类似VGG、GoogleNet，替换成ResNet块
-4.学习嵌套函数是训练神经网络的理想情况。在深层神经网络中，学习另一层作为恒等映射较容易（尽管这是一个极端情况）
-5.残差映射可以更容易地学习同一函数，例如将权重层中的参数近似为零</p>
+block）核心：每一个附加层都应该更容易地包含原始函数作为其元素之一 <img
+src="/pic/Pasted%20image%2020240729182440.png" /> <img
+src="/pic/Pasted%20image%2020240729182557.png" /> <img
+src="/pic/Pasted%20image%2020240729183132.png" /></li>
+<li>通常在第一块步幅为2来使高宽减半，同时用1x1kernal来增加通道数，后接多个高宽不变的ResNet块</li>
+<li>总体架构类似VGG、GoogleNet，替换成ResNet块</li>
+<li>学习嵌套函数是训练神经网络的理想情况。在深层神经网络中，学习另一层作为恒等映射较容易（尽管这是一个极端情况）</li>
+<li>残差映射可以更容易地学习同一函数，例如将权重层中的参数近似为零</li>
+</ol>
 
     </div>
 
