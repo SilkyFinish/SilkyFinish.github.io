@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"silkyfinish.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="lecture 2: Image ClassificationNearest NeighborL1(Manhattan) distance$d{1}(I{1},I{2})&#x3D;\sum{p}|I{1}^{p},I{2}^{p}|$ complexity: training:O(1）；testing:O(n) L2(Euclidean) distance$d{2}(I{1},I{2})&#x3D;\sqrt{\s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="EECS-498">
+<meta property="og:url" content="https://silkyfinish.github.io/2025/02/25/CV%20Note/index.html">
+<meta property="og:site_name" content="SilkyFinish">
+<meta property="og:description" content="lecture 2: Image ClassificationNearest NeighborL1(Manhattan) distance$d{1}(I{1},I{2})&#x3D;\sum{p}|I{1}^{p},I{2}^{p}|$ complexity: training:O(1）；testing:O(n) L2(Euclidean) distance$d{2}(I{1},I{2})&#x3D;\sqrt{\s">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241008112055643.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241008142726126.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241008144822052.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241008165800623.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241009110943195.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241009131845222.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241020211126843.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241021201956060.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241022082649549.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241022083711420.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241022084247142.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241022084825848.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241025090559876.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241029163342960.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241029165055992.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241029165523149.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241029170041546.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241029171035991.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241030085742900.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241030090333879.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241030091224606.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241030102230031.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241030102543978.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241030103113116.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241030103440937.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241030104733736.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241030105106642.png">
+<meta property="og:image" content="https://miro.medium.com/v2/resize:fit:1400/1*V2435M1u0tiSOz4nRBfl4g.png">
+<meta property="og:image" content="https://miro.medium.com/v2/resize:fit:814/1*QcTbVCVPj4WFnqvvWU5-hQ.png">
+<meta property="og:image" content="https://jalammar.github.io/images/t/transformer_resideual_layer_norm_3.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241105162359823.png">
+<meta property="og:image" content="https://jalammar.github.io/images/t/transformer_decoder_output_softmax.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241107145509471.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241107150655411.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241107151745204.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241107153625028.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241107181657411.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241107190010495.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241107190432160.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241107191254910.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241107191320392.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241107191919232.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241107192332863.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241107194754136.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241107195438795.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241107200438779.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241107200602162.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241107200959363.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241107201937581.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241107203248448.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241108102710500.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241108102922677.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241108103255928.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241108103706172.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241108104216844.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241108104506273.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241108110435594.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241108110806188.png">
+<meta property="article:published_time" content="2025-02-25T12:03:00.000Z">
+<meta property="article:modified_time" content="2025-02-25T12:05:28.278Z">
+<meta property="article:author" content="SilkyFinish">
+<meta property="article:tag" content="Deep Learning">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://silkyfinish.github.io/2025/02/25/pic/image-20241008112055643.png">
+
+
+<link rel="canonical" href="https://silkyfinish.github.io/2025/02/25/CV%20Note/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://silkyfinish.github.io/2025/02/25/CV%20Note/","path":"2025/02/25/CV Note/","title":"EECS-498"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>EECS-498 | SilkyFinish</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">SilkyFinish</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">SilkyFinish的个人博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#lecture-2-Image-Classification"><span class="nav-number">1.</span> <span class="nav-text">lecture 2: Image Classification</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Nearest-Neighbor"><span class="nav-number">1.1.</span> <span class="nav-text">Nearest Neighbor</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#L1-Manhattan-distance"><span class="nav-number">1.1.1.</span> <span class="nav-text">L1(Manhattan) distance</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#L2-Euclidean-distance"><span class="nav-number">1.1.2.</span> <span class="nav-text">L2(Euclidean) distance</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Assignment-1"><span class="nav-number">1.2.</span> <span class="nav-text">Assignment 1</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Tensor-Basics"><span class="nav-number">1.2.1.</span> <span class="nav-text">Tensor Basics</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Creating-and-Accessing-tensors"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">Creating and Accessing tensors</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Tensor-constructors"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">Tensor constructors</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Datatypes"><span class="nav-number">1.2.1.3.</span> <span class="nav-text">Datatypes</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Tensor-indexing"><span class="nav-number">1.2.2.</span> <span class="nav-text">Tensor indexing</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Slice-indexing"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">Slice indexing</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Integer-tensor-indexing"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">Integer tensor indexing</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Boolean-tensor-indexing"><span class="nav-number">1.2.2.3.</span> <span class="nav-text">Boolean tensor indexing</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Reshaping-operations"><span class="nav-number">1.2.3.</span> <span class="nav-text">Reshaping operations</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#View"><span class="nav-number">1.2.3.1.</span> <span class="nav-text">View</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Swapping-axes"><span class="nav-number">1.2.3.2.</span> <span class="nav-text">Swapping axes</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Contiguous-tensors"><span class="nav-number">1.2.3.3.</span> <span class="nav-text">Contiguous tensors</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Tensor-operations"><span class="nav-number">1.2.4.</span> <span class="nav-text">Tensor operations</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Elementwise-operations"><span class="nav-number">1.2.4.1.</span> <span class="nav-text">Elementwise operations</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Reduction-operations"><span class="nav-number">1.2.4.2.</span> <span class="nav-text">Reduction operations</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Matrix-operations"><span class="nav-number">1.2.4.3.</span> <span class="nav-text">Matrix operations</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Vectorization"><span class="nav-number">1.2.4.4.</span> <span class="nav-text">Vectorization</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Broadcasting"><span class="nav-number">1.2.5.</span> <span class="nav-text">Broadcasting</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Out-of-place-vs-in-place-operators"><span class="nav-number">1.2.5.1.</span> <span class="nav-text">Out-of-place vs in-place operators</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Running-on-GPU"><span class="nav-number">1.2.6.</span> <span class="nav-text">Running on GPU</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Other"><span class="nav-number">1.2.7.</span> <span class="nav-text">Other</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#lecture-3-Linear-Classifier"><span class="nav-number">2.</span> <span class="nav-text">lecture 3:Linear Classifier</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#different-viewpoint"><span class="nav-number">2.1.</span> <span class="nav-text">different viewpoint</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Algebraic-Viewpint"><span class="nav-number">2.1.1.</span> <span class="nav-text">Algebraic Viewpint</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Visual-VIewpoint"><span class="nav-number">2.1.2.</span> <span class="nav-text">Visual VIewpoint</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Geometric-Viewpoint"><span class="nav-number">2.1.3.</span> <span class="nav-text">Geometric Viewpoint</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Multiclass-SVM-Loss-hinge-loss"><span class="nav-number">2.2.</span> <span class="nav-text">Multiclass SVM Loss(hinge loss)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Regularization"><span class="nav-number">2.3.</span> <span class="nav-text">Regularization</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cross-Entropy-Loss-Multinomial-Logistic-Regression"><span class="nav-number">2.4.</span> <span class="nav-text">Cross-Entropy Loss(Multinomial Logistic Regression)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#lecture-4-Optimization"><span class="nav-number">3.</span> <span class="nav-text">lecture 4:Optimization</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#SGD-Momentum"><span class="nav-number">3.1.</span> <span class="nav-text">SGD+Momentum</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Nesterov-Momentum"><span class="nav-number">3.2.</span> <span class="nav-text">Nesterov Momentum</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AdaGrad"><span class="nav-number">3.3.</span> <span class="nav-text">AdaGrad</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RMSProp-%E2%80%9DLeak-Adagrad%E2%80%9D"><span class="nav-number">3.4.</span> <span class="nav-text">RMSProp:”Leak Adagrad”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Adam-RMSProp-Momentum"><span class="nav-number">3.5.</span> <span class="nav-text">Adam: RMSProp+Momentum</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#lecture-5-Neural-Networks"><span class="nav-number">4.</span> <span class="nav-text">lecture 5:Neural Networks</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Lecture-6-Back-Propagation"><span class="nav-number">5.</span> <span class="nav-text">Lecture 6:Back Propagation</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Lecture-7%EF%BC%9AConvolutional-Networks"><span class="nav-number">6.</span> <span class="nav-text">Lecture 7：Convolutional Networks</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Receptive-Fields"><span class="nav-number">6.1.</span> <span class="nav-text">Receptive Fields</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Strided-Convolution"><span class="nav-number">6.2.</span> <span class="nav-text">Strided Convolution</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LeNet"><span class="nav-number">6.3.</span> <span class="nav-text">LeNet</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Lecture-8%EF%BC%9ACNN-Architecture"><span class="nav-number">7.</span> <span class="nav-text">Lecture 8：CNN Architecture</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#VGG"><span class="nav-number">7.1.</span> <span class="nav-text">VGG</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ResNet"><span class="nav-number">7.2.</span> <span class="nav-text">ResNet</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ResNeXt"><span class="nav-number">7.3.</span> <span class="nav-text">ResNeXt</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Squeeze-and-Excitation-Networks"><span class="nav-number">7.4.</span> <span class="nav-text">Squeeze-and-Excitation Networks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Densely-Connected-Neural-Networks"><span class="nav-number">7.5.</span> <span class="nav-text">Densely Connected Neural Networks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MobileNets-Tiny-Networks-For-MObile-Devices"><span class="nav-number">7.6.</span> <span class="nav-text">MobileNets:Tiny Networks(For MObile Devices)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Lecture-9-Hardware-and-Software"><span class="nav-number">8.</span> <span class="nav-text">Lecture 9: Hardware and Software</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#autograd"><span class="nav-number">8.1.</span> <span class="nav-text">autograd</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Static-Computation-Graphs"><span class="nav-number">8.2.</span> <span class="nav-text">Static Computation Graphs</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Lecture-10-Training-Neural-Networks-I"><span class="nav-number">9.</span> <span class="nav-text">Lecture 10: Training Neural Networks I</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Activation-functions"><span class="nav-number">9.1.</span> <span class="nav-text">Activation functions</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Leaky-ReLU"><span class="nav-number">9.1.1.</span> <span class="nav-text">Leaky ReLU</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PReLU-parametric"><span class="nav-number">9.1.2.</span> <span class="nav-text">PReLU(parametric)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Exponential-Linear-Unit-ELU"><span class="nav-number">9.1.3.</span> <span class="nav-text">Exponential Linear Unit(ELU)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Scaled-Exponential-Linear-Unit-SELU"><span class="nav-number">9.1.4.</span> <span class="nav-text">Scaled Exponential Linear Unit(SELU)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Data-Preprocessing"><span class="nav-number">9.2.</span> <span class="nav-text">Data Preprocessing</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Weight-Initialization"><span class="nav-number">9.3.</span> <span class="nav-text">Weight Initialization</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Xavier-Initialization"><span class="nav-number">9.3.1.</span> <span class="nav-text">Xavier Initialization</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Kaiming-MSRA-Initialization"><span class="nav-number">9.3.2.</span> <span class="nav-text">Kaiming&#x2F;MSRA Initialization</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Regularization-1"><span class="nav-number">9.4.</span> <span class="nav-text">Regularization</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Dropout"><span class="nav-number">9.4.1.</span> <span class="nav-text">Dropout</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Others"><span class="nav-number">9.4.2.</span> <span class="nav-text">Others</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Lecture-11-Training-Neural-Networks-II"><span class="nav-number">10.</span> <span class="nav-text">Lecture 11: Training Neural Networks II</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Learning-Rate-Schedule"><span class="nav-number">10.1.</span> <span class="nav-text">Learning Rate Schedule</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Learing-Rate-Decay-Step"><span class="nav-number">10.1.1.</span> <span class="nav-text">Learing Rate Decay:Step</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Learing-Rate-Decay-Sosine"><span class="nav-number">10.1.2.</span> <span class="nav-text">Learing Rate Decay:Sosine</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Learing-Rate-Decay-Linear"><span class="nav-number">10.1.3.</span> <span class="nav-text">Learing Rate Decay:Linear</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Learing-Rate-Decay-Inverse-Sqrt"><span class="nav-number">10.1.4.</span> <span class="nav-text">Learing Rate Decay:Inverse Sqrt</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Choosing-Hyperparameters"><span class="nav-number">10.2.</span> <span class="nav-text">Choosing Hyperparameters</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Model-Ensembles"><span class="nav-number">10.3.</span> <span class="nav-text">Model Ensembles</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Transfer-Learning"><span class="nav-number">10.4.</span> <span class="nav-text">Transfer Learning</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Lecture-12-Recurrent-Networks"><span class="nav-number">11.</span> <span class="nav-text">Lecture 12: Recurrent Networks</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Vanilla-Elman-RNN"><span class="nav-number">11.1.</span> <span class="nav-text">Vanilla&#x2F;Elman RNN</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Truncated-Backpropagation-Through-Time"><span class="nav-number">11.2.</span> <span class="nav-text">Truncated Backpropagation Through Time</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Example%EF%BC%9A-Image-Captioning"><span class="nav-number">11.3.</span> <span class="nav-text">Example： Image Captioning</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Long-Short-Term-Memory-LSTM"><span class="nav-number">11.4.</span> <span class="nav-text">Long Short Term Memory(LSTM)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Highway-Networks"><span class="nav-number">11.5.</span> <span class="nav-text">Highway Networks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Gated-Recurrent-Unit-GRU"><span class="nav-number">11.6.</span> <span class="nav-text">Gated Recurrent Unit(GRU)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Lecture-13-Attention"><span class="nav-number">12.</span> <span class="nav-text">Lecture 13: Attention</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Sequence-to-Sequence-with-RNNs-and-Attention"><span class="nav-number">12.1.</span> <span class="nav-text">Sequence-to-Sequence with RNNs and Attention</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Attention-Layer"><span class="nav-number">12.2.</span> <span class="nav-text">Attention Layer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Self-Attention-Layer"><span class="nav-number">12.3.</span> <span class="nav-text">Self-Attention Layer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Masked-Self-Attention-Layer"><span class="nav-number">12.4.</span> <span class="nav-text">Masked Self-Attention Layer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Multihead-Self-Attention-Layer"><span class="nav-number">12.5.</span> <span class="nav-text">Multihead Self-Attention Layer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Three-Ways-of-Processing-Sequences"><span class="nav-number">12.6.</span> <span class="nav-text">Three Ways of Processing Sequences</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Transformer"><span class="nav-number">12.7.</span> <span class="nav-text">Transformer</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Decoder-Side"><span class="nav-number">12.7.1.</span> <span class="nav-text">The Decoder Side</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Lecture-14-Visualizing-and-Understanding"><span class="nav-number">13.</span> <span class="nav-text">Lecture 14: Visualizing and Understanding</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Lecture-19-Generative-Models-I"><span class="nav-number">14.</span> <span class="nav-text">Lecture 19: Generative Models I</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Autoregressive-Models"><span class="nav-number">14.1.</span> <span class="nav-text">Autoregressive Models</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#PixelRNN"><span class="nav-number">14.1.1.</span> <span class="nav-text">PixelRNN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PixelCNN"><span class="nav-number">14.1.2.</span> <span class="nav-text">PixelCNN</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Variational-Autoencoders"><span class="nav-number">14.2.</span> <span class="nav-text">Variational Autoencoders</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Autoencoders"><span class="nav-number">14.2.1.</span> <span class="nav-text">Autoencoders</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Variational-Autoencoders-1"><span class="nav-number">14.2.2.</span> <span class="nav-text">Variational Autoencoders</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#After-training-test"><span class="nav-number">14.2.2.1.</span> <span class="nav-text">After training(test)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Train"><span class="nav-number">14.2.2.2.</span> <span class="nav-text">Train</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Math"><span class="nav-number">14.2.2.3.</span> <span class="nav-text">Math</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Summary"><span class="nav-number">14.2.2.4.</span> <span class="nav-text">Summary</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Lecture-20-Generative-Models-II"><span class="nav-number">15.</span> <span class="nav-text">Lecture 20: Generative Models II</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#VAE"><span class="nav-number">15.1.</span> <span class="nav-text">VAE</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate"><span class="nav-number">15.1.1.</span> <span class="nav-text">Generate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Edit"><span class="nav-number">15.1.2.</span> <span class="nav-text">Edit</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VQ-VAE"><span class="nav-number">15.2.</span> <span class="nav-text">VQ-VAE</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GAN"><span class="nav-number">15.3.</span> <span class="nav-text">GAN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Structure"><span class="nav-number">15.3.1.</span> <span class="nav-text">Structure</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Loss"><span class="nav-number">15.3.2.</span> <span class="nav-text">Loss</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Train-1"><span class="nav-number">15.3.3.</span> <span class="nav-text">Train</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Math-1"><span class="nav-number">15.3.4.</span> <span class="nav-text">Math</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="SilkyFinish"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">SilkyFinish</p>
+  <div class="site-description" itemprop="description">冲天香阵透长安，满城尽带黄金甲</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://silkyfinish.github.io/2025/02/25/CV%20Note/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="SilkyFinish">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SilkyFinish">
+      <meta itemprop="description" content="冲天香阵透长安，满城尽带黄金甲">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="EECS-498 | SilkyFinish">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          EECS-498
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2025-02-25 20:03:00 / Modified: 20:05:28" itemprop="dateCreated datePublished" datetime="2025-02-25T20:03:00+08:00">2025-02-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Note/" itemprop="url" rel="index"><span itemprop="name">Note</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="lecture-2-Image-Classification"><a href="#lecture-2-Image-Classification" class="headerlink" title="lecture 2: Image Classification"></a>lecture 2: Image Classification</h1><h2 id="Nearest-Neighbor"><a href="#Nearest-Neighbor" class="headerlink" title="Nearest Neighbor"></a>Nearest Neighbor</h2><h3 id="L1-Manhattan-distance"><a href="#L1-Manhattan-distance" class="headerlink" title="L1(Manhattan) distance"></a>L1(Manhattan) distance</h3><p>$d<em>{1}(I</em>{1},I<em>{2})=\sum</em>{p}|I<em>{1}^{p},I</em>{2}^{p}|$</p>
+<p>complexity: training:O(1）；testing:O(n)</p>
+<h3 id="L2-Euclidean-distance"><a href="#L2-Euclidean-distance" class="headerlink" title="L2(Euclidean) distance"></a>L2(Euclidean) distance</h3><p>$d<em>{2}(I</em>{1},I<em>{2})=\sqrt{\sum</em>{p}(I<em>{1}^{p},I</em>{2}^{p})^2}$</p>
+<h2 id="Assignment-1"><a href="#Assignment-1" class="headerlink" title="Assignment 1"></a>Assignment 1</h2><h3 id="Tensor-Basics"><a href="#Tensor-Basics" class="headerlink" title="Tensor Basics"></a>Tensor Basics</h3><h4 id="Creating-and-Accessing-tensors"><a href="#Creating-and-Accessing-tensors" class="headerlink" title="Creating and Accessing tensors"></a>Creating and Accessing tensors</h4><p>A <code>torch</code> <strong>tensor</strong> is a multidimensional grid of values, all of the same type, and is indexed by a tuple of nonnegative integers. The number of dimensions is the <strong>rank</strong> of the tensor; the <strong>shape</strong> of a tensor is a tuple of integers giving the size of the array along each dimension.</p>
+<p>We can initialize <code>torch</code> tensor from nested Python lists. We can access or mutate elements of a PyTorch tensor using square brackets.</p>
+<p>Accessing an element from a PyTorch tensor returns a PyTorch scalar; we can convert this to a Python scalar using the <code>.item()</code> method</p>
+<h4 id="Tensor-constructors"><a href="#Tensor-constructors" class="headerlink" title="Tensor constructors"></a>Tensor constructors</h4><p>PyTorch provides many convenience methods for constructing tensors; this avoids the need to use Python lists, which can be inefficient when manipulating large amounts of data. Some of the most commonly used tensor constructors are:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.google.com/url?q=https%3A%2F%2Fpytorch.org%2Fdocs%2Fstable%2Fgenerated%2Ftorch.zeros.html"><code>torch.zeros</code></a>: Creates a tensor of all zeros</li>
+<li><a target="_blank" rel="noopener" href="https://www.google.com/url?q=https%3A%2F%2Fpytorch.org%2Fdocs%2Fstable%2Fgenerated%2Ftorch.ones.html"><code>torch.ones</code></a>: Creates a tensor of all ones</li>
+<li><a target="_blank" rel="noopener" href="https://www.google.com/url?q=https%3A%2F%2Fpytorch.org%2Fdocs%2Fstable%2Fgenerated%2Ftorch.rand.html"><code>torch.rand</code></a>: Creates a tensor with uniform random numbers</li>
+</ul>
+<h4 id="Datatypes"><a href="#Datatypes" class="headerlink" title="Datatypes"></a>Datatypes</h4><p>Each tensor has a <code>dtype</code> attribute that you can use to check its data type</p>
+<p>We can <strong>cast</strong> a tensor to another datatype using the <a target="_blank" rel="noopener" href="https://www.google.com/url?q=https%3A%2F%2Fpytorch.org%2Fdocs%2Fstable%2Fgenerated%2Ftorch.Tensor.to.html"><code>.to()</code></a> method; there are also convenience methods like <a target="_blank" rel="noopener" href="https://www.google.com/url?q=https%3A%2F%2Fpytorch.org%2Fdocs%2Fstable%2Fgenerated%2Ftorch.Tensor.float.html"><code>.float()</code></a> and <a target="_blank" rel="noopener" href="https://www.google.com/url?q=https%3A%2F%2Fpytorch.org%2Fdocs%2Fstable%2Fgenerated%2Ftorch.Tensor.long.html"><code>.long()</code></a> that cast to particular datatypes</p>
+<p>PyTorch provides several ways to create a tensor with the same datatype as another tensor:</p>
+<ul>
+<li>PyTorch provides tensor constructors such as <a target="_blank" rel="noopener" href="https://www.google.com/url?q=https%3A%2F%2Fpytorch.org%2Fdocs%2Fstable%2Fgenerated%2Ftorch.zeros_like.html"><code>torch.zeros_like()</code></a> that create new tensors with the same shape and type as a given tensor</li>
+<li>Tensor objects have instance methods such as <a target="_blank" rel="noopener" href="https://www.google.com/url?q=https%3A%2F%2Fpytorch.org%2Fdocs%2Fstable%2Fgenerated%2Ftorch.Tensor.new_zeros.html"><code>.new_zeros()</code></a> that create tensors the same type but possibly different shapes</li>
+<li>The tensor instance method <a target="_blank" rel="noopener" href="https://www.google.com/url?q=https%3A%2F%2Fpytorch.org%2Fdocs%2Fstable%2Fgenerated%2Ftorch.Tensor.to.html"><code>.to()</code></a> can take a tensor as an argument, in which case it casts to the datatype of the argument</li>
+</ul>
+<h3 id="Tensor-indexing"><a href="#Tensor-indexing" class="headerlink" title="Tensor indexing"></a>Tensor indexing</h3><h4 id="Slice-indexing"><a href="#Slice-indexing" class="headerlink" title="Slice indexing"></a>Slice indexing</h4><p>similar to python</p>
+<p>There are two common ways to access a single row or column of a tensor: using an integer will reduce the rank by one, and using a length-one slice will keep the same rank. </p>
+<p>you can use the <code>clone()</code> method to make a copy of a tensor</p>
+<h4 id="Integer-tensor-indexing"><a href="#Integer-tensor-indexing" class="headerlink" title="Integer tensor indexing"></a>Integer tensor indexing</h4><p>We can also use <strong>index arrays</strong> to index tensors</p>
+<p>More generally, given index arrays <code>idx0</code> and <code>idx1</code> with <code>N</code> elements each, <code>a[idx0, idx1]</code> is equivalent to:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">torch.tensor([</span><br><span class="line">  a[idx0[<span class="number">0</span>], idx1[<span class="number">0</span>]],</span><br><span class="line">  a[idx0[<span class="number">1</span>], idx1[<span class="number">1</span>]],</span><br><span class="line">  ...,</span><br><span class="line">  a[idx0[N - <span class="number">1</span>], idx1[N - <span class="number">1</span>]]</span><br><span class="line">])</span><br></pre></td></tr></table></figure>
+<h4 id="Boolean-tensor-indexing"><a href="#Boolean-tensor-indexing" class="headerlink" title="Boolean tensor indexing"></a>Boolean tensor indexing</h4><p>Boolean tensor indexing lets you pick out arbitrary elements of a tensor according to a boolean mask. Frequently this type of indexing is used to select or modify the elements of a tensor that satisfy some condition.</p>
+<p>In PyTorch, we use tensors of dtype <code>torch.bool</code> to hold boolean masks</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Find the elements of a that are bigger than 3. The mask has the same shape as</span></span><br><span class="line"><span class="comment"># a, where each element of mask tells whether the corresponding element of a</span></span><br><span class="line"><span class="comment"># is greater than three.</span></span><br><span class="line">mask = (a &gt; <span class="number">3</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;\nMask tensor:&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(mask)</span><br><span class="line"></span><br><span class="line"><span class="comment"># We can use the mask to construct a rank-1 tensor containing the elements of a</span></span><br><span class="line"><span class="comment"># that are selected by the mask</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;\nSelecting elements with the mask:&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(a[mask])</span><br><span class="line"></span><br><span class="line"><span class="comment"># We can also use boolean masks to modify tensors; for example this sets all</span></span><br><span class="line"><span class="comment"># elements &lt;= 3 to zero:</span></span><br><span class="line">a[a &lt;= <span class="number">3</span>] = <span class="number">0</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;\nAfter modifying with a mask:&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(a)</span><br></pre></td></tr></table></figure>
+<h3 id="Reshaping-operations"><a href="#Reshaping-operations" class="headerlink" title="Reshaping operations"></a>Reshaping operations</h3><h4 id="View"><a href="#View" class="headerlink" title="View"></a>View</h4><p>PyTorch provides many ways to manipulate the shapes of tensors. The simplest example is <a target="_blank" rel="noopener" href="https://www.google.com/url?q=https%3A%2F%2Fpytorch.org%2Fdocs%2Fstable%2Fgenerated%2Ftorch.Tensor.view.html"><code>.view()</code></a>: This returns a new tensor with the same number of elements as its input, but with a different shape.</p>
+<p>We can use <code>.view()</code> to flatten matrices into vectors, and to convert rank-1 vectors into rank-2 row or column matrices</p>
+<p>As a convenience, calls to <code>.view()</code> may include a single -1 argument; this puts enough elements on that dimension so that the output has the same number of elements as the input. </p>
+<p>shares the same data!</p>
+<h4 id="Swapping-axes"><a href="#Swapping-axes" class="headerlink" title="Swapping axes"></a>Swapping axes</h4><p>The simplest such function is <code>.t()</code>, specificially for transposing matrices</p>
+<p>For tensors with more than two dimensions, we can use the function <a target="_blank" rel="noopener" href="https://www.google.com/url?q=https%3A%2F%2Fpytorch.org%2Fdocs%2Fstable%2Fgenerated%2Ftorch.transpose.html"><code>torch.transpose</code></a>) to swap arbitrary dimensions.</p>
+<p>If you want to swap multiple axes at the same time, you can use <a target="_blank" rel="noopener" href="https://www.google.com/url?q=https%3A%2F%2Fpytorch.org%2Fdocs%2Fstable%2Fgenerated%2Ftorch.permute.html"><code>torch.permute</code></a>) method to arbitrarily permute dimensions</p>
+<h4 id="Contiguous-tensors"><a href="#Contiguous-tensors" class="headerlink" title="Contiguous tensors"></a>Contiguous tensors</h4><p>you can typically overcome these sorts of errors by either by calling <a target="_blank" rel="noopener" href="https://www.google.com/url?q=https%3A%2F%2Fpytorch.org%2Fdocs%2Fstable%2Fgenerated%2Ftorch.Tensor.contiguous.html"><code>.contiguous()</code></a> before <code>.view()</code>, or by using <a target="_blank" rel="noopener" href="https://www.google.com/url?q=https%3A%2F%2Fpytorch.org%2Fdocs%2Fstable%2Fgenerated%2Ftorch.reshape.html"><code>.reshape()</code></a> instead of <code>.view()</code></p>
+<h3 id="Tensor-operations"><a href="#Tensor-operations" class="headerlink" title="Tensor operations"></a>Tensor operations</h3><h4 id="Elementwise-operations"><a href="#Elementwise-operations" class="headerlink" title="Elementwise operations"></a>Elementwise operations</h4><p>Basic mathematical functions operate elementwise on tensors, and are available as operator overloads, as functions in the <code>torch</code> module, and as instance methods on torch objects</p>
+<h4 id="Reduction-operations"><a href="#Reduction-operations" class="headerlink" title="Reduction operations"></a>Reduction operations</h4><p>We may sometimes want to perform operations that aggregate over part or all of a tensor, such as a summation; these are called <strong>reduction</strong> operations.</p>
+<p>Like the elementwise operations above, most reduction operations are available both as functions in the <code>torch</code> module and as instance methods on <code>tensor</code> objects.</p>
+<p>We can use the <a target="_blank" rel="noopener" href="https://www.google.com/url?q=https%3A%2F%2Fpytorch.org%2Fdocs%2Fstable%2Fgenerated%2Ftorch.Tensor.sum.html"><code>.sum()</code></a> method (or eqivalently <a target="_blank" rel="noopener" href="https://www.google.com/url?q=https%3A%2F%2Fpytorch.org%2Fdocs%2Fstable%2Fgenerated%2Ftorch.sum.html"><code>torch.sum</code></a>) to reduce either an entire tensor, or to reduce along only one dimension of the tensor using the <code>dim</code> argument.Other useful reduction operations include <a target="_blank" rel="noopener" href="https://www.google.com/url?q=https%3A%2F%2Fpytorch.org%2Fdocs%2Fstable%2Fgenerated%2Ftorch.mean.html"><code>mean</code></a>, <a target="_blank" rel="noopener" href="https://www.google.com/url?q=https%3A%2F%2Fpytorch.org%2Fdocs%2Fstable%2Fgenerated%2Ftorch.min.html"><code>min</code></a>, and <a target="_blank" rel="noopener" href="https://www.google.com/url?q=https%3A%2F%2Fpytorch.org%2Fdocs%2Fstable%2Fgenerated%2Ftorch.max.html"><code>max</code></a></p>
+<p> After summing with <code>dim=d</code>, the dimension at index <code>d</code> of the input is <strong>eliminated</strong> from the shape of the output tensor</p>
+<p>Reduction operations <em>reduce</em> the rank of tensors: the dimension over which you perform the reduction will be removed from the shape of the output. If you pass <code>keepdim=True</code> to a reduction operation, the specified dimension will not be removed; the output tensor will instead have a shape of 1 in that dimension</p>
+<p>torch.argmin:This is the second value returned by <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/torch.min.html#torch.min"><code>torch.min()</code></a></p>
+<h4 id="Matrix-operations"><a href="#Matrix-operations" class="headerlink" title="Matrix operations"></a>Matrix operations</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://www.google.com/url?q=https%3A%2F%2Fpytorch.org%2Fdocs%2Fstable%2Fgenerated%2Ftorch.dot.html"><code>torch.dot</code></a>: Computes inner product of vectors</li>
+<li><a target="_blank" rel="noopener" href="https://www.google.com/url?q=https%3A%2F%2Fpytorch.org%2Fdocs%2Fstable%2Fgenerated%2Ftorch.mm.html"><code>torch.mm</code></a>: Computes matrix-matrix products</li>
+<li><a target="_blank" rel="noopener" href="https://www.google.com/url?q=https%3A%2F%2Fpytorch.org%2Fdocs%2Fstable%2Fgenerated%2Ftorch.mv.html"><code>torch.mv</code></a>: Computes matrix-vector products</li>
+<li><a target="_blank" rel="noopener" href="https://www.google.com/url?q=https%3A%2F%2Fpytorch.org%2Fdocs%2Fstable%2Fgenerated%2Ftorch.addmm.html"><code>torch.addmm</code></a> / <a target="_blank" rel="noopener" href="https://www.google.com/url?q=https%3A%2F%2Fpytorch.org%2Fdocs%2Fstable%2Fgenerated%2Ftorch.addmv.html"><code>torch.addmv</code></a>: Computes matrix-matrix and matrix-vector multiplications plus a bias</li>
+<li><a target="_blank" rel="noopener" href="https://www.google.com/url?q=https%3A%2F%2Fpytorch.org%2Fdocs%2Fstable%2Fgenerated%2Ftorch.bmm.html"><code>torch.bmm</code></a> / <a target="_blank" rel="noopener" href="https://www.google.com/url?q=https%3A%2F%2Fpytorch.org%2Fdocs%2Fstable%2Fgenerated%2Ftorch.baddbmm.html"><code>torch.baddmm</code></a>: Batched versions of <code>torch.mm</code> and <code>torch.addmm</code>, respectively</li>
+<li><a target="_blank" rel="noopener" href="https://www.google.com/url?q=https%3A%2F%2Fpytorch.org%2Fdocs%2Fstable%2Fgenerated%2Ftorch.matmul.html"><code>torch.matmul</code></a>: General matrix product that performs different operations depending on the rank of the inputs. Confusingly, this is similar to <code>np.dot</code> in numpy</li>
+<li>torch.stack(<em>tensors</em>, <em>dim=0</em>, <em>**, </em>out=None*) :Concatenates a sequence of tensors along a new dimension</li>
+</ul>
+<h4 id="Vectorization"><a href="#Vectorization" class="headerlink" title="Vectorization"></a>Vectorization</h4><p>avoiding explicit Python loops in your code and instead using PyTorch operators to handle looping internally will cause your code to run a lot faster. This style of writing code, called <strong>vectorization</strong>, avoids overhead from the Python interpreter, and can also better parallelize the computation (e.g. across CPU cores, on on GPUs)</p>
+<h3 id="Broadcasting"><a href="#Broadcasting" class="headerlink" title="Broadcasting"></a>Broadcasting</h3><p>Broadcasting usually happens implicitly inside many PyTorch operators. However we can also broadcast explicitly using the function <a target="_blank" rel="noopener" href="https://www.google.com/url?q=https%3A%2F%2Fpytorch.org%2Fdocs%2Fstable%2Fgenerated%2Ftorch.broadcast_tensors.html%23torch.broadcast_tensors"><code>torch.broadcast_tensors</code></a></p>
+<p> <a target="_blank" rel="noopener" href="https://www.google.com/url?q=https%3A%2F%2Fpytorch.org%2Fdocs%2Fstable%2Fgenerated%2Ftorch.mm.html"><code>torch.mm</code></a> does not support broadcasting, but <a target="_blank" rel="noopener" href="https://www.google.com/url?q=https%3A%2F%2Fpytorch.org%2Fdocs%2Fstable%2Fgenerated%2Ftorch.matmul.html"><code>torch.matmul</code></a> does</p>
+<h4 id="Out-of-place-vs-in-place-operators"><a href="#Out-of-place-vs-in-place-operators" class="headerlink" title="Out-of-place vs in-place operators"></a>Out-of-place vs in-place operators</h4><p><strong>Out-of-place operators:</strong> return a new tensor</p>
+<p><strong>In-place operators:</strong> modify and return the input tensor</p>
+<h3 id="Running-on-GPU"><a href="#Running-on-GPU" class="headerlink" title="Running on GPU"></a>Running on GPU</h3><p>ll PyTorch tensors also have a <code>device</code> attribute that specifies the device where the tensor is stored — either CPU, or CUDA (for NVIDA GPUs)</p>
+<p>we can use the <a target="_blank" rel="noopener" href="https://www.google.com/url?q=https%3A%2F%2Fpytorch.org%2Fdocs%2F1.1.0%2Ftensors.html%23torch.Tensor.to"><code>.to()</code></a> method to change the device of a tensor. We can also use the convenience methods <code>.cuda()</code> and <code>.cpu()</code> methods to move tensors between CPU and GPU</p>
+<p>Calling x.to(y) where y is a tensor will return a copy of x with the same device and dtype as y</p>
+<h3 id="Other"><a href="#Other" class="headerlink" title="Other"></a>Other</h3><p>torch.topk(<em>input</em>, <em>k</em>, <em>dim=None</em>, <em>largest=True</em>, <em>sorted=True</em>, <em>**, </em>out=None*):Returns the <code>k</code> largest elements of the given <code>input</code> tensor along a given dimension</p>
+<p>torch.chunk(<em>input</em>, <em>chunks</em>, <em>dim=0</em>)：split tensor tuple</p>
+<p>torch.cat(<em>tensors</em>, <em>dim=0</em>, <em>**, </em>out=None*):<a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/torch.cat.html#torch.cat"><code>torch.cat()</code></a> can be seen as an inverse operation for <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/torch.split.html#torch.split"><code>torch.split()</code></a> and <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/torch.chunk.html#torch.chunk"><code>torch.chunk()</code></a></p>
+<h1 id="lecture-3-Linear-Classifier"><a href="#lecture-3-Linear-Classifier" class="headerlink" title="lecture 3:Linear Classifier"></a>lecture 3:Linear Classifier</h1><h2 id="different-viewpoint"><a href="#different-viewpoint" class="headerlink" title="different viewpoint"></a>different viewpoint</h2><h3 id="Algebraic-Viewpint"><a href="#Algebraic-Viewpint" class="headerlink" title="Algebraic Viewpint"></a>Algebraic Viewpint</h3><h3 id="Visual-VIewpoint"><a href="#Visual-VIewpoint" class="headerlink" title="Visual VIewpoint"></a>Visual VIewpoint</h3><p><img src="../pic/image-20241008112055643.png" alt="图片"></p>
+<h3 id="Geometric-Viewpoint"><a href="#Geometric-Viewpoint" class="headerlink" title="Geometric Viewpoint"></a>Geometric Viewpoint</h3><p><img src="../pic/image-20241008142726126.png" alt="图片"></p>
+<h2 id="Multiclass-SVM-Loss-hinge-loss"><a href="#Multiclass-SVM-Loss-hinge-loss" class="headerlink" title="Multiclass SVM Loss(hinge loss)"></a>Multiclass SVM Loss(hinge loss)</h2><p>The score of the correct class should be higer than all the other scores</p>
+<p><img src="../pic/image-20241008144822052.png" alt="图片"></p>
+<p>score:s=f(xi,W)</p>
+<p>$L<em>i=\sum</em>{j\ne y<em>i}max(0,s</em>{j}-s_{y_i}+1)$</p>
+<h2 id="Regularization"><a href="#Regularization" class="headerlink" title="Regularization"></a>Regularization</h2><p>$L(W)=1/N\sum_{i=1}^NL_i(f(x_i,W),y_i)+\lambda R(W)$</p>
+<p>$\lambda R(W)$:Regularization:Prevent the model from doing too well on traing data</p>
+<p>simple examples:</p>
+<p>L2 regularization:$R(W)=\sum<em>k\sum_lW</em>{k,l}^2$</p>
+<p>L1 regularization:$R(W)=\sum<em>k\sum_l|W</em>{k,l}|$</p>
+<p>L2 regularization:$R(W)=\sum<em>k\sum_l\beta W</em>{k,l}^2+|W_{k,l}|$</p>
+<p>goal:1.express preferences;2.avoid overfitting;.improve optimization by adding curvature</p>
+<p><img src="../pic/image-20241008165800623.png" alt="图片"></p>
+<h2 id="Cross-Entropy-Loss-Multinomial-Logistic-Regression"><a href="#Cross-Entropy-Loss-Multinomial-Logistic-Regression" class="headerlink" title="Cross-Entropy Loss(Multinomial Logistic Regression)"></a>Cross-Entropy Loss(Multinomial Logistic Regression)</h2><p>comapre the m pv):maximum likelihood estimation</p>
+<h1 id="lecture-4-Optimization"><a href="#lecture-4-Optimization" class="headerlink" title="lecture 4:Optimization"></a>lecture 4:Optimization</h1><p>$w^*=argmin_wL(w)$</p>
+<h2 id="SGD-Momentum"><a href="#SGD-Momentum" class="headerlink" title="SGD+Momentum"></a>SGD+Momentum</h2><p>Build up “velocity” as a running mean of gradients</p>
+<p>$\rho$ gives “friction”;typically rho=0.9 or 0.99</p>
+<p>$v_{t+1}=\rho v_t+\nabla f(x_t)$</p>
+<p>$x<em>{t+1}=x_t-\alpha v</em>{t+1}$</p>
+<p>1).At local minimum we still have some velocity that can help escape</p>
+<p>2).smooth out the noise ,alleviate oscillatory problem</p>
+<h2 id="Nesterov-Momentum"><a href="#Nesterov-Momentum" class="headerlink" title="Nesterov Momentum"></a>Nesterov Momentum</h2><p><img src="../pic/image-20241009110943195.png" alt="图片"> </p>
+<p>“Look ahead” to the point where updating  using velocity would take us; compute  gradient there and mix it with velocity to  get actual update direction</p>
+<p>$v_{t+1}=\rho v_t-\alpha\nabla f(x_t+\rho v_t)$</p>
+<p>$x<em>{t+1}=x_t+v</em>{t+1}$</p>
+<h2 id="AdaGrad"><a href="#AdaGrad" class="headerlink" title="AdaGrad"></a>AdaGrad</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">grad_squared=<span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> t <span class="keyword">in</span> <span class="built_in">range</span>(num_steps):</span><br><span class="line">    dw=compute_gradient(w)</span><br><span class="line">    grad_squared+=dw*dw</span><br><span class="line">    w-=learning_rate*dw/(grad_quared.sqrt()+<span class="number">1e-7</span>)</span><br></pre></td></tr></table></figure>
+<p>progress along “steep”directions is damped</p>
+<p>progress along “flat”directions is accelerated</p>
+<h2 id="RMSProp-”Leak-Adagrad”"><a href="#RMSProp-”Leak-Adagrad”" class="headerlink" title="RMSProp:”Leak Adagrad”"></a>RMSProp:”Leak Adagrad”</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">grad_squared=<span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> t <span class="keyword">in</span> <span class="built_in">range</span>(num_steps):</span><br><span class="line">    dw=compute_gradient(w)</span><br><span class="line">    grad_squared+=decay_rate*grad_squared+(<span class="number">1</span>-decay_rate)*dw*dw</span><br><span class="line">    w-=learning_rate*dw/(grad_quared.sqrt()+<span class="number">1e-7</span>)</span><br></pre></td></tr></table></figure>
+<p>avoid slowing down when square becomes bigger</p>
+<h2 id="Adam-RMSProp-Momentum"><a href="#Adam-RMSProp-Momentum" class="headerlink" title="Adam: RMSProp+Momentum"></a>Adam: RMSProp+Momentum</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">moment1=<span class="number">0</span></span><br><span class="line">moment2=<span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> t <span class="keyword">in</span> <span class="built_in">range</span>(num_steps):</span><br><span class="line">    dw=compute_gradient(w)</span><br><span class="line">    moment1=beta1*moment1+(<span class="number">1</span>-beta1)*dw <span class="comment">#similar to velocity</span></span><br><span class="line">    moment2=beta2*moment2+(<span class="number">1</span>-beta2)*dw*dw</span><br><span class="line">    w-=learning_rate*moment1/(moment2.sqrt()+<span class="number">1e-7</span>)</span><br></pre></td></tr></table></figure>
+<p>Bias correction for the fact that the first and the second moment estimates start at zero</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">moment1=<span class="number">0</span></span><br><span class="line">moment2=<span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> t <span class="keyword">in</span> <span class="built_in">range</span>(num_steps):</span><br><span class="line">    dw=compute_gradient(w)</span><br><span class="line">    moment1=beta1*moment1+(<span class="number">1</span>-beta1)*dw <span class="comment">#similar to velocity</span></span><br><span class="line">    moment2=beta2*moment2+(<span class="number">1</span>-beta2)*dw*dw</span><br><span class="line">    moment1_unbias=moment1/(<span class="number">1</span>-beta1**t)</span><br><span class="line">    moment2_unbias=moment2/(<span class="number">1</span>-beta2**t)</span><br><span class="line">    w-=learning_rate*moment1_unbias/(moment2_unbias.sqrt()+<span class="number">1e-7</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="../pic/image-20241009131845222.png" alt="图片"></p>
+<h1 id="lecture-5-Neural-Networks"><a href="#lecture-5-Neural-Networks" class="headerlink" title="lecture 5:Neural Networks"></a>lecture 5:Neural Networks</h1><p>Feature transforms</p>
+<p>Fully-connected neural network:also MLP</p>
+<h1 id="Lecture-6-Back-Propagation"><a href="#Lecture-6-Back-Propagation" class="headerlink" title="Lecture 6:Back Propagation"></a>Lecture 6:Back Propagation</h1><p>Represent complex expressions  as computational graphs</p>
+<p>During the backward pass, each node in  the graph receives upstream gradients and multiplies them by local gradients to  compute downstream gradients</p>
+<p>Backprop can be implemented with “flat” code  where the backward pass looks like forward pass  reversed</p>
+<h1 id="Lecture-7：Convolutional-Networks"><a href="#Lecture-7：Convolutional-Networks" class="headerlink" title="Lecture 7：Convolutional Networks"></a>Lecture 7：Convolutional Networks</h1><h2 id="Receptive-Fields"><a href="#Receptive-Fields" class="headerlink" title="Receptive Fields"></a>Receptive Fields</h2><p>Each successive convolution adds K-1 to the receptive field size</p>
+<p>With L layers the receptive field size is 1+L*(K-1)</p>
+<p><img src="../pic/image-20241020211126843.png" alt="图片"></p>
+<h2 id="Strided-Convolution"><a href="#Strided-Convolution" class="headerlink" title="Strided Convolution"></a>Strided Convolution</h2><p>a way to add receptive field size quickly</p>
+<h2 id="LeNet"><a href="#LeNet" class="headerlink" title="LeNet"></a>LeNet</h2><p>spatial size decreases:using pooling or strived conv</p>
+<p>number of channels increases:total “volume” is preserved</p>
+<h1 id="Lecture-8：CNN-Architecture"><a href="#Lecture-8：CNN-Architecture" class="headerlink" title="Lecture 8：CNN Architecture"></a>Lecture 8：CNN Architecture</h1><p>ZFNet:a bigger AlexNet</p>
+<h2 id="VGG"><a href="#VGG" class="headerlink" title="VGG"></a>VGG</h2><p>5x5=2 layer of 3x3 in receptive fields,but less FLOPS and fewer parametres;and it can add more relu between layers</p>
+<h2 id="ResNet"><a href="#ResNet" class="headerlink" title="ResNet"></a>ResNet</h2><p>Bottleneck Block:More layers, less computational cost</p>
+<p><img src="../pic/image-20241021201956060.png" alt="图片"></p>
+<h2 id="ResNeXt"><a href="#ResNeXt" class="headerlink" title="ResNeXt"></a>ResNeXt</h2><p><img src="../pic/image-20241022082649549.png" alt="图片"></p>
+<p>add groups improves performance with same computational complexity</p>
+<h2 id="Squeeze-and-Excitation-Networks"><a href="#Squeeze-and-Excitation-Networks" class="headerlink" title="Squeeze-and-Excitation Networks"></a>Squeeze-and-Excitation Networks</h2><p><img src="../pic/image-20241022083711420.png" alt="图片"></p>
+<h2 id="Densely-Connected-Neural-Networks"><a href="#Densely-Connected-Neural-Networks" class="headerlink" title="Densely Connected Neural Networks"></a>Densely Connected Neural Networks</h2><p><img src="../pic/image-20241022084247142.png" alt="图片"></p>
+<p>Dense blocks where each layer is connected to every other layer in feedforward fashion</p>
+<p>Alleviates vanishing gradient,strengthens feature propagation,encourages feature reuse</p>
+<h2 id="MobileNets-Tiny-Networks-For-MObile-Devices"><a href="#MobileNets-Tiny-Networks-For-MObile-Devices" class="headerlink" title="MobileNets:Tiny Networks(For MObile Devices)"></a>MobileNets:Tiny Networks(For MObile Devices)</h2><p><img src="../pic/image-20241022084825848.png" alt="图片"></p>
+<h1 id="Lecture-9-Hardware-and-Software"><a href="#Lecture-9-Hardware-and-Software" class="headerlink" title="Lecture 9: Hardware and Software"></a>Lecture 9: Hardware and Software</h1><h2 id="autograd"><a href="#autograd" class="headerlink" title="autograd"></a>autograd</h2><p>requires_grad=True</p>
+<h2 id="Static-Computation-Graphs"><a href="#Static-Computation-Graphs" class="headerlink" title="Static Computation Graphs"></a>Static Computation Graphs</h2><p>graph=build_graph()</p>
+<p>reuse the same graph on every iteration</p>
+<p>graph=torch.jit.script(model):</p>
+<p>Just-In-Time compilation:introspect the source code of the function,compile it into a graph object</p>
+<p>advantage:optimization;serialize</p>
+<p>diadvantage:debug</p>
+<h1 id="Lecture-10-Training-Neural-Networks-I"><a href="#Lecture-10-Training-Neural-Networks-I" class="headerlink" title="Lecture 10: Training Neural Networks I"></a>Lecture 10: Training Neural Networks I</h1><p>One time setup </p>
+<p>Activation functions, data preprocessing,  weight initialization, regularization</p>
+<h2 id="Activation-functions"><a href="#Activation-functions" class="headerlink" title="Activation functions"></a>Activation functions</h2><h3 id="Leaky-ReLU"><a href="#Leaky-ReLU" class="headerlink" title="Leaky ReLU"></a>Leaky ReLU</h3><p>f(x)=max(0.01x,x):will not die</p>
+<h3 id="PReLU-parametric"><a href="#PReLU-parametric" class="headerlink" title="PReLU(parametric)"></a>PReLU(parametric)</h3><p>$f(x)=max(\alpha x,x) where\ \alpha\ is\ learnable$</p>
+<h3 id="Exponential-Linear-Unit-ELU"><a href="#Exponential-Linear-Unit-ELU" class="headerlink" title="Exponential Linear Unit(ELU)"></a>Exponential Linear Unit(ELU)</h3><p>$f(x)=x\ if\  x&gt;0$</p>
+<p>$f(x)=\alpha (exp(x)-1)\ if\  x&gt;0$</p>
+<p>closer to zero mean outputs</p>
+<p>negative saturation regime compared with Leaky ReLU adds some robustness to noise</p>
+<h3 id="Scaled-Exponential-Linear-Unit-SELU"><a href="#Scaled-Exponential-Linear-Unit-SELU" class="headerlink" title="Scaled Exponential Linear Unit(SELU)"></a>Scaled Exponential Linear Unit(SELU)</h3><p>$f(x)=\lambda x\ if\  x&gt;0$</p>
+<p>$f(x)=\lambda\alpha (exp(x)-1)\ if\  x&gt;0$</p>
+<p>works better for deep networks</p>
+<p>“self-normalizing”property;can train deep SELU networks without BatchNorm</p>
+<h2 id="Data-Preprocessing"><a href="#Data-Preprocessing" class="headerlink" title="Data Preprocessing"></a>Data Preprocessing</h2><p>standardlize:less sensitive to small changes in weight,easier to optimize</p>
+<p><img src="../pic/image-20241025090559876.png" alt="图片"></p>
+<h2 id="Weight-Initialization"><a href="#Weight-Initialization" class="headerlink" title="Weight Initialization"></a>Weight Initialization</h2><p>Gaussion:not good for deep network</p>
+<h3 id="Xavier-Initialization"><a href="#Xavier-Initialization" class="headerlink" title="Xavier Initialization"></a>Xavier Initialization</h3><p>w=np.random.randn(Din,Dout)/np.sqrt(Din)</p>
+<p>variance of output=variance of input-&gt;std:1/sqrt(Din)</p>
+<p>problem:change from tanh to ReLU,activations collapse to zero again because Xavier assumes zero centred activation function</p>
+<h3 id="Kaiming-MSRA-Initialization"><a href="#Kaiming-MSRA-Initialization" class="headerlink" title="Kaiming/MSRA Initialization"></a>Kaiming/MSRA Initialization</h3><p>std=sqrt(2/Din)</p>
+<p>problem: not good for ResNet-&gt;intialize first conv with MSRA,second to zero</p>
+<h2 id="Regularization-1"><a href="#Regularization-1" class="headerlink" title="Regularization"></a>Regularization</h2><p>batch normalization and data augmentation almost always a good idea</p>
+<h3 id="Dropout"><a href="#Dropout" class="headerlink" title="Dropout"></a>Dropout</h3><p>for large fully-connected layers</p>
+<p>dropout makes output random-&gt;$\int p(z)f(x,z)dz$</p>
+<p>At test time, drop  nothing and multiply by dropout probability:output at test time=expected output at traing time</p>
+<p>inverted dropout:drop and scale during traing;test time is unchanged</p>
+<h3 id="Others"><a href="#Others" class="headerlink" title="Others"></a>Others</h3><p>dropconnect:drop random connections between neurons(set weight to 0)</p>
+<p>fractional max pooling:use randomized pooling regions</p>
+<p>stochastic depth:skip some residual blocks in ResNet</p>
+<p>cutout:set random images regions to 0</p>
+<p>mixup:train on random blends of image</p>
+<h1 id="Lecture-11-Training-Neural-Networks-II"><a href="#Lecture-11-Training-Neural-Networks-II" class="headerlink" title="Lecture 11: Training Neural Networks II"></a>Lecture 11: Training Neural Networks II</h1><p>2.Training dynamics Learning rate schedules;  hyperparameter optimization </p>
+<p>3.After training Model ensembles, transfer learning</p>
+<h2 id="Learning-Rate-Schedule"><a href="#Learning-Rate-Schedule" class="headerlink" title="Learning Rate Schedule"></a>Learning Rate Schedule</h2><h3 id="Learing-Rate-Decay-Step"><a href="#Learing-Rate-Decay-Step" class="headerlink" title="Learing Rate Decay:Step"></a>Learing Rate Decay:Step</h3><p>reduce learning rate at a few fixed points</p>
+<h3 id="Learing-Rate-Decay-Sosine"><a href="#Learing-Rate-Decay-Sosine" class="headerlink" title="Learing Rate Decay:Sosine"></a>Learing Rate Decay:Sosine</h3><p>$\alpha_t=1/2\alpha_0(1+cos(t\pi/T))$</p>
+<h3 id="Learing-Rate-Decay-Linear"><a href="#Learing-Rate-Decay-Linear" class="headerlink" title="Learing Rate Decay:Linear"></a>Learing Rate Decay:Linear</h3><p>$\alpha_t=\alpha_0(1-t/T)$</p>
+<h3 id="Learing-Rate-Decay-Inverse-Sqrt"><a href="#Learing-Rate-Decay-Inverse-Sqrt" class="headerlink" title="Learing Rate Decay:Inverse Sqrt"></a>Learing Rate Decay:Inverse Sqrt</h3><p>$\alpha_t=\alpha_0/\sqrt{t}$</p>
+<h2 id="Choosing-Hyperparameters"><a href="#Choosing-Hyperparameters" class="headerlink" title="Choosing Hyperparameters"></a>Choosing Hyperparameters</h2><p>grid search</p>
+<p>random search</p>
+<h2 id="Model-Ensembles"><a href="#Model-Ensembles" class="headerlink" title="Model Ensembles"></a>Model Ensembles</h2><ol>
+<li>Train multiple independent models 2. At test time average their results</li>
+</ol>
+<h2 id="Transfer-Learning"><a href="#Transfer-Learning" class="headerlink" title="Transfer Learning"></a>Transfer Learning</h2><p>feature extracter;fine tuning</p>
+<h1 id="Lecture-12-Recurrent-Networks"><a href="#Lecture-12-Recurrent-Networks" class="headerlink" title="Lecture 12: Recurrent Networks"></a>Lecture 12: Recurrent Networks</h1><p>key idea: RNNs have an “internal state” that is updated as a sequence is processed</p>
+<p>$h<em>t=f_W(h</em>{t-1},x_t)$</p>
+<h2 id="Vanilla-Elman-RNN"><a href="#Vanilla-Elman-RNN" class="headerlink" title="Vanilla/Elman RNN"></a>Vanilla/Elman RNN</h2><p>$h<em>t=tanh(W</em>{hh}h<em>{t-1}+W</em>{xh}x_t)$</p>
+<p>$y<em>{t}=W</em>{hy}h_{t}$</p>
+<h2 id="Truncated-Backpropagation-Through-Time"><a href="#Truncated-Backpropagation-Through-Time" class="headerlink" title="Truncated Backpropagation Through Time"></a>Truncated Backpropagation Through Time</h2><p>only backpropagate through finite chunks of the sequence</p>
+<h2 id="Example：-Image-Captioning"><a href="#Example：-Image-Captioning" class="headerlink" title="Example： Image Captioning"></a>Example： Image Captioning</h2><p><img src="../pic/image-20241029163342960.png" alt="图片"></p>
+<h2 id="Long-Short-Term-Memory-LSTM"><a href="#Long-Short-Term-Memory-LSTM" class="headerlink" title="Long Short Term Memory(LSTM)"></a>Long Short Term Memory(LSTM)</h2><p><img src="../pic/image-20241029165055992.png" alt="图片"></p>
+<p>two vectors at each timestep: cell state and hidden state</p>
+<p>four gates</p>
+<p><img src="../pic/image-20241029165523149.png" alt="图片"></p>
+<p>i:input gate,whether to write cell</p>
+<p>f: forget gate,whether to erase cell</p>
+<p>o:output gate,whether to reveal cell</p>
+<p>g:gategate,how much to write to cell</p>
+<p><img src="../pic/image-20241029170041546.png" alt="图片"></p>
+<h2 id="Highway-Networks"><a href="#Highway-Networks" class="headerlink" title="Highway Networks"></a>Highway Networks</h2><p><img src="../pic/image-20241029171035991.png" alt="图片"></p>
+<h2 id="Gated-Recurrent-Unit-GRU"><a href="#Gated-Recurrent-Unit-GRU" class="headerlink" title="Gated Recurrent Unit(GRU)"></a>Gated Recurrent Unit(GRU)</h2><h1 id="Lecture-13-Attention"><a href="#Lecture-13-Attention" class="headerlink" title="Lecture 13: Attention"></a>Lecture 13: Attention</h1><p><img src="../pic/image-20241030085742900.png" alt="图片"></p>
+<h2 id="Sequence-to-Sequence-with-RNNs-and-Attention"><a href="#Sequence-to-Sequence-with-RNNs-and-Attention" class="headerlink" title="Sequence-to-Sequence with RNNs and Attention"></a>Sequence-to-Sequence with RNNs and Attention</h2><p><img src="../pic/image-20241030090333879.png" alt="图片"></p>
+<p>how much should we attend to each hidden state of the encoder given the current state of the decoder</p>
+<p><img src="../pic/image-20241030091224606.png" alt="图片"></p>
+<h2 id="Attention-Layer"><a href="#Attention-Layer" class="headerlink" title="Attention Layer"></a>Attention Layer</h2><p>scaled similarity function:dot product</p>
+<p>multiple query vectors</p>
+<p>seperate key and value</p>
+<p><img src="../pic/image-20241030102230031.png" alt="图片"></p>
+<h2 id="Self-Attention-Layer"><a href="#Self-Attention-Layer" class="headerlink" title="Self-Attention Layer"></a>Self-Attention Layer</h2><p><img src="../pic/image-20241030102543978.png" alt="图片"></p>
+<p>don’t know the order of the vectors-&gt;positon embedding</p>
+<p>Y1:This produces the output of the self-attention layer at this position</p>
+<p>Clearly the word at this position will have the highest softmax score, but sometimes it’s useful to attend to another word that is relevant to the current word.</p>
+<h2 id="Masked-Self-Attention-Layer"><a href="#Masked-Self-Attention-Layer" class="headerlink" title="Masked Self-Attention Layer"></a>Masked Self-Attention Layer</h2><p><img src="../pic/image-20241030103113116.png" alt="图片"></p>
+<h2 id="Multihead-Self-Attention-Layer"><a href="#Multihead-Self-Attention-Layer" class="headerlink" title="Multihead Self-Attention Layer"></a>Multihead Self-Attention Layer</h2><p>1.It expands the model’s ability to focus on different positions.</p>
+<p>2.It gives the attention layer multiple “representation subspaces”.</p>
+<p><img src="../pic/image-20241030103440937.png" alt="图片"></p>
+<h2 id="Three-Ways-of-Processing-Sequences"><a href="#Three-Ways-of-Processing-Sequences" class="headerlink" title="Three Ways of Processing Sequences"></a>Three Ways of Processing Sequences</h2><p><img src="../pic/image-20241030104733736.png" alt="图片"></p>
+<h2 id="Transformer"><a href="#Transformer" class="headerlink" title="Transformer"></a>Transformer</h2><p><img src="../pic/image-20241030105106642.png" alt="图片"></p>
+<p>For RNNs, instead of only encoding the whole sentence in a hidden state, each word has a corresponding hidden state that is passed all the way to the decoding stage. Then, the hidden states are used at each step of the RNN to decode.</p>
+<p><img src="https://miro.medium.com/v2/resize:fit:1400/1*V2435M1u0tiSOz4nRBfl4g.png" alt="img"></p>
+<p><img src="https://miro.medium.com/v2/resize:fit:814/1*QcTbVCVPj4WFnqvvWU5-hQ.png" alt="img"></p>
+<p><img src="https://jalammar.github.io/images/t/transformer_resideual_layer_norm_3.png" alt="img"></p>
+<h3 id="The-Decoder-Side"><a href="#The-Decoder-Side" class="headerlink" title="The Decoder Side"></a>The Decoder Side</h3><p>The encoder start by processing the input sequence. The output of the top encoder is then transformed into a set of attention vectors K and V. These are to be used by each decoder in its “encoder-decoder attention” layer which helps the decoder focus on appropriate places in the input sequence</p>
+<p><img src="../pic/image-20241105162359823.png" alt="图片"></p>
+<p><img src="https://jalammar.github.io/images/t/transformer_decoder_output_softmax.png" alt="img"></p>
+<h1 id="Lecture-14-Visualizing-and-Understanding"><a href="#Lecture-14-Visualizing-and-Understanding" class="headerlink" title="Lecture 14: Visualizing and Understanding"></a>Lecture 14: Visualizing and Understanding</h1><h1 id="Lecture-19-Generative-Models-I"><a href="#Lecture-19-Generative-Models-I" class="headerlink" title="Lecture 19: Generative Models I"></a>Lecture 19: Generative Models I</h1><p>Discriminative Model: learn a probability distribution  p(y|x)</p>
+<p>Generative Model: learn a probability distribution  p(x)</p>
+<p>Conditional Generative Model: learn  p(x|y)</p>
+<p><img src="../pic/image-20241107145509471.png" alt="图片"></p>
+<h2 id="Autoregressive-Models"><a href="#Autoregressive-Models" class="headerlink" title="Autoregressive Models"></a>Autoregressive Models</h2><p>goal:write down an explicit function for p(x)=f(x,W)</p>
+<p>given dataset $x^{(i)}$,train the model by solving$W^*=argmax\prod_ip(x^{(i)})=argmax\sum_ilogf(x^{(i)},W)$</p>
+<p><img src="../pic/image-20241107150655411.png" alt="图片"></p>
+<h3 id="PixelRNN"><a href="#PixelRNN" class="headerlink" title="PixelRNN"></a>PixelRNN</h3><p>generate from the upper left corner</p>
+<p>compute a hidden state for each pixel that depends on hidden states and RGB values from the left and the above (LSTM)</p>
+<p>$h<em>{x,y}=f(h</em>{x-1,y},h_{x,y-1},W)$</p>
+<p>at each pixel,predict R,G,B:softmax over (0,1…255)</p>
+<p><img src="../pic/image-20241107151745204.png" alt="图片"></p>
+<p>slow</p>
+<h3 id="PixelCNN"><a href="#PixelCNN" class="headerlink" title="PixelCNN"></a>PixelCNN</h3><p>slow</p>
+<h2 id="Variational-Autoencoders"><a href="#Variational-Autoencoders" class="headerlink" title="Variational Autoencoders"></a>Variational Autoencoders</h2><p>VAE define an intratable density that we cannot explicitly compute or optimize ,but can directly optimize a lower bound on the density</p>
+<h3 id="Autoencoders"><a href="#Autoencoders" class="headerlink" title="Autoencoders"></a>Autoencoders</h3><p><img src="../pic/image-20241107153625028.png" alt="图片"></p>
+<p>cmompress  to low dimention</p>
+<p>cnn;up cnn</p>
+<p>no probabilistic: no way to sample new data from learned model</p>
+<h3 id="Variational-Autoencoders-1"><a href="#Variational-Autoencoders-1" class="headerlink" title="Variational Autoencoders"></a>Variational Autoencoders</h3><p>x is an image, z is latent  factors(unobserved) used to generate x</p>
+<p>Decoder must be probabilistic: Decoder inputs z, outputs mean μx|z and (diagonal) covariance ∑x|z                   -&gt;Sample x from Gaussian with mean  μx|z and (diagonal) covariance ∑x|z</p>
+<h4 id="After-training-test"><a href="#After-training-test" class="headerlink" title="After training(test)"></a>After training(test)</h4><p>1.sample a new latent variable from the prior distribution</p>
+<p>2.z-decoder-x’s distribution</p>
+<p><img src="../pic/image-20241107181657411.png" alt="图片"></p>
+<p>assume simple prior p(z): Gaussian</p>
+<p>assume the probability over the image:gaussian with a number of the gaussian equal to the numer of pixels-&gt;parametrize:mean value and standard deviation value for each pixel</p>
+<p>output a high dimentional gaussian distribution</p>
+<p>represent p(x|z) with a neural network</p>
+<h4 id="Train"><a href="#Train" class="headerlink" title="Train"></a>Train</h4><p>maximize likelihood</p>
+<p><img src="../pic/image-20241107190010495.png" alt="图片"></p>
+<p>$p_{\theta}(x|z)$:decoder</p>
+<p>$p_{\theta}(z)$:gaussian</p>
+<p>Solution: Train  another network  (encoder) that learns $q<em>{\phi}(z|x)=p</em>{\theta}(z|x)$</p>
+<p><img src="../pic/image-20241107190432160.png" alt="图片"></p>
+<h4 id="Math"><a href="#Math" class="headerlink" title="Math"></a>Math</h4><p><img src="../pic/image-20241107191254910.png" alt="图片"></p>
+<p><img src="../pic/image-20241107191320392.png" alt="图片"></p>
+<p>-&gt;</p>
+<p><img src="../pic/image-20241107191919232.png" alt="图片"></p>
+<h4 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h4><p><img src="../pic/image-20241107192332863.png" alt="图片"></p>
+<h1 id="Lecture-20-Generative-Models-II"><a href="#Lecture-20-Generative-Models-II" class="headerlink" title="Lecture 20: Generative Models II"></a>Lecture 20: Generative Models II</h1><h2 id="VAE"><a href="#VAE" class="headerlink" title="VAE"></a>VAE</h2><p><img src="../pic/image-20241107194754136.png" alt="图片"></p>
+<p><img src="../pic/image-20241107195438795.png" alt="图片"></p>
+<p><img src="../pic/image-20241107200438779.png" alt="图片"></p>
+<h3 id="Generate"><a href="#Generate" class="headerlink" title="Generate"></a>Generate</h3><p><img src="../pic/image-20241107200602162.png" alt="图片"></p>
+<h3 id="Edit"><a href="#Edit" class="headerlink" title="Edit"></a>Edit</h3><p><img src="../pic/image-20241107200959363.png" alt="图片"></p>
+<h2 id="VQ-VAE"><a href="#VQ-VAE" class="headerlink" title="VQ-VAE"></a>VQ-VAE</h2><p><img src="../pic/image-20241107201937581.png" alt="图片"></p>
+<h2 id="GAN"><a href="#GAN" class="headerlink" title="GAN"></a>GAN</h2><h3 id="Structure"><a href="#Structure" class="headerlink" title="Structure"></a>Structure</h3><p><img src="../pic/image-20241107203248448.png" alt="图片"></p>
+<h3 id="Loss"><a href="#Loss" class="headerlink" title="Loss"></a>Loss</h3><p><img src="../pic/image-20241108102710500.png" alt="图片"></p>
+<h3 id="Train-1"><a href="#Train-1" class="headerlink" title="Train"></a>Train</h3><p><img src="../pic/image-20241108102922677.png" alt="图片"></p>
+<p><img src="../pic/image-20241108103255928.png" alt="图片"></p>
+<h3 id="Math-1"><a href="#Math-1" class="headerlink" title="Math"></a>Math</h3><p><img src="../pic/image-20241108103706172.png" alt="图片"></p>
+<p><img src="../pic/image-20241108104216844.png" alt="图片"></p>
+<p><img src="../pic/image-20241108104506273.png" alt="图片"></p>
+<p><img src="../pic/image-20241108110435594.png" alt="图片"></p>
+<p><img src="../pic/image-20241108110806188.png" alt="图片"></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Deep-Learning/" rel="tag"># Deep Learning</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/" rel="prev" title="2024年终总结">
+                  <i class="fa fa-angle-left"></i> 2024年终总结
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">SilkyFinish</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
