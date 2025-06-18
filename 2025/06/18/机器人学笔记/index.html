@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"silkyfinish.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="导论导论 描述刚体状态 平面 自由度 DOF：x，y；旋转 3 DOF   空间 DOF：x，y，z；绕x，y，z轴转动 6 DOF     整合表示 在刚体上建立frame：body frame 移动：由body frame 的原点位置判定 转动：由body frame 的姿态判断（相对于world frame）   运动状态 利用各个DOF的微分，将位移和姿态（displayment&#x2F;orie">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自然语言处理">
+<meta property="og:url" content="https://silkyfinish.github.io/2025/06/18/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AD%A6%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="SilkyFinish">
+<meta property="og:description" content="导论导论 描述刚体状态 平面 自由度 DOF：x，y；旋转 3 DOF   空间 DOF：x，y，z；绕x，y，z轴转动 6 DOF     整合表示 在刚体上建立frame：body frame 移动：由body frame 的原点位置判定 转动：由body frame 的姿态判断（相对于world frame）   运动状态 利用各个DOF的微分，将位移和姿态（displayment&#x2F;orie">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/06/18/pic/image-20250413151019317.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/06/18/pic/image-20250413152011106.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/06/18/pic/image-20250413172449607.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/06/18/pic/image-20250413203823961.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/06/18/pic/image-20250413214935852.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/06/18/pic/image-20250414102431086.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/06/18/pic/image-20250414102950846.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/06/18/pic/image-20250416162331712.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/06/18/pic/image-20250416162625628.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/06/18/pic/image-20250418191833152.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/06/18/pic/image-20250418193542302.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/06/18/pic/image-20250418194538847.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/06/18/pic/image-20250418202155053.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/06/18/pic/image-20250420140315910.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/06/18/pic/image-20250420140340056.png">
+<meta property="og:image" content="https://silkyfinish.github.io/2025/06/18/pic/image-20250420161741292.png">
+<meta property="article:published_time" content="2025-06-18T11:59:39.094Z">
+<meta property="article:modified_time" content="2025-06-18T12:13:33.185Z">
+<meta property="article:author" content="SilkyFinish">
+<meta property="article:tag" content="Deep Learning">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://silkyfinish.github.io/2025/06/18/pic/image-20250413151019317.png">
+
+
+<link rel="canonical" href="https://silkyfinish.github.io/2025/06/18/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AD%A6%E7%AC%94%E8%AE%B0/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://silkyfinish.github.io/2025/06/18/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AD%A6%E7%AC%94%E8%AE%B0/","path":"2025/06/18/机器人学笔记/","title":"自然语言处理"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>自然语言处理 | SilkyFinish</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">SilkyFinish</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">SilkyFinish的个人博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AF%BC%E8%AE%BA"><span class="nav-number">1.</span> <span class="nav-text">导论</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%BC%E8%AE%BA-1"><span class="nav-number">1.1.</span> <span class="nav-text">导论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A7%BB%E5%8A%A8"><span class="nav-number">1.2.</span> <span class="nav-text">移动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%AC%E5%8A%A8"><span class="nav-number">1.3.</span> <span class="nav-text">转动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%8B%E8%BD%AC%E7%9F%A9%E9%98%B5"><span class="nav-number">1.4.</span> <span class="nav-text">旋转矩阵</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%8F%E8%BF%B0B%E7%9B%B8%E5%AF%B9%E4%BA%8EA%E7%9A%84%E5%A7%BF%E6%80%81"><span class="nav-number">1.4.1.</span> <span class="nav-text">描述B相对于A的姿态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AC%E6%8D%A2%E5%90%91%E9%87%8F%E5%9D%90%E6%A0%87"><span class="nav-number">1.4.2.</span> <span class="nav-text">转换向量坐标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%8F%E8%BF%B0%E6%97%8B%E8%BD%AC%E7%8A%B6%E6%80%81"><span class="nav-number">1.4.3.</span> <span class="nav-text">描述旋转状态</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%97%8B%E8%BD%AC%E7%9F%A9%E9%98%B5-1"><span class="nav-number">2.</span> <span class="nav-text">旋转矩阵</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8E%E8%BD%AC%E8%A7%92"><span class="nav-number">2.1.</span> <span class="nav-text">与转角</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fixed-Angles"><span class="nav-number">2.2.</span> <span class="nav-text">Fixed Angles</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Euler-Angles"><span class="nav-number">2.3.</span> <span class="nav-text">Euler Angles</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">2.4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mapping"><span class="nav-number">2.5.</span> <span class="nav-text">Mapping</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Operator"><span class="nav-number">2.6.</span> <span class="nav-text">Operator</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-1"><span class="nav-number">2.7.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Transformation-Matrix-%E8%BF%90%E7%AE%97"><span class="nav-number">2.8.</span> <span class="nav-text">Transformation Matrix 运算</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%A1%BA%E5%90%91%E8%BF%90%E5%8A%A8%E5%AD%A6"><span class="nav-number">3.</span> <span class="nav-text">顺向运动学</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%BC%E8%AE%BA-2"><span class="nav-number">3.1.</span> <span class="nav-text">导论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%8B%E8%87%82%E5%87%A0%E4%BD%95%E6%8F%8F%E8%BF%B0"><span class="nav-number">3.2.</span> <span class="nav-text">手臂几何描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#D-H%E8%A1%A8%E7%A4%BA%E6%B3%95-Denavit-Hartenberg"><span class="nav-number">3.3.</span> <span class="nav-text">D-H表示法 Denavit-Hartenberg</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Link-Transformation"><span class="nav-number">3.4.</span> <span class="nav-text">Link Transformation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Actuator-Joint-and-Cartesian-Spaces"><span class="nav-number">3.5.</span> <span class="nav-text">Actuator, Joint, and Cartesian Spaces</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%86%E5%90%91%E8%BF%90%E5%8A%A8%E5%AD%A6"><span class="nav-number">4.</span> <span class="nav-text">逆向运动学</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%BC%E8%AE%BA-3"><span class="nav-number">4.1.</span> <span class="nav-text">导论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E9%87%8D%E8%A7%A3"><span class="nav-number">4.2.</span> <span class="nav-text">多重解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pieper%E2%80%99s-Solution"><span class="nav-number">4.3.</span> <span class="nav-text">Pieper’s Solution</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4%E4%B8%80%EF%BC%9A%E7%A1%AE%E5%AE%9A%E6%89%8B%E8%85%95%E4%B8%AD%E5%BF%83%E7%82%B9%E7%9A%84%E4%BD%8D%E7%BD%AE"><span class="nav-number">4.3.0.1.</span> <span class="nav-text">步骤一：确定手腕中心点的位置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4%E4%BA%8C%EF%BC%9A%E6%B1%82%E8%A7%A3%E5%89%8D%E4%B8%89%E4%B8%AA%E5%85%B3%E8%8A%82%E8%A7%92%E5%BA%A6%EF%BC%88%CE%B81%E3%80%81%CE%B82%E3%80%81%CE%B83%EF%BC%89"><span class="nav-number">4.3.0.2.</span> <span class="nav-text">步骤二：求解前三个关节角度（θ1、θ2、θ3）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4%E4%B8%89%EF%BC%9A%E6%B1%82%E8%A7%A3%E5%90%8E%E4%B8%89%E4%B8%AA%E5%85%B3%E8%8A%82%E8%A7%92%E5%BA%A6%EF%BC%88%CE%B84%E3%80%81%CE%B85%E3%80%81%CE%B86%EF%BC%89"><span class="nav-number">4.3.0.3.</span> <span class="nav-text">步骤三：求解后三个关节角度（θ4、θ5、θ6）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%89%A9%E4%BB%B6%E5%8F%96%E6%94%BE%E4%BB%BB%E5%8A%A1"><span class="nav-number">4.4.</span> <span class="nav-text">物件取放任务</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%BA%E6%A2%B0%E6%89%8B%E8%87%82%E8%BD%A8%E8%BF%B9%E8%A7%84%E5%88%92"><span class="nav-number">5.</span> <span class="nav-text">机械手臂轨迹规划</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%BC%E8%AE%BA-4"><span class="nav-number">5.1.</span> <span class="nav-text">导论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Joint-Space-%E4%B8%8B%E7%9A%84%E8%BD%A8%E8%BF%B9%E8%A7%84%E5%88%92"><span class="nav-number">5.2.</span> <span class="nav-text">Joint Space 下的轨迹规划</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cartesian-Space-%E4%B8%8B%E7%9A%84%E8%BD%A8%E8%BF%B9%E8%A7%84%E5%88%92"><span class="nav-number">5.3.</span> <span class="nav-text">Cartesian Space 下的轨迹规划</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cubic-Polynomials"><span class="nav-number">5.4.</span> <span class="nav-text">Cubic Polynomials</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E6%AE%B5Cubic-Polynomials"><span class="nav-number">5.5.</span> <span class="nav-text">多段Cubic Polynomials</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#General-Cubic-Polynomials"><span class="nav-number">5.6.</span> <span class="nav-text">General Cubic Polynomials</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Linear-Function-with-Parabolic-Blends"><span class="nav-number">6.</span> <span class="nav-text">Linear Function with Parabolic Blends</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E6%AE%B5Linear-Function-with-Parabolic-Blends"><span class="nav-number">6.1.</span> <span class="nav-text">多段Linear Function with Parabolic Blends</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linear-Function-with-Parabolic-Blends%E6%B3%A8%E8%A7%A3"><span class="nav-number">6.2.</span> <span class="nav-text">Linear Function with Parabolic Blends注解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cartesian-Space%E4%B8%8B%E8%BD%A8%E8%BF%B9%E5%87%A0%E4%BD%95%E4%B8%8B%E9%99%90"><span class="nav-number">6.3.</span> <span class="nav-text">Cartesian Space下轨迹几何下限</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="SilkyFinish"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">SilkyFinish</p>
+  <div class="site-description" itemprop="description">冲天香阵透长安，满城尽带黄金甲</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://silkyfinish.github.io/2025/06/18/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AD%A6%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="SilkyFinish">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SilkyFinish">
+      <meta itemprop="description" content="冲天香阵透长安，满城尽带黄金甲">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="自然语言处理 | SilkyFinish">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          自然语言处理
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2025-06-18 19:59:39 / Modified: 20:13:33" itemprop="dateCreated datePublished" datetime="2025-06-18T19:59:39+08:00">2025-06-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Note/" itemprop="url" rel="index"><span itemprop="name">Note</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="导论"><a href="#导论" class="headerlink" title="导论"></a>导论</h1><h2 id="导论-1"><a href="#导论-1" class="headerlink" title="导论"></a>导论</h2><ul>
+<li>描述刚体状态<ul>
+<li>平面<ul>
+<li>自由度 DOF：x，y；旋转</li>
+<li>3 DOF</li>
+</ul>
+</li>
+<li>空间<ul>
+<li>DOF：x，y，z；绕x，y，z轴转动</li>
+<li>6 DOF</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>整合表示<ul>
+<li>在刚体上建立frame：body frame</li>
+<li>移动：由body frame 的原点位置判定</li>
+<li>转动：由body frame 的姿态判断（相对于world frame）</li>
+</ul>
+</li>
+<li>运动状态<ul>
+<li>利用各个DOF的微分，将位移和姿态（displayment/orientation）转换到速度和加速度（角）等运动状态</li>
+</ul>
+</li>
+</ul>
+<h2 id="移动"><a href="#移动" class="headerlink" title="移动"></a>移动</h2><ul>
+<li>以vector P 来描述body frame 原点B相对于world frame A 的状态</li>
+<li>px py pz 三个分量</li>
+<li><img src="../pic/image-20250413151019317.png" alt="image-20250413151019317"></li>
+</ul>
+<h2 id="转动"><a href="#转动" class="headerlink" title="转动"></a>转动</h2><ul>
+<li><img src="../pic/image-20250413152011106.png" alt="image-20250413152011106"></li>
+</ul>
+<h2 id="旋转矩阵"><a href="#旋转矩阵" class="headerlink" title="旋转矩阵"></a>旋转矩阵</h2><h3 id="描述B相对于A的姿态"><a href="#描述B相对于A的姿态" class="headerlink" title="描述B相对于A的姿态"></a>描述B相对于A的姿态</h3><ul>
+<li>${}^{A}<em>{B}R={}^{B}</em>{A}R^{T}$</li>
+<li>${}^{A}<em>{B}R^{T}{}^{A}</em>{B}R=I<em>{3}(单位矩阵)={}^{A}</em>{B}R^{-1}{}^{A}_{B}R$</li>
+<li>-&gt;${}^{A}<em>{B}R^{T}={}^{A}</em>{B}R^{-1}(orthogonal\,matrix\,正交矩阵)={}^{B}_{A}R$</li>
+<li><ol>
+<li>always invertible; 2. columns: orthonoraml basis：length=1，mutually perpendicular</li>
+</ol>
+</li>
+<li>旋转矩阵9个数字，但上述条件置入了6个限制，所以R只有3个DOF，同前述空间中转动有3个DOF</li>
+</ul>
+<h3 id="转换向量坐标"><a href="#转换向量坐标" class="headerlink" title="转换向量坐标"></a>转换向量坐标</h3><p>${}^{A}P={}^{A}_{B}R{}^{B}P$</p>
+<h3 id="描述旋转状态"><a href="#描述旋转状态" class="headerlink" title="描述旋转状态"></a>描述旋转状态</h3><p><img src="../pic/image-20250413172449607.png" alt="image-20250413172449607"></p>
+<p>将vector 在同一个frame中进行转动</p>
+<p>${}^{A}P’=R(\theta){}^{A}P$</p>
+<h1 id="旋转矩阵-1"><a href="#旋转矩阵-1" class="headerlink" title="旋转矩阵"></a>旋转矩阵</h1><h2 id="与转角"><a href="#与转角" class="headerlink" title="与转角"></a>与转角</h2><p>旋转矩阵-3次旋转角度-3 DOF</p>
+<p>两种拆解方式</p>
+<ul>
+<li>方向固定不动的转轴旋转：fixed angles</li>
+<li>对「转动的frame当下所在」的转轴方向旋转：Euler angles</li>
+</ul>
+<h2 id="Fixed-Angles"><a href="#Fixed-Angles" class="headerlink" title="Fixed Angles"></a>Fixed Angles</h2><ul>
+<li>X-Y-Z angles-&gt;rotation matrix<ul>
+<li><img src="../pic/image-20250413203823961.png" alt="image-20250413203823961"></li>
+</ul>
+</li>
+<li>rotation matrix-&gt;angles</li>
+</ul>
+<h2 id="Euler-Angles"><a href="#Euler-Angles" class="headerlink" title="Euler Angles"></a>Euler Angles</h2><ul>
+<li><p>Z-Y-X angles-&gt;rotation matrix</p>
+<ul>
+<li><p><img src="../pic/image-20250413214935852.png" alt="image-20250413214935852"></p>
+</li>
+<li><p>欧拉角旋转在每一步都改变了参考系，因此每个旋转矩阵作用在已经旋转过的坐标系上。固定角旋转则是在同一个固定参考系中进行的，因此每个旋转矩阵作用在原始的固定坐标系上。</p>
+</li>
+</ul>
+</li>
+<li><p>Z-Y-Z angles-&gt;rotation matrix</p>
+</li>
+<li><p>rotation matrix-&gt;angles</p>
+</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>12种Euler/fixed 3x2x2</li>
+<li>共12中转动拆解方式（E正转=f反转）</li>
+<li><img src="../pic/image-20250414102431086.png" alt="image-20250414102431086"></li>
+</ul>
+<h2 id="Mapping"><a href="#Mapping" class="headerlink" title="Mapping"></a>Mapping</h2><ul>
+<li>整合移动和转动<ul>
+<li>Homogeneous transformation matrix</li>
+<li><img src="../pic/image-20250414102950846.png" alt="image-20250414102950846"></li>
+<li>${}^{A}<em>{B}R</em>{X,Y,Z}$</li>
+</ul>
+</li>
+</ul>
+<h2 id="Operator"><a href="#Operator" class="headerlink" title="Operator"></a>Operator</h2><ul>
+<li>$R_{K}(\theta)$</li>
+</ul>
+<h2 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h2><p>transformation matrix三种用法：</p>
+<ul>
+<li>描述一个frame相对于另一个frame的空间状态</li>
+<li>将point由某一个frame的表达转换到另一个frame来表达</li>
+<li>将point（vector）在同一个frame中进行移动和转动</li>
+</ul>
+<h2 id="Transformation-Matrix-运算"><a href="#Transformation-Matrix-运算" class="headerlink" title="Transformation Matrix 运算"></a>Transformation Matrix 运算</h2><ul>
+<li>连乘<ul>
+<li><img src="../pic/image-20250416162331712.png" alt="image-20250416162331712"></li>
+</ul>
+</li>
+<li><p>反矩阵</p>
+<ul>
+<li><img src="../pic/image-20250416162625628.png" alt="image-20250416162625628"></li>
+</ul>
+</li>
+<li><p>求位置相对关系</p>
+<ul>
+<li>${}^{U}<em>{D}T={}^{U}</em>{A}T{}^{A}<em>{D}T={}^{U}</em>{B}T{}^{B}<em>{C}T{}^{C}</em>{D}T$</li>
+<li>IF ${}^{C}_{D}T$ unknown<ul>
+<li>$=({}^{U}<em>{B}T{}^{B}</em>{C}T)^{-1}{}^{U}<em>{A}T{}^{A}</em>{D}T$</li>
+<li>$={}^{B}<em>{C}T^{-1}{}^{U}</em>{B}T^{-1}{}^{U}<em>{A}T{}^{A}</em>{D}T$</li>
+</ul>
+</li>
+<li>IF ${}^{B}_{C}T$ unknown<ul>
+<li>$={}^{U}<em>{B}T^{-1}{}^{U}</em>{A}T{}^{A}<em>{D}T{}^{C}</em>{D}T^{-1}$</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>总结<ul>
+<li>B对A的转轴旋转，premultiply，类似fixed angles</li>
+<li>B对B的转轴旋转，postmultiply，类似euler angles</li>
+</ul>
+</li>
+</ul>
+<h1 id="顺向运动学"><a href="#顺向运动学" class="headerlink" title="顺向运动学"></a>顺向运动学</h1><h2 id="导论-2"><a href="#导论-2" class="headerlink" title="导论"></a>导论</h2><p><img src="../pic/image-20250418191833152.png" alt="image-20250418191833152"></p>
+<h2 id="手臂几何描述"><a href="#手臂几何描述" class="headerlink" title="手臂几何描述"></a>手臂几何描述</h2><ul>
+<li>joint<ul>
+<li>对某特定axis进行rotation或translation</li>
+</ul>
+</li>
+<li>link<ul>
+<li>连接joint的杆件，刚体</li>
+<li>link0 地杆 不动的</li>
+<li>link1，2，从下到上</li>
+</ul>
+</li>
+<li>描述<ul>
+<li><img src="../pic/image-20250418193542302.png" alt="image-20250418193542302"></li>
+<li>旋转joint和移动joint</li>
+</ul>
+</li>
+</ul>
+<h2 id="D-H表示法-Denavit-Hartenberg"><a href="#D-H表示法-Denavit-Hartenberg" class="headerlink" title="D-H表示法 Denavit-Hartenberg"></a>D-H表示法 Denavit-Hartenberg</h2><ul>
+<li>建立frame<ul>
+<li><img src="../pic/image-20250418194538847.png" alt="image-20250418194538847"></li>
+</ul>
+</li>
+</ul>
+<h2 id="Link-Transformation"><a href="#Link-Transformation" class="headerlink" title="Link Transformation"></a>Link Transformation</h2><p><img src="../pic/image-20250418202155053.png" alt="image-20250418202155053"></p>
+<h2 id="Actuator-Joint-and-Cartesian-Spaces"><a href="#Actuator-Joint-and-Cartesian-Spaces" class="headerlink" title="Actuator, Joint, and Cartesian Spaces"></a>Actuator, Joint, and Cartesian Spaces</h2><ul>
+<li>Joint space , Cartesianspace<ul>
+<li>${}^{W}P&lt;-\theta<em>{1}…\theta</em>{n}$ Forward Kinematics</li>
+<li>${}^{W}P-&gt;\theta<em>{1}…\theta</em>{n}$ Inverse Kinematics</li>
+</ul>
+</li>
+<li>Actuator space, Joint space<ul>
+<li>$\theta<em>{joint}=\theta</em>{motor}*N(齿轮比)$</li>
+</ul>
+</li>
+</ul>
+<h1 id="逆向运动学"><a href="#逆向运动学" class="headerlink" title="逆向运动学"></a>逆向运动学</h1><h2 id="导论-3"><a href="#导论-3" class="headerlink" title="导论"></a>导论</h2><p>reachable workspace：手臂可以用一种以上的姿态到达的位置</p>
+<p>dexterous workspace：手臂可以用任何姿态到达的位置</p>
+<p>subspace： 手臂在定义头尾的𝑇所能达到的变动范围</p>
+<h2 id="多重解"><a href="#多重解" class="headerlink" title="多重解"></a>多重解</h2><ul>
+<li>解析法<ul>
+<li>代数，几何</li>
+</ul>
+</li>
+<li>数值法</li>
+</ul>
+<h2 id="Pieper’s-Solution"><a href="#Pieper’s-Solution" class="headerlink" title="Pieper’s Solution"></a>Pieper’s Solution</h2><h4 id="步骤一：确定手腕中心点的位置"><a href="#步骤一：确定手腕中心点的位置" class="headerlink" title="步骤一：确定手腕中心点的位置"></a>步骤一：确定手腕中心点的位置</h4><ul>
+<li>利用末端的目标位置和姿态，反推出“手腕中心点”的位置。</li>
+<li>只需要前三个关节来达到这个点。</li>
+</ul>
+<h4 id="步骤二：求解前三个关节角度（θ1、θ2、θ3）"><a href="#步骤二：求解前三个关节角度（θ1、θ2、θ3）" class="headerlink" title="步骤二：求解前三个关节角度（θ1、θ2、θ3）"></a>步骤二：求解前三个关节角度（θ1、θ2、θ3）</h4><ul>
+<li>这是一个三连杆（RRR）逆向运动学问题，通常可以用几何法或代数法解析求解。</li>
+</ul>
+<h4 id="步骤三：求解后三个关节角度（θ4、θ5、θ6）"><a href="#步骤三：求解后三个关节角度（θ4、θ5、θ6）" class="headerlink" title="步骤三：求解后三个关节角度（θ4、θ5、θ6）"></a>步骤三：求解后三个关节角度（θ4、θ5、θ6）</h4><ul>
+<li>有了前三轴的解后，末端执行器的方向就只由后三轴决定。</li>
+<li>通过旋转矩阵，将末端目标姿态分解到后三轴，通常用欧拉角（如Z-Y-Z）或四元数等描述。</li>
+</ul>
+<h2 id="物件取放任务"><a href="#物件取放任务" class="headerlink" title="物件取放任务"></a>物件取放任务</h2><p><img src="../pic/image-20250420140315910.png" alt="image-20250420140315910"></p>
+<p><img src="../pic/image-20250420140340056.png" alt="image-20250420140340056"></p>
+<p>-&gt;Pieper’s Solution</p>
+<h1 id="机械手臂轨迹规划"><a href="#机械手臂轨迹规划" class="headerlink" title="机械手臂轨迹规划"></a>机械手臂轨迹规划</h1><h2 id="导论-4"><a href="#导论-4" class="headerlink" title="导论"></a>导论</h2><p>smooth path： continuous with first derivative</p>
+<h2 id="Joint-Space-下的轨迹规划"><a href="#Joint-Space-下的轨迹规划" class="headerlink" title="Joint Space 下的轨迹规划"></a>Joint Space 下的轨迹规划</h2><ul>
+<li>步骤<ul>
+<li>定义T相对于G的initial，via，final points</li>
+<li>inverse kinematics：将手臂末端点状态转换到joint状态</li>
+<li>对所有joints规划smooth trajectories</li>
+<li>forward kinematics：将joint状态转换到手臂末端点状态，将手臂末端点再Cartesian space下轨迹的可行性</li>
+</ul>
+</li>
+</ul>
+<h2 id="Cartesian-Space-下的轨迹规划"><a href="#Cartesian-Space-下的轨迹规划" class="headerlink" title="Cartesian Space 下的轨迹规划"></a>Cartesian Space 下的轨迹规划</h2><ul>
+<li><p>步骤</p>
+<ul>
+<li><p>定义T相对于G的initial，via，final points</p>
+</li>
+<li><p>对所有手臂末端点状态规划smooth trajectories</p>
+</li>
+<li>将规划好手臂末端点状态的轨迹点转换到joint状态，检查joint状态在Joint Space 下轨迹的可行性</li>
+</ul>
+</li>
+</ul>
+<h2 id="Cubic-Polynomials"><a href="#Cubic-Polynomials" class="headerlink" title="Cubic Polynomials"></a>Cubic Polynomials</h2><p>三次多项式</p>
+<p><img src="../pic/image-20250420161741292.png" alt="image-20250420161741292"></p>
+<h2 id="多段Cubic-Polynomials"><a href="#多段Cubic-Polynomials" class="headerlink" title="多段Cubic Polynomials"></a>多段Cubic Polynomials</h2><p><strong>每段的边界条件</strong></p>
+<ul>
+<li>每一段的起止点位置要和实际的关键点吻合。</li>
+<li>相邻两段的连接点（即中间点）处，要求：<ul>
+<li><strong>位置连续</strong>（轨迹不跳跃）</li>
+<li><strong>速度连续</strong>（运动不突变）</li>
+<li>（有时还要求<strong>加速度连续</strong>，但三次多项式只能保证前两项）</li>
+</ul>
+</li>
+</ul>
+<h2 id="General-Cubic-Polynomials"><a href="#General-Cubic-Polynomials" class="headerlink" title="General Cubic Polynomials"></a>General Cubic Polynomials</h2><ul>
+<li>每段有4个系数（a0, a1, a2, a3），N段就有4N个未知数。</li>
+<li>通过以下条件来列方程：<ul>
+<li><strong>位置连续</strong>：每个点都必须被轨迹准确经过（2N个条件）。</li>
+<li><strong>速度/加速度连续</strong>：中间点的速度、加速度要连续（一般2(N-1)个条件）。</li>
+<li><strong>两端条件</strong>：还需要2个额外条件，通常是设置起点和终点的速度或加速度。</li>
+</ul>
+</li>
+</ul>
+<h1 id="Linear-Function-with-Parabolic-Blends"><a href="#Linear-Function-with-Parabolic-Blends" class="headerlink" title="Linear Function with Parabolic Blends"></a>Linear Function with Parabolic Blends</h1><p>Only linear function；Linear function with parabolic blends；Only parabolic functions</p>
+<h2 id="多段Linear-Function-with-Parabolic-Blends"><a href="#多段Linear-Function-with-Parabolic-Blends" class="headerlink" title="多段Linear Function with Parabolic Blends"></a>多段Linear Function with Parabolic Blends</h2><p>参数设置</p>
+<ul>
+<li>可以选择“给定加速度算时间”或“给定时间算加速度”</li>
+</ul>
+<p>这种方法有时轨迹不会严格经过所有给定的via points（中间点），如果必须经过，可以通过设置“伪via点”来调整。</p>
+<h2 id="Linear-Function-with-Parabolic-Blends注解"><a href="#Linear-Function-with-Parabolic-Blends注解" class="headerlink" title="Linear Function with Parabolic Blends注解"></a>Linear Function with Parabolic Blends注解</h2><p>这种方法轨迹未必严格经过所有中间点；</p>
+<p>若要求严格经过，需调整via点或用伪via点；</p>
+<p>轨迹计算要分清每段类型；</p>
+<p>受实际机械臂能力和空间限制影响，轨迹规划需结合实际情况灵活处理。</p>
+<h2 id="Cartesian-Space下轨迹几何下限"><a href="#Cartesian-Space下轨迹几何下限" class="headerlink" title="Cartesian Space下轨迹几何下限"></a>Cartesian Space下轨迹几何下限</h2><p>中间某些区域无法到达，轨迹需要高加减速，针对特定的起始和终点姿态，无法产生连续轨迹</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Deep-Learning/" rel="tag"># Deep Learning</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/04/11/%E7%A7%91%E7%A0%94%E6%80%BB%E7%BB%93/" rel="prev" title="第一次科研总结">
+                  <i class="fa fa-angle-left"></i> 第一次科研总结
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">SilkyFinish</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

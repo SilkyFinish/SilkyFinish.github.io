@@ -123,7 +123,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -151,6 +151,323 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://silkyfinish.github.io/2025/06/18/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AD%A6%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="SilkyFinish">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SilkyFinish">
+      <meta itemprop="description" content="冲天香阵透长安，满城尽带黄金甲">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | SilkyFinish">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/18/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AD%A6%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">自然语言处理</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2025-06-18 19:59:39 / Modified: 20:13:33" itemprop="dateCreated datePublished" datetime="2025-06-18T19:59:39+08:00">2025-06-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Note/" itemprop="url" rel="index"><span itemprop="name">Note</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="导论"><a href="#导论" class="headerlink" title="导论"></a>导论</h1><h2 id="导论-1"><a href="#导论-1" class="headerlink" title="导论"></a>导论</h2><ul>
+<li>描述刚体状态<ul>
+<li>平面<ul>
+<li>自由度 DOF：x，y；旋转</li>
+<li>3 DOF</li>
+</ul>
+</li>
+<li>空间<ul>
+<li>DOF：x，y，z；绕x，y，z轴转动</li>
+<li>6 DOF</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>整合表示<ul>
+<li>在刚体上建立frame：body frame</li>
+<li>移动：由body frame 的原点位置判定</li>
+<li>转动：由body frame 的姿态判断（相对于world frame）</li>
+</ul>
+</li>
+<li>运动状态<ul>
+<li>利用各个DOF的微分，将位移和姿态（displayment/orientation）转换到速度和加速度（角）等运动状态</li>
+</ul>
+</li>
+</ul>
+<h2 id="移动"><a href="#移动" class="headerlink" title="移动"></a>移动</h2><ul>
+<li>以vector P 来描述body frame 原点B相对于world frame A 的状态</li>
+<li>px py pz 三个分量</li>
+<li><img src="../pic/image-20250413151019317.png" alt="image-20250413151019317"></li>
+</ul>
+<h2 id="转动"><a href="#转动" class="headerlink" title="转动"></a>转动</h2><ul>
+<li><img src="../pic/image-20250413152011106.png" alt="image-20250413152011106"></li>
+</ul>
+<h2 id="旋转矩阵"><a href="#旋转矩阵" class="headerlink" title="旋转矩阵"></a>旋转矩阵</h2><h3 id="描述B相对于A的姿态"><a href="#描述B相对于A的姿态" class="headerlink" title="描述B相对于A的姿态"></a>描述B相对于A的姿态</h3><ul>
+<li>${}^{A}<em>{B}R={}^{B}</em>{A}R^{T}$</li>
+<li>${}^{A}<em>{B}R^{T}{}^{A}</em>{B}R=I<em>{3}(单位矩阵)={}^{A}</em>{B}R^{-1}{}^{A}_{B}R$</li>
+<li>-&gt;${}^{A}<em>{B}R^{T}={}^{A}</em>{B}R^{-1}(orthogonal\,matrix\,正交矩阵)={}^{B}_{A}R$</li>
+<li><ol>
+<li>always invertible; 2. columns: orthonoraml basis：length=1，mutually perpendicular</li>
+</ol>
+</li>
+<li>旋转矩阵9个数字，但上述条件置入了6个限制，所以R只有3个DOF，同前述空间中转动有3个DOF</li>
+</ul>
+<h3 id="转换向量坐标"><a href="#转换向量坐标" class="headerlink" title="转换向量坐标"></a>转换向量坐标</h3><p>${}^{A}P={}^{A}_{B}R{}^{B}P$</p>
+<h3 id="描述旋转状态"><a href="#描述旋转状态" class="headerlink" title="描述旋转状态"></a>描述旋转状态</h3><p><img src="../pic/image-20250413172449607.png" alt="image-20250413172449607"></p>
+<p>将vector 在同一个frame中进行转动</p>
+<p>${}^{A}P’=R(\theta){}^{A}P$</p>
+<h1 id="旋转矩阵-1"><a href="#旋转矩阵-1" class="headerlink" title="旋转矩阵"></a>旋转矩阵</h1><h2 id="与转角"><a href="#与转角" class="headerlink" title="与转角"></a>与转角</h2><p>旋转矩阵-3次旋转角度-3 DOF</p>
+<p>两种拆解方式</p>
+<ul>
+<li>方向固定不动的转轴旋转：fixed angles</li>
+<li>对「转动的frame当下所在」的转轴方向旋转：Euler angles</li>
+</ul>
+<h2 id="Fixed-Angles"><a href="#Fixed-Angles" class="headerlink" title="Fixed Angles"></a>Fixed Angles</h2><ul>
+<li>X-Y-Z angles-&gt;rotation matrix<ul>
+<li><img src="../pic/image-20250413203823961.png" alt="image-20250413203823961"></li>
+</ul>
+</li>
+<li>rotation matrix-&gt;angles</li>
+</ul>
+<h2 id="Euler-Angles"><a href="#Euler-Angles" class="headerlink" title="Euler Angles"></a>Euler Angles</h2><ul>
+<li><p>Z-Y-X angles-&gt;rotation matrix</p>
+<ul>
+<li><p><img src="../pic/image-20250413214935852.png" alt="image-20250413214935852"></p>
+</li>
+<li><p>欧拉角旋转在每一步都改变了参考系，因此每个旋转矩阵作用在已经旋转过的坐标系上。固定角旋转则是在同一个固定参考系中进行的，因此每个旋转矩阵作用在原始的固定坐标系上。</p>
+</li>
+</ul>
+</li>
+<li><p>Z-Y-Z angles-&gt;rotation matrix</p>
+</li>
+<li><p>rotation matrix-&gt;angles</p>
+</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>12种Euler/fixed 3x2x2</li>
+<li>共12中转动拆解方式（E正转=f反转）</li>
+<li><img src="../pic/image-20250414102431086.png" alt="image-20250414102431086"></li>
+</ul>
+<h2 id="Mapping"><a href="#Mapping" class="headerlink" title="Mapping"></a>Mapping</h2><ul>
+<li>整合移动和转动<ul>
+<li>Homogeneous transformation matrix</li>
+<li><img src="../pic/image-20250414102950846.png" alt="image-20250414102950846"></li>
+<li>${}^{A}<em>{B}R</em>{X,Y,Z}$</li>
+</ul>
+</li>
+</ul>
+<h2 id="Operator"><a href="#Operator" class="headerlink" title="Operator"></a>Operator</h2><ul>
+<li>$R_{K}(\theta)$</li>
+</ul>
+<h2 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h2><p>transformation matrix三种用法：</p>
+<ul>
+<li>描述一个frame相对于另一个frame的空间状态</li>
+<li>将point由某一个frame的表达转换到另一个frame来表达</li>
+<li>将point（vector）在同一个frame中进行移动和转动</li>
+</ul>
+<h2 id="Transformation-Matrix-运算"><a href="#Transformation-Matrix-运算" class="headerlink" title="Transformation Matrix 运算"></a>Transformation Matrix 运算</h2><ul>
+<li>连乘<ul>
+<li><img src="../pic/image-20250416162331712.png" alt="image-20250416162331712"></li>
+</ul>
+</li>
+<li><p>反矩阵</p>
+<ul>
+<li><img src="../pic/image-20250416162625628.png" alt="image-20250416162625628"></li>
+</ul>
+</li>
+<li><p>求位置相对关系</p>
+<ul>
+<li>${}^{U}<em>{D}T={}^{U}</em>{A}T{}^{A}<em>{D}T={}^{U}</em>{B}T{}^{B}<em>{C}T{}^{C}</em>{D}T$</li>
+<li>IF ${}^{C}_{D}T$ unknown<ul>
+<li>$=({}^{U}<em>{B}T{}^{B}</em>{C}T)^{-1}{}^{U}<em>{A}T{}^{A}</em>{D}T$</li>
+<li>$={}^{B}<em>{C}T^{-1}{}^{U}</em>{B}T^{-1}{}^{U}<em>{A}T{}^{A}</em>{D}T$</li>
+</ul>
+</li>
+<li>IF ${}^{B}_{C}T$ unknown<ul>
+<li>$={}^{U}<em>{B}T^{-1}{}^{U}</em>{A}T{}^{A}<em>{D}T{}^{C}</em>{D}T^{-1}$</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>总结<ul>
+<li>B对A的转轴旋转，premultiply，类似fixed angles</li>
+<li>B对B的转轴旋转，postmultiply，类似euler angles</li>
+</ul>
+</li>
+</ul>
+<h1 id="顺向运动学"><a href="#顺向运动学" class="headerlink" title="顺向运动学"></a>顺向运动学</h1><h2 id="导论-2"><a href="#导论-2" class="headerlink" title="导论"></a>导论</h2><p><img src="../pic/image-20250418191833152.png" alt="image-20250418191833152"></p>
+<h2 id="手臂几何描述"><a href="#手臂几何描述" class="headerlink" title="手臂几何描述"></a>手臂几何描述</h2><ul>
+<li>joint<ul>
+<li>对某特定axis进行rotation或translation</li>
+</ul>
+</li>
+<li>link<ul>
+<li>连接joint的杆件，刚体</li>
+<li>link0 地杆 不动的</li>
+<li>link1，2，从下到上</li>
+</ul>
+</li>
+<li>描述<ul>
+<li><img src="../pic/image-20250418193542302.png" alt="image-20250418193542302"></li>
+<li>旋转joint和移动joint</li>
+</ul>
+</li>
+</ul>
+<h2 id="D-H表示法-Denavit-Hartenberg"><a href="#D-H表示法-Denavit-Hartenberg" class="headerlink" title="D-H表示法 Denavit-Hartenberg"></a>D-H表示法 Denavit-Hartenberg</h2><ul>
+<li>建立frame<ul>
+<li><img src="../pic/image-20250418194538847.png" alt="image-20250418194538847"></li>
+</ul>
+</li>
+</ul>
+<h2 id="Link-Transformation"><a href="#Link-Transformation" class="headerlink" title="Link Transformation"></a>Link Transformation</h2><p><img src="../pic/image-20250418202155053.png" alt="image-20250418202155053"></p>
+<h2 id="Actuator-Joint-and-Cartesian-Spaces"><a href="#Actuator-Joint-and-Cartesian-Spaces" class="headerlink" title="Actuator, Joint, and Cartesian Spaces"></a>Actuator, Joint, and Cartesian Spaces</h2><ul>
+<li>Joint space , Cartesianspace<ul>
+<li>${}^{W}P&lt;-\theta<em>{1}…\theta</em>{n}$ Forward Kinematics</li>
+<li>${}^{W}P-&gt;\theta<em>{1}…\theta</em>{n}$ Inverse Kinematics</li>
+</ul>
+</li>
+<li>Actuator space, Joint space<ul>
+<li>$\theta<em>{joint}=\theta</em>{motor}*N(齿轮比)$</li>
+</ul>
+</li>
+</ul>
+<h1 id="逆向运动学"><a href="#逆向运动学" class="headerlink" title="逆向运动学"></a>逆向运动学</h1><h2 id="导论-3"><a href="#导论-3" class="headerlink" title="导论"></a>导论</h2><p>reachable workspace：手臂可以用一种以上的姿态到达的位置</p>
+<p>dexterous workspace：手臂可以用任何姿态到达的位置</p>
+<p>subspace： 手臂在定义头尾的𝑇所能达到的变动范围</p>
+<h2 id="多重解"><a href="#多重解" class="headerlink" title="多重解"></a>多重解</h2><ul>
+<li>解析法<ul>
+<li>代数，几何</li>
+</ul>
+</li>
+<li>数值法</li>
+</ul>
+<h2 id="Pieper’s-Solution"><a href="#Pieper’s-Solution" class="headerlink" title="Pieper’s Solution"></a>Pieper’s Solution</h2><h4 id="步骤一：确定手腕中心点的位置"><a href="#步骤一：确定手腕中心点的位置" class="headerlink" title="步骤一：确定手腕中心点的位置"></a>步骤一：确定手腕中心点的位置</h4><ul>
+<li>利用末端的目标位置和姿态，反推出“手腕中心点”的位置。</li>
+<li>只需要前三个关节来达到这个点。</li>
+</ul>
+<h4 id="步骤二：求解前三个关节角度（θ1、θ2、θ3）"><a href="#步骤二：求解前三个关节角度（θ1、θ2、θ3）" class="headerlink" title="步骤二：求解前三个关节角度（θ1、θ2、θ3）"></a>步骤二：求解前三个关节角度（θ1、θ2、θ3）</h4><ul>
+<li>这是一个三连杆（RRR）逆向运动学问题，通常可以用几何法或代数法解析求解。</li>
+</ul>
+<h4 id="步骤三：求解后三个关节角度（θ4、θ5、θ6）"><a href="#步骤三：求解后三个关节角度（θ4、θ5、θ6）" class="headerlink" title="步骤三：求解后三个关节角度（θ4、θ5、θ6）"></a>步骤三：求解后三个关节角度（θ4、θ5、θ6）</h4><ul>
+<li>有了前三轴的解后，末端执行器的方向就只由后三轴决定。</li>
+<li>通过旋转矩阵，将末端目标姿态分解到后三轴，通常用欧拉角（如Z-Y-Z）或四元数等描述。</li>
+</ul>
+<h2 id="物件取放任务"><a href="#物件取放任务" class="headerlink" title="物件取放任务"></a>物件取放任务</h2><p><img src="../pic/image-20250420140315910.png" alt="image-20250420140315910"></p>
+<p><img src="../pic/image-20250420140340056.png" alt="image-20250420140340056"></p>
+<p>-&gt;Pieper’s Solution</p>
+<h1 id="机械手臂轨迹规划"><a href="#机械手臂轨迹规划" class="headerlink" title="机械手臂轨迹规划"></a>机械手臂轨迹规划</h1><h2 id="导论-4"><a href="#导论-4" class="headerlink" title="导论"></a>导论</h2><p>smooth path： continuous with first derivative</p>
+<h2 id="Joint-Space-下的轨迹规划"><a href="#Joint-Space-下的轨迹规划" class="headerlink" title="Joint Space 下的轨迹规划"></a>Joint Space 下的轨迹规划</h2><ul>
+<li>步骤<ul>
+<li>定义T相对于G的initial，via，final points</li>
+<li>inverse kinematics：将手臂末端点状态转换到joint状态</li>
+<li>对所有joints规划smooth trajectories</li>
+<li>forward kinematics：将joint状态转换到手臂末端点状态，将手臂末端点再Cartesian space下轨迹的可行性</li>
+</ul>
+</li>
+</ul>
+<h2 id="Cartesian-Space-下的轨迹规划"><a href="#Cartesian-Space-下的轨迹规划" class="headerlink" title="Cartesian Space 下的轨迹规划"></a>Cartesian Space 下的轨迹规划</h2><ul>
+<li><p>步骤</p>
+<ul>
+<li><p>定义T相对于G的initial，via，final points</p>
+</li>
+<li><p>对所有手臂末端点状态规划smooth trajectories</p>
+</li>
+<li>将规划好手臂末端点状态的轨迹点转换到joint状态，检查joint状态在Joint Space 下轨迹的可行性</li>
+</ul>
+</li>
+</ul>
+<h2 id="Cubic-Polynomials"><a href="#Cubic-Polynomials" class="headerlink" title="Cubic Polynomials"></a>Cubic Polynomials</h2><p>三次多项式</p>
+<p><img src="../pic/image-20250420161741292.png" alt="image-20250420161741292"></p>
+<h2 id="多段Cubic-Polynomials"><a href="#多段Cubic-Polynomials" class="headerlink" title="多段Cubic Polynomials"></a>多段Cubic Polynomials</h2><p><strong>每段的边界条件</strong></p>
+<ul>
+<li>每一段的起止点位置要和实际的关键点吻合。</li>
+<li>相邻两段的连接点（即中间点）处，要求：<ul>
+<li><strong>位置连续</strong>（轨迹不跳跃）</li>
+<li><strong>速度连续</strong>（运动不突变）</li>
+<li>（有时还要求<strong>加速度连续</strong>，但三次多项式只能保证前两项）</li>
+</ul>
+</li>
+</ul>
+<h2 id="General-Cubic-Polynomials"><a href="#General-Cubic-Polynomials" class="headerlink" title="General Cubic Polynomials"></a>General Cubic Polynomials</h2><ul>
+<li>每段有4个系数（a0, a1, a2, a3），N段就有4N个未知数。</li>
+<li>通过以下条件来列方程：<ul>
+<li><strong>位置连续</strong>：每个点都必须被轨迹准确经过（2N个条件）。</li>
+<li><strong>速度/加速度连续</strong>：中间点的速度、加速度要连续（一般2(N-1)个条件）。</li>
+<li><strong>两端条件</strong>：还需要2个额外条件，通常是设置起点和终点的速度或加速度。</li>
+</ul>
+</li>
+</ul>
+<h1 id="Linear-Function-with-Parabolic-Blends"><a href="#Linear-Function-with-Parabolic-Blends" class="headerlink" title="Linear Function with Parabolic Blends"></a>Linear Function with Parabolic Blends</h1><p>Only linear function；Linear function with parabolic blends；Only parabolic functions</p>
+<h2 id="多段Linear-Function-with-Parabolic-Blends"><a href="#多段Linear-Function-with-Parabolic-Blends" class="headerlink" title="多段Linear Function with Parabolic Blends"></a>多段Linear Function with Parabolic Blends</h2><p>参数设置</p>
+<ul>
+<li>可以选择“给定加速度算时间”或“给定时间算加速度”</li>
+</ul>
+<p>这种方法有时轨迹不会严格经过所有给定的via points（中间点），如果必须经过，可以通过设置“伪via点”来调整。</p>
+<h2 id="Linear-Function-with-Parabolic-Blends注解"><a href="#Linear-Function-with-Parabolic-Blends注解" class="headerlink" title="Linear Function with Parabolic Blends注解"></a>Linear Function with Parabolic Blends注解</h2><p>这种方法轨迹未必严格经过所有中间点；</p>
+<p>若要求严格经过，需调整via点或用伪via点；</p>
+<p>轨迹计算要分清每段类型；</p>
+<p>受实际机械臂能力和空间限制影响，轨迹规划需结合实际情况灵活处理。</p>
+<h2 id="Cartesian-Space下轨迹几何下限"><a href="#Cartesian-Space下轨迹几何下限" class="headerlink" title="Cartesian Space下轨迹几何下限"></a>Cartesian Space下轨迹几何下限</h2><p>中间某些区域无法到达，轨迹需要高加减速，针对特定的起始和终点姿态，无法产生连续轨迹</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
